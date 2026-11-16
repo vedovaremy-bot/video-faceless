@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Les 5 points</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+  .hud { position: absolute; left: 70px; right: 70px; top: 96px; display: flex; gap: 14px; }
+  .seg { flex: 1; height: 10px; border-radius: 6px; background: rgba(233,204,127,.18); overflow: hidden; }
+  .seg i { display: block; height: 100%; background: var(--gold-grad); transform-origin: left; transform: scaleX(0); }
+  .wm { position: absolute; right: -60px; top: 420px; font-size: 760px; line-height: 1; }
+  .numc { width: 190px; height: 190px; border-radius: 50%; background: var(--gold-grad); background-size: 220% 100%; color: #120f08; font-family: var(--cinzel); font-weight: 800; font-size: 110px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 80px rgba(217,180,90,.45); }
+  .t { font-size: 108px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.05; }
+  .sub { font-family: var(--serif); font-style: italic; font-size: 80px; color: #e2c67d; line-height: 1.15; }
+  .box { width: 170px; height: 170px; border-radius: 40px; border: 4px solid rgba(233,204,127,.7); display: flex; align-items: center; justify-content: center; background: rgba(20,18,14,.7); }
+  .rec { position: absolute; left: 100px; right: 100px; display: flex; align-items: center; gap: 34px; padding: 34px 44px; border-radius: 40px; font-size: 52px; font-weight: 650; letter-spacing: -0.02em; }
+  .rec svg { flex: 0 0 64px; height: 64px; }
+  .opt { position: absolute; left: 80px; right: 80px; padding: 54px 60px; border-radius: 56px; }
+  .opt .n { font-family: var(--cinzel); color: var(--gold); font-size: 44px; font-weight: 700; letter-spacing: .2em; }
+  .opt .h { font-size: 80px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.08; margin-top: 18px; }
+  .opt .s { font-family: var(--serif); font-style: italic; color: #e2c67d; font-size: 62px; margin-top: 10px; }
+</style>
+<script src="../scripts/v2_5points.js"></script>
+<script src="../shared/engine.js"></script>
+<script>
+const CHECK = '<svg width="110" height="110" viewBox="0 0 24 24" fill="none" stroke="url(#gg)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path data-anim="draw" d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+const POINTS = [
+  { p: 'p2', n: 1, t: ['Ce que tu vas', 'apprendre'], tc: 'p2.2', s: [['module par module.', 'p2.10']] },
+  { p: 'p3', n: 2, t: ['Un vrai', 'accompagnement'], tc: 'p3.5', s: [['pas juste des vidéos', 'p3.8'], ['que tu regardes seul.', 'p3.12']] },
+  { p: 'p4', n: 3, t: ['Une', 'communauté'], tc: 'p4.2', s: [['pour poser tes questions', 'p4.4'], ['& rester motivé.', 'p4.8']] },
+  { p: 'p5', n: 4, t: ['La vérité'], tc: 'p5.5', s: [['Ça demande du travail.', 'p5.7'], ['Aucun résultat garanti.', 'p5.12']] },
+  { p: 'p6', n: 5, t: ['Des conditions', 'claires'], tc: 'p6.4', s: [["avant de t'engager.", 'p6.7']] },
+];
+window.build = ({ say }) => {
+  say(document.getElementById('h2'), 'p1', 1, 5);
+  say(document.getElementById('h3'), 'p1', 5, 8);
+  const root = document.getElementById('cam'), flash = document.getElementById('pointsAnchor');
+  for (const P of POINTS) {
+    const sc = document.createElement('section'); sc.className = 'scene'; sc.dataset.from = P.p;
+    sc.innerHTML = `
+      <span class="wm cz" data-cue="${P.p}.0" data-anim="none" style="color:rgba(217,180,90,.09)">0${P.n}</span>
+      <div class="center" style="top:200px"><span class="label" data-cue="${P.p}.0">Point ${P.n} / 5</span></div>
+      <div class="center" style="top:300px"><span class="numc" data-cue="${P.p}.0" data-anim="pop">${P.n}</span></div>
+      <div class="center" style="top:600px">${P.t.map((l, i) => `<span class="line t" data-cue="${P.tc}+${i * 0.15}">${l}</span>`).join('')}</div>
+      <div class="center" style="top:${P.t.length > 1 ? 880 : 760}px">${P.s.map(([l, c]) => `<span class="line sub" data-cue="${c}">${l}</span>`).join('')}</div>
+      <div class="center" style="top:1330px"><span class="box" data-cue="${P.p}$-0.45" data-anim="pop" data-sfx="check">${CHECK.replace('data-anim="draw"', `data-cue="${P.p}$-0.3" data-anim="draw" data-d="0.35" data-sfx="none"`)}</span></div>`;
+    root.insertBefore(sc, flash);
+  }
+  const h = document.getElementById('herit');
+  [...'HÉRITAGE'].forEach((c, i) => { const s = document.createElement('span'); s.className = 'goldtxt'; s.textContent = c; s.dataset.cue = `p7.0+${(i * 0.05).toFixed(2)}`; s.dataset.d = '0.6'; h.appendChild(s); });
+};
+</script>
+</head>
+<body>
+<div id="stage"><div id="cam">
+  <canvas id="silk" width="270" height="480"></canvas><canvas id="dust" width="1080" height="1920"></canvas><div class="vignette"></div>
+
+  <!-- HOOK -->
+  <section class="scene">
+    <div class="center" style="top:300px"><span class="t" style="font-size:150px" data-cue="-0.5" data-anim="slam">N'achète</span></div>
+    <div class="center" style="top:480px"><span class="line gold" id="h2" style="font-size:96px"></span></div>
+    <div class="center" style="top:640px"><span class="line kin light" id="h3" style="font-size:78px"></span></div>
+    <div class="center" style="top:760px"><span class="goldtxt" style="font-size:560px;line-height:1" data-cue="p1.9" data-anim="slam" data-flash>5</span></div>
+    <div class="center" style="top:1340px"><span class="label" style="font-size:64px" data-cue="p1.10">points</span></div>
+  </section>
+
+  <i id="pointsAnchor"></i>
+
+  <!-- HERITAGE coche les cases -->
+  <section class="scene" data-from="p7" data-glow>
+    <div class="center" style="top:130px"><span data-cue="p7.0" data-anim="pop" data-d="0.6"><svg class="logo" style="width:180px;height:198px"><use href="#logo"/></svg></span></div>
+    <div class="center" style="top:350px"><span class="line" id="herit" style="font-size:120px;line-height:1.1;letter-spacing:.02em"></span></div>
+    <div class="center" style="top:520px"><span class="sub" data-cue="p7.6">coche ces cases.</span></div>
+    <div class="rec card" style="top:720px" data-cue="p7.10" data-anim="left" data-sfx="check"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="url(#gg)"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#120f08" stroke-width="2.6" fill="none" stroke-linecap="round"/></svg>Un programme structuré</div>
+    <div class="rec card" style="top:930px" data-cue="p7.17" data-anim="left" data-sfx="check"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="url(#gg)"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#120f08" stroke-width="2.6" fill="none" stroke-linecap="round"/></svg>Des coachings collectifs chaque semaine*</div>
+    <div class="rec card" style="top:1180px" data-cue="p7.23" data-anim="left" data-sfx="check"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="url(#gg)"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#120f08" stroke-width="2.6" fill="none" stroke-linecap="round"/></svg>Un groupe privé*</div>
+    <div class="center" style="top:1400px"><span class="tiny" data-cue="p7.14" style="font-size:34px">* selon la formule choisie</span></div>
+  </section>
+
+  <!-- CTA: bio or DM -->
+  <section class="scene" data-from="p8">
+    <div class="center" style="top:180px"><span class="label" data-cue="p8.0">Pour aller plus loin</span></div>
+    <div class="opt card" style="top:330px" data-cue="p8.0" data-anim="left">
+      <div class="n">Option 1</div><div class="h">Clique sur le lien<br>dans ma bio 🔗</div><div class="s">pour découvrir le programme.</div></div>
+    <div class="center" style="top:900px"><span class="goldtxt" style="font-size:110px" data-cue="p8.11" data-anim="slam">OU</span></div>
+    <div class="opt card" style="top:1080px" data-cue="p8.12" data-anim="right">
+      <div class="n">Option 2</div><div class="h">Écris-moi<br>en DM 📩</div><div class="s">je te partage le lien.</div></div>
+    <div class="center" style="top:1700px"><span class="tiny" data-cue="p8.0">Lien affilié : je peux toucher une commission, sans surcoût pour toi.</span></div>
+    <div class="center" style="top:1745px"><span class="tiny" data-cue="p8.0">Aucun résultat garanti.</span></div>
+  </section>
+
+  <!-- progress HUD over the 5 points -->
+  <div class="hud" data-cue="p2" data-out="p7-0.2" data-anim="none">
+    <div class="seg"><i data-grow="p2,p2$" data-axis="x"></i></div><div class="seg"><i data-grow="p3,p3$" data-axis="x"></i></div>
+    <div class="seg"><i data-grow="p4,p4$" data-axis="x"></i></div><div class="seg"><i data-grow="p5,p5$" data-axis="x"></i></div>
+    <div class="seg"><i data-grow="p6,p6$" data-axis="x"></i></div>
+  </div>
+</div><div id="flash"></div></div>
+</body>
+</html>

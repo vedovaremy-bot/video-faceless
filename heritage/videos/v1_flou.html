@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Le Flou</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+  .chaos { position: absolute; padding: 34px 54px; border-radius: 40px; font-size: 76px; font-weight: 800; letter-spacing: -0.03em; color: #fff; white-space: nowrap; }
+  .chaos.small { font-size: 44px; font-weight: 600; padding: 22px 36px; color: #cfc6b3; opacity: .7; }
+  .blackout { position: absolute; inset: 0; background: rgba(0,0,0,.82); }
+  .node { position: absolute; left: 150px; right: 60px; display: flex; gap: 46px; align-items: flex-start; }
+  .node .num { flex: 0 0 104px; height: 104px; border-radius: 50%; background: var(--gold-grad); background-size: 220% 100%; color: #120f08; font-family: var(--cinzel); font-weight: 800; font-size: 58px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 50px rgba(217,180,90,.5); }
+  .node .tx { font-size: 66px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; padding-top: 10px; }
+  .node .tx em { display: block; font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 54px; color: #d9b45a; letter-spacing: 0; margin-top: 6px; }
+  .pillar { position: absolute; width: 300px; height: 330px; border-radius: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px; text-align: center; font-size: 40px; font-weight: 650; line-height: 1.15; }
+  .pillar svg { width: 110px; height: 110px; }
+  .dm { position: absolute; left: 110px; right: 110px; top: 840px; height: 760px; padding: 40px; }
+  .dm .hd { display: flex; align-items: center; gap: 24px; padding-bottom: 30px; border-bottom: 1px solid rgba(233,204,127,.2); font-size: 40px; font-weight: 600; }
+  .dm .av { width: 84px; height: 84px; border-radius: 50%; border: 2px solid rgba(233,204,127,.6); display: flex; align-items: center; justify-content: center; background: #0d0c09; }
+  .bub { position: absolute; padding: 26px 40px; border-radius: 40px; font-size: 44px; font-weight: 600; white-space: nowrap; }
+  .bub.me { right: 40px; background: var(--gold-grad); background-size: 220% 100%; color: #120f08; border-bottom-right-radius: 10px; }
+  .bub.them { left: 40px; background: #24211a; color: #f4efe4; border-bottom-left-radius: 10px; }
+  .input { position: absolute; left: 40px; right: 40px; bottom: 40px; height: 110px; border-radius: 999px; border: 2px solid rgba(233,204,127,.4); display: flex; align-items: center; padding: 0 40px; font-size: 46px; font-weight: 600; color: #fff; letter-spacing: .04em; }
+  .send { position: absolute; right: 54px; bottom: 52px; width: 86px; height: 86px; border-radius: 50%; background: var(--gold-grad); display: flex; align-items: center; justify-content: center; }
+  .subbtn .b { display: none; } .subbtn.done .a { display: none; } .subbtn.done .b { display: inline; }
+  #heartfill { transition: none; }
+</style>
+<script src="../scripts/v1_flou.js"></script>
+<script src="../shared/engine.js"></script>
+<script>
+window.build = ({ say }) => {
+  say(document.getElementById('s3a'), 'p3', 0, 2);
+  say(document.getElementById('s3c'), 'p3', 8, 11);
+  say(document.getElementById('s3d'), 'p3', 11, 14);
+  say(document.getElementById('s4a'), 'p4', 0, 2); say(document.getElementById('s4b'), 'p4', 2, 5);
+  say(document.getElementById('s5t'), 'p5', 5, 8);
+  say(document.getElementById('s7a'), 'p7', 0, 1);
+  say(document.getElementById('s8a'), 'p8', 0, 5);
+  const h = document.getElementById('herit');
+  [...'HÉRITAGE'].forEach((c, i) => { const s = document.createElement('span'); s.className = 'goldtxt'; s.textContent = c; s.dataset.cue = `p6.7+${(i * 0.05).toFixed(2)}`; s.dataset.d = '0.6'; h.appendChild(s); });
+};
+window.onFrame = (t, { clamp, cue }) => {
+  const f = document.getElementById('flouin');
+  f.style.filter = `blur(${9 + 4 * Math.sin(t * 5)}px)`;
+  const hp = clamp((t - cue('p8.5')) / 0.35);
+  document.getElementById('heartfill').style.opacity = hp;
+  const ring = document.getElementById('ring'), rp = clamp((t - cue('p8.5')) / 0.7);
+  ring.style.transform = `translate(-50%,-50%) scale(${0.6 + rp * 1.6})`; ring.style.opacity = rp > 0 && rp < 1 ? 0.8 * (1 - rp) : 0;
+};
+</script>
+</head>
+<body>
+<div id="stage"><div id="cam">
+  <canvas id="silk" width="270" height="480"></canvas><canvas id="dust" width="1080" height="1920"></canvas><div class="vignette"></div>
+
+  <!-- HOOK: contradictory advice slams -->
+  <section class="scene">
+    <div class="center" style="top:150px"><span class="pill" data-cue="-1" data-anim="none">Ta tête en ce moment 👇</span></div>
+    <div class="chaos small glass" style="left:520px;top:520px" data-cue="p1.1" data-anim="pop" data-tilt="8" data-sfx="none">Fais des pubs</div>
+    <div class="chaos small glass" style="left:70px;top:1480px" data-cue="p1.6" data-anim="pop" data-tilt="-7" data-sfx="none">Crée ta marque</div>
+    <div class="chaos small glass" style="left:560px;top:1560px" data-cue="p1.9" data-anim="pop" data-tilt="6" data-sfx="none">Fais du dropshipping</div>
+    <div class="chaos glass" style="left:70px;top:330px" data-cue="-0.5" data-anim="slam" data-tilt="-6">Fais du TikTok.</div>
+    <div class="chaos glass" style="right:60px;top:660px" data-cue="p1.3" data-anim="slam" data-tilt="5">Non, YouTube.</div>
+    <div class="chaos glass" style="left:50px;top:960px" data-cue="p1.5" data-anim="slam" data-tilt="-3">Lance une boutique.</div>
+    <div class="chaos glass" style="right:40px;top:1250px" data-cue="p1.8" data-anim="slam" data-tilt="4">Fais de l'affiliation.</div>
+  </section>
+
+  <!-- STOP -->
+  <section class="scene" data-from="p2-0.05" data-cut>
+    <div class="blackout"></div>
+    <div class="center" style="top:760px"><span class="goldtxt" style="font-size:280px;line-height:1" data-cue="p2-0.05" data-anim="slam" data-flash>STOP.</span></div>
+  </section>
+
+  <!-- 15 conseils -->
+  <section class="scene" data-from="p3">
+    <div class="center" style="top:230px"><span class="line kin light" id="s3a" style="font-size:80px"></span></div>
+    <div class="center" style="top:330px"><span class="goldtxt" style="font-size:520px;line-height:1" data-cue="p3.2" data-anim="slam">15</span></div>
+    <div class="center" style="top:880px"><span class="kin" data-cue="p3.3" style="font-size:96px">conseils différents</span></div>
+    <div class="center" style="top:1000px"><span class="kin light" data-cue="p3.5" style="font-size:80px">dans la tête…</span></div>
+    <div class="center" style="top:1300px"><span class="line kin light" id="s3c" style="font-size:80px"></span><span class="line kin" id="s3d" style="font-size:104px"></span></div>
+  </section>
+
+  <!-- le flou -->
+  <section class="scene" data-from="p4">
+    <div class="center" style="top:560px"><span class="line kin light" id="s4a" style="font-size:90px"></span><span class="line kin" id="s4b" style="font-size:110px"></span></div>
+    <div class="center" style="top:900px"><span class="kin light" data-cue="p4.5" style="font-size:90px">C'est le</span></div>
+    <div class="center" style="top:1010px"><span data-cue="p4.7" data-anim="pop" data-d="0.4"><span id="flouin" class="gold" style="display:inline-block;font-size:300px;line-height:1.1">flou.</span></span></div>
+  </section>
+
+  <!-- un seul plan -->
+  <section class="scene" data-from="p5">
+    <div class="center" style="top:170px"><span class="label" data-cue="p5.0">La solution</span></div>
+    <div class="center" style="top:270px"><span class="line kin gold" id="s5t" style="font-size:150px"></span></div>
+    <i style="position:absolute;left:201px;top:760px;width:4px;height:780px;background:linear-gradient(#d9b45a,rgba(217,180,90,.1));transform-origin:top" data-grow="p5.8,p5$"></i>
+    <div class="node" style="top:700px" data-cue="p5.8" data-anim="left"><div class="num">1</div><div class="tx">Une étape<em>à la fois.</em></div></div>
+    <div class="node" style="top:1040px" data-cue="p5.14" data-anim="left"><div class="num">2</div><div class="tx">Quelqu'un<em>pour te recadrer.</em></div></div>
+    <div class="node" style="top:1380px" data-cue="p5.18" data-anim="left"><div class="num">3</div><div class="tx">Même quand<em>tu décroches.</em></div></div>
+  </section>
+
+  <!-- Heritage -->
+  <section class="scene" data-from="p6" data-glow>
+    <div class="center" style="top:150px"><span data-cue="p6.0" data-anim="pop" data-d="0.6"><svg class="logo"><use href="#logo"/></svg></span></div>
+    <div class="center" style="top:410px"><span class="line" id="herit" style="font-size:130px;line-height:1.1;letter-spacing:.02em"></span>
+      <span class="label" data-cue="p6.7+0.5" style="font-size:42px;margin-top:6px">par IHC</span></div>
+    <div class="pillar glass" style="left:50px;top:820px" data-cue="p6.10" data-anim="pop">
+      <svg viewBox="0 0 48 48" fill="none" stroke="url(#gg)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="38" r="4"/><circle cx="38" cy="10" r="4"/><path d="M14 38h14a6 6 0 0 0 0-12H20a6 6 0 0 1 0-12h14"/></svg>Méthode<br>claire</div>
+    <div class="pillar glass" style="left:390px;top:820px" data-cue="p6.13" data-anim="pop">
+      <svg viewBox="0 0 48 48" fill="none" stroke="url(#gg)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10h24v16H16l-6 6v-6H6z"/><path d="M34 18h8v16h-4v6l-6-6H22v-4"/></svg>Coachings<br>collectifs</div>
+    <div class="pillar glass" style="left:730px;top:820px" data-cue="p6.17" data-anim="pop">
+      <svg viewBox="0 0 48 48" fill="none" stroke="url(#gg)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="15" r="6"/><circle cx="10" cy="20" r="4.5"/><circle cx="38" cy="20" r="4.5"/><path d="M13 40c0-7 5-12 11-12s11 5 11 12M2 38c0-5 3.5-8.5 8-8.5M46 38c0-5-3.5-8.5-8-8.5"/></svg>Une<br>communauté</div>
+    <div class="center" style="top:1260px"><span class="gold" data-cue="p6.19" style="font-size:76px">qui avance avec toi.</span></div>
+  </section>
+
+  <!-- DM CTA -->
+  <section class="scene" data-from="p7">
+    <div class="center" style="top:220px"><span class="line kin" id="s7a" style="font-size:110px"></span></div>
+    <div class="center" style="top:360px"><span class="goldtxt" style="font-size:150px;line-height:1.1" data-cue="p7.2" data-anim="slam">HÉRITAGE</span></div>
+    <div class="center" style="top:560px"><span class="kin light" data-cue="p7.4" style="font-size:90px">en DM 📩</span></div>
+    <div class="dm card" data-cue="p7.0" data-d="0.6">
+      <div class="hd"><div class="av"><svg style="width:60px;height:66px"><use href="#logo"/></svg></div>Message</div>
+      <div class="bub me" style="top:220px" data-cue="p7.5+0.3" data-anim="pop">HERITAGE</div>
+      <div class="bub them" style="top:370px" data-cue="p7.9" data-anim="pop">Je t'explique tout 👇</div>
+      <div class="input"><span data-cue="p7.2" data-anim="type" data-d="0.7" data-out="p7.5+0.3" data-sfx="type">HERITAGE</span></div>
+      <div class="send" data-cue="p7.4" data-anim="pop"><svg width="44" height="44" viewBox="0 0 24 24" fill="#120f08"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></div>
+    </div>
+  </section>
+
+  <!-- like + abonne -->
+  <section class="scene" data-from="p8">
+    <div class="center" style="top:300px"><span class="line kin" id="s8a" style="font-size:100px"></span></div>
+    <div id="ring" style="position:absolute;left:540px;top:760px;width:300px;height:300px;border-radius:50%;border:6px solid #e9cc7f;opacity:0"></div>
+    <div class="center" style="top:640px"><span data-cue="p8.5" data-anim="pop" data-sfx="like">
+      <svg class="heart" viewBox="0 0 24 22"><path d="M12 21s-9-5.6-9-12A5 5 0 0 1 12 6a5 5 0 0 1 9 3c0 6.4-9 12-9 12z" fill="none" stroke="url(#gg)" stroke-width="1.4"/>
+        <path id="heartfill" d="M12 21s-9-5.6-9-12A5 5 0 0 1 12 6a5 5 0 0 1 9 3c0 6.4-9 12-9 12z" fill="url(#gg)"/></svg></span></div>
+    <div class="center" style="top:1060px"><span data-cue="p8.7" data-anim="pop" data-sfx-at="p8.7+0.6|ding">
+      <span class="subbtn" data-class="p8.7+0.6|done"><span class="a">＋ S'abonner</span><span class="b">Abonné ✓</span></span></span></div>
+    <div class="center" style="top:1260px"><span class="gold" data-cue="p8.8" style="font-size:72px">pour la suite.</span></div>
+    <div class="center" style="top:1760px"><span class="tiny" data-cue="p8.0">Contenu affilié · aucun résultat garanti</span></div>
+  </section>
+</div><div id="flash"></div></div>
+</body>
+</html>

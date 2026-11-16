@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>La conversation</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+  .caps { top: 150px; height: 400px; }
+  .cap { font-size: 76px; }
+  .phone { position: absolute; left: 60px; right: 60px; top: 600px; bottom: 70px; border-radius: 64px; overflow: hidden; }
+  .phone .hd { position: absolute; left: 0; right: 0; top: 0; height: 150px; display: flex; align-items: center; gap: 26px; padding: 0 44px; border-bottom: 1px solid rgba(233,204,127,.18); background: rgba(10,10,11,.9); z-index: 2; }
+  .phone .av { width: 92px; height: 92px; border-radius: 50%; background: linear-gradient(135deg, #3a3326, #16130e); border: 2px solid rgba(233,204,127,.5); display: flex; align-items: center; justify-content: center; font-family: var(--cinzel); font-weight: 700; font-size: 44px; color: #f1dfae; }
+  .phone .nm { font-size: 44px; font-weight: 700; } .phone .st { font-size: 28px; color: #8d877b; margin-top: 4px; }
+  .phone .tag { margin-left: auto; font-size: 24px; color: #8d877b; border: 1px solid rgba(233,204,127,.3); border-radius: 999px; padding: 8px 18px; }
+  .area { position: absolute; left: 0; right: 0; top: 150px; bottom: 0; overflow: hidden; }
+  #msgs { position: absolute; left: 40px; right: 40px; top: 40px; display: flex; flex-direction: column; gap: 26px; }
+  .m { max-width: 80%; padding: 28px 38px; border-radius: 42px; font-size: 44px; font-weight: 550; line-height: 1.25; letter-spacing: -0.01em; }
+  .m.them { align-self: flex-start; background: #24211a; color: #f4efe4; border-bottom-left-radius: 12px; }
+  .m.me { align-self: flex-end; background: var(--gold-grad); background-size: 220% 100%; color: #120f08; border-bottom-right-radius: 12px; }
+  .m.rich { align-self: flex-end; background: #0e0d0a; border: 2px solid rgba(233,204,127,.55); color: #f4efe4; padding: 34px 40px; }
+  .rich .top { display: flex; align-items: center; gap: 22px; font-family: var(--cinzel); font-weight: 700; font-size: 46px; color: #e9cc7f; }
+  .rich ul { list-style: none; margin-top: 18px; font-size: 38px; } .rich li { margin-top: 10px; } .rich li::before { content: "✦ "; color: #d9b45a; }
+  .rich small { display: block; margin-top: 14px; font-size: 26px; color: #8d877b; }
+  .dim { position: absolute; inset: 0; background: rgba(0,0,0,.92); }
+  .subbtn .b { display: none; } .subbtn.done .a { display: none; } .subbtn.done .b { display: inline; }
+</style>
+<script src="../scripts/v3_dm.js"></script>
+<script src="../shared/engine.js"></script>
+<script>
+window.build = ({ captions }) => {
+  captions(document.getElementById('caps'), ['p1', 'p2', 'p3', 'p4', 'p5', 'p6'], 5);
+};
+window.onFrame = (t, { clamp, easeOut, cue }) => {
+  const area = document.querySelector('.area').clientHeight - 80;
+  let bottom = 0;
+  for (const m of document.querySelectorAll('#msgs .m')) {
+    const p = easeOut(clamp((t - cue(m.dataset.cue)) / 0.35));
+    if (p <= 0) break;
+    const b = m.offsetTop + m.offsetHeight; bottom = bottom + (b - bottom) * p;
+  }
+  document.getElementById('msgs').style.transform = `translateY(${-Math.max(0, bottom - area)}px)`;
+  const hp = clamp((t - cue('p7.0')) / 0.35);
+  document.getElementById('heartfill').style.opacity = hp;
+};
+</script>
+</head>
+<body>
+<div id="stage"><div id="cam">
+  <canvas id="silk" width="270" height="480"></canvas><canvas id="dust" width="1080" height="1920"></canvas><div class="vignette"></div>
+
+  <section class="scene" data-to="END">
+    <div class="caps" id="caps"></div>
+    <div class="phone card">
+      <div class="hd"><div class="av">A</div><div><div class="nm">Alex</div><div class="st">en ligne</div></div><div class="tag">conversation type</div></div>
+      <div class="area"><div id="msgs">
+        <div class="m them" data-cue="-0.5" data-anim="pop">J'ai peur d'acheter une formation de plus… et de ne jamais la finir 😔</div>
+        <div class="m me" data-cue="p3.0" data-anim="pop">Le problème, c'est rarement la formation.</div>
+        <div class="m me" data-cue="p3.6" data-anim="pop">C'est d'être seul face aux vidéos, sans savoir quoi faire après.</div>
+        <div class="m me" data-cue="p4.0" data-anim="pop">Dans Héritage, tu n'es pas seul 🤝</div>
+        <div class="m rich" data-cue="p4.10" data-anim="pop">
+          <div class="top"><svg style="width:70px;height:77px"><use href="#logo"/></svg>HÉRITAGE</div>
+          <ul><li>Coachings collectifs chaque semaine*</li><li>Groupe privé pour tes questions*</li><li>Méthode étape par étape</li></ul>
+          <small>* selon la formule choisie</small></div>
+        <div class="m me" data-cue="p5.0" data-anim="pop">Mais soyons honnêtes : personne ne fera le travail à ta place.</div>
+        <div class="m them" data-cue="p5$" data-anim="pop">Ok. Je suis prêt à m'y mettre 💪</div>
+        <div class="m them" data-cue="p6.7" data-anim="pop" style="font-family:var(--cinzel);font-weight:700;color:#e9cc7f;font-size:52px">HÉRITAGE</div>
+        <div class="m me" data-cue="p6.11" data-anim="pop">Je te partage le lien 🔗 et je te dis par où commencer.</div>
+      </div></div>
+    </div>
+  </section>
+
+  <section class="scene" data-from="p7" data-to="END">
+    <div class="dim"></div>
+    <div class="center" style="top:480px"><span data-cue="p7.0" data-anim="pop" data-sfx="like">
+      <svg class="heart" viewBox="0 0 24 22"><path d="M12 21s-9-5.6-9-12A5 5 0 0 1 12 6a5 5 0 0 1 9 3c0 6.4-9 12-9 12z" fill="none" stroke="url(#gg)" stroke-width="1.4"/>
+        <path id="heartfill" d="M12 21s-9-5.6-9-12A5 5 0 0 1 12 6a5 5 0 0 1 9 3c0 6.4-9 12-9 12z" fill="url(#gg)"/></svg></span></div>
+    <div class="center" style="top:860px"><span data-cue="p7.1" data-anim="pop" data-sfx-at="p7.1+0.6|ding">
+      <span class="subbtn" data-class="p7.1+0.6|done"><span class="a">＋ S'abonner</span><span class="b">Abonné ✓</span></span></span></div>
+    <div class="center" style="top:1080px"><span class="gold" data-cue="p7.5" style="font-size:76px">à la prochaine vidéo.</span></div>
+    <div class="center" style="top:1760px"><span class="tiny" data-cue="p7.0">Lien affilié · aucun résultat garanti</span></div>
+  </section>
+</div><div id="flash"></div></div>
+</body>
+</html>
