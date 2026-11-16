@@ -7,7 +7,7 @@
 | `v3_dm.mp4` | Conversation DM mise en scène + sous-titres karaoké (~39 s) | DM « HÉRITAGE » + like/abonne-toi |
 | `heritage_promo.mp4` | Ancienne version (voix féminine) | Lien en bio |
 
-Voix : homme, Coqui `tts_models/fr/css10/vits` (gratuit). ElevenLabs est prêt (`voice_el.py`) dès qu'une clé valide est configurée.
+Voix : homme, Piper « Tom » (fr_FR-tom-medium, gratuite) — `./build2.sh <video> tom` avec PIPER_MODEL=<chemin du .onnx>. ElevenLabs est prêt (`voice_el.py`) dès qu une clé valide est configurée.
 
 ## Régénérer
 ```
