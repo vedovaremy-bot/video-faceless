@@ -1,6 +1,7 @@
 """Original ambient soundtrack + sound design synced to out/events.json -> out/audio.wav"""
 import json, wave, numpy as np
-SR, DUR = 44100, 34.0
+SR = 44100
+DUR = json.load(open('out/timing.json'))['duration'] if __import__('os').path.exists('out/timing.json') else 34.0
 n = int(SR * DUR); t = np.arange(n) / SR
 rng = np.random.default_rng(7)
 out = np.zeros(n)
@@ -49,5 +50,5 @@ fade = np.clip((DUR - t) / 2.0, 0, 1) * np.clip(t / 0.3, 0, 1)
 out *= fade
 out = out / np.max(np.abs(out)) * 0.85
 st = np.stack([out, np.roll(out, 300) * 0.97], 1)  # light stereo width
-w = wave.open('out/audio.wav', 'wb'); w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR)
+w = wave.open('out/music.wav', 'wb'); w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR)
 w.writeframes((st * 32767).astype('<i2').tobytes()); w.close()

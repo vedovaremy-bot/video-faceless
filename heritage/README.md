@@ -1,11 +1,13 @@
-# Heritage — vidéo faceless (9:16, 34 s)
+# Héritage par IHC — vidéo faceless (9:16, ~50 s, voix off)
 
-Vidéo finale : `heritage_promo.mp4` (1080×1920, 30 fps, musique originale générée).
+Vidéo finale : `heritage_promo.mp4` (1080×1920, 30 fps). DA noir & doré (logo H couronné, Cinzel, satin noir/doré, poussière dorée).
+Voix off : Kokoro (open source), voix française `ff_siwis`. Musique : générée (originale, libre de droits).
 
-Régénérer :
+Régénérer tout (après modification des textes) :
 ```
-node render.js                 # images -> out/video_noaudio.mp4 + out/events.json
-python3 music.py               # bande-son -> out/audio.wav
-ffmpeg -y -i out/video_noaudio.mp4 -i out/audio.wav -c:v copy -c:a aac -b:a 192k -shortest heritage_promo.mp4
+pip install kokoro-onnx soundfile
+# modèles : https://github.com/thewh1teagle/kokoro-onnx/releases/tag/model-files-v1.0
+./build.sh kokoro-v1.0.int8.onnx voices-v1.0.bin
 ```
-Textes et timings : `index.html` (ouvrable dans un navigateur pour un aperçu en boucle).
+- Texte lu : `voice.py` (liste SCRIPT) — les animations se recalent automatiquement sur la voix.
+- Textes à l'écran et design : `index.html`.

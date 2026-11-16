@@ -5,6 +5,8 @@ const FPS = 30;
 (async () => {
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
+  const tf = path.join(__dirname, 'out', 'timing.json');
+  if (fs.existsSync(tf)) await page.addInitScript(t => { window.TIMING = t; }, JSON.parse(fs.readFileSync(tf, 'utf8')));
   await page.goto('file://' + path.join(__dirname, 'index.html'));
   await page.evaluate(() => document.fonts.ready);
   const outDir = path.join(__dirname, 'out'); fs.mkdirSync(outDir, { recursive: true });

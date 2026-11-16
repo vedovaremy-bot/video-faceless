@@ -5,16 +5,19 @@
 <title>Heritage — vidéo faceless</title>
 <style>
   @font-face { font-family: "Instrument Serif"; font-style: normal; src: url(fonts/InstrumentSerif-Regular.woff2) format("woff2"); }
+  @font-face { font-family: "Cinzel"; font-weight: 400 900; src: url(fonts/Cinzel.woff2) format("woff2"); }
   @font-face { font-family: "Instrument Serif"; font-style: italic; src: url(fonts/InstrumentSerif-Italic.woff2) format("woff2"); }
   :root {
-    --ink: #0d1020;
-    --muted: #8a8f9e;
-    --blue: #2f4bd8;
+    --ink: #f4efe4;
+    --muted: #8d877b;
+    --gold: #d9b45a;
+    --gold-grad: linear-gradient(100deg, #8a6a25 0%, #e9cc7f 28%, #fff1c4 45%, #d4a94c 62%, #8a6a25 100%);
     --serif: "Instrument Serif", Georgia, serif;
+    --cinzel: "Cinzel", serif;
     --sans: "Inter", "Inter Display", system-ui, sans-serif;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #f4f5f8; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #060607; }
   #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: var(--sans); color: var(--ink); }
   canvas#silk { position: absolute; inset: 0; width: 1080px; height: 1920px; }
   .scene { position: absolute; inset: 0; opacity: 0; will-change: opacity, transform, filter; }
@@ -25,62 +28,77 @@
 
   /* type */
   .kin { font-weight: 600; font-size: 96px; letter-spacing: -0.035em; line-height: 1.12; }
-  .kin.light { font-weight: 400; color: #6b7080; }
-  .serif-it { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -0.01em; color: var(--blue); }
-  .label { font-family: var(--serif); font-size: 50px; letter-spacing: .38em; text-transform: uppercase; padding-left: .38em; }
-  .label.ink { color: #1a1d2b; }
-  .label.white { color: #fff; }
+  .kin.light { font-weight: 400; color: #9a9384; }
+  .serif-it { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
+  .serif-it .w { margin: 0 .05em; }
+  .serif-it .w, .goldtxt { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -0.01em; background: var(--gold-grad); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; padding: 0 .08em; }
+  .goldtxt { font-style: normal; font-family: var(--cinzel); font-weight: 700; }
+  .logo { width: 210px; height: 231px; filter: drop-shadow(0 0 24px rgba(217,180,90,.35)); }
+  .label { font-family: var(--cinzel); font-weight: 600; font-size: 42px; letter-spacing: .34em; text-transform: uppercase; padding-left: .38em; }
+  .label.ink { color: var(--gold); }
+  .label.white { color: var(--gold); }
   .label-rule { display: block; height: 2px; margin: 18px auto 0; width: 0; background: currentColor; opacity: .5; }
 
   /* strike-through */
-  .strike { position: relative; color: #9aa0ae; font-weight: 400; }
-  .strike i { position: absolute; left: -2%; top: 54%; height: 7px; width: 0; background: #1a1d2b; border-radius: 4px; }
+  .strike { position: relative; color: #6f6a60; font-weight: 400; }
+  .strike i { position: absolute; left: -2%; top: 54%; height: 7px; width: 0; background: var(--gold); border-radius: 4px; box-shadow: 0 0 18px rgba(233,204,127,.7); }
 
   /* glass */
   .glass {
-    background: linear-gradient(160deg, rgba(255,255,255,.28), rgba(255,255,255,.08));
-    border: 2px solid rgba(255,255,255,.45);
-    box-shadow: inset 0 2px 0 rgba(255,255,255,.35), 0 30px 80px rgba(5,15,70,.35);
+    background: linear-gradient(160deg, rgba(255,240,200,.14), rgba(255,240,200,.03));
+    border: 2px solid rgba(233,204,127,.45);
+    box-shadow: inset 0 2px 0 rgba(255,236,190,.22), 0 30px 80px rgba(0,0,0,.55);
     backdrop-filter: blur(22px) saturate(140%);
     -webkit-backdrop-filter: blur(22px) saturate(140%);
   }
   .card { position: absolute; left: 90px; right: 90px; border-radius: 64px; }
   .bubble { position: absolute; padding: 24px 40px; border-radius: 999px; font-size: 42px; font-weight: 500; color: #fff; white-space: nowrap; }
   .pillbar { position: absolute; left: 90px; right: 90px; height: 120px; border-radius: 999px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 40px; font-weight: 500; }
-  .pill-dark { display: inline-block; padding: 18px 40px; border-radius: 999px; background: #e9ebf1; color: #1a1d2b; font-size: 38px; font-weight: 500; border: 2px solid #fff; box-shadow: 0 8px 30px rgba(20,30,80,.12); }
+  .pill-dark { display: inline-block; padding: 18px 40px; border-radius: 999px; background: rgba(20,18,14,.85); color: #f1dfae; font-size: 38px; font-weight: 500; border: 2px solid rgba(233,204,127,.55); box-shadow: 0 0 40px rgba(217,180,90,.18); }
 
   /* dark checklist card */
   .dark {
-    position: absolute; left: 60px; right: 60px; border-radius: 64px; background: #0b0c10; color: #fff;
-    box-shadow: 0 50px 120px rgba(10,15,40,.35), 0 10px 30px rgba(10,15,40,.25);
+    position: absolute; left: 60px; right: 60px; border-radius: 64px; background: linear-gradient(170deg, #17150f 0%, #0a0a0b 45%); color: #fff;
+    border: 2px solid rgba(233,204,127,.42);
+    box-shadow: 0 0 0 1px rgba(0,0,0,.6), 0 50px 120px rgba(0,0,0,.7), 0 0 90px rgba(217,180,90,.14), inset 0 2px 0 rgba(255,236,190,.12);
     padding: 90px 60px 90px 70px;
   }
   .dark h2 { white-space: nowrap; font-size: 88px; font-weight: 600; letter-spacing: -0.035em; line-height: 1; display: flex; align-items: center; gap: 26px; }
   .chev { width: 46px; height: 46px; opacity: .85; }
-  .glow { color: #eef1ff; text-shadow: 0 0 26px rgba(80,110,255,.95), 0 0 70px rgba(60,90,255,.7); }
-  .vline { position: absolute; left: 92px; top: 210px; width: 3px; background: #6c7080; transform-origin: top; }
+  .glow { color: #ffeebd; text-shadow: 0 0 26px rgba(233,190,90,.95), 0 0 70px rgba(217,160,60,.6); }
+  .vline { position: absolute; left: 92px; top: 210px; width: 3px; background: linear-gradient(#d9b45a, rgba(217,180,90,.15)); transform-origin: top; }
   .varrow { position: absolute; left: 78px; width: 32px; height: 32px; }
   .items { margin: 70px 0 0 64px; display: flex; flex-direction: column; gap: 62px; }
-  .item { position: relative; padding-left: 72px; font-size: 50px; line-height: 1.28; letter-spacing: -0.02em; color: #8e93a3; }
+  .item { position: relative; padding-left: 72px; font-size: 50px; line-height: 1.28; letter-spacing: -0.02em; color: #8d877b; }
   .item b { color: #fff; font-weight: 600; }
   .item .chk { position: absolute; left: 0; top: 10px; width: 52px; height: 52px; }
   .item .sub { display: block; padding-left: 0; }
-  .item .sub::before { content: "↳ "; color: #6c7080; }
+  .item .sub::before { content: "↳ "; color: #b8964a; }
   .foot { margin: 84px 0 0 64px; }
   .foot .a { font-size: 60px; font-weight: 600; letter-spacing: -0.03em; }
-  .foot .b { font-size: 50px; color: #8e93a3; letter-spacing: -0.02em; margin-top: 8px; }
+  .foot .b { font-size: 50px; color: #c9a85a; font-family: var(--serif); font-style: italic; font-size: 56px; letter-spacing: -0.02em; margin-top: 8px; }
 
   /* offers */
   .offer { position: absolute; left: 100px; right: 100px; border-radius: 44px; padding: 38px 48px; color: #fff; display: flex; flex-direction: column; gap: 8px; }
   .offer .n { font-size: 50px; font-weight: 650; letter-spacing: -0.02em; display: flex; align-items: center; gap: 18px; }
-  .offer .n small { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 46px; opacity: .8; letter-spacing: 0; }
+  .offer .n small { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 46px; color: #d9b45a; letter-spacing: 0; }
   .offer .d { font-size: 36px; opacity: .85; }
-  .tiny { font-size: 30px; color: #8a8f9e; letter-spacing: .01em; }
+  .tiny { font-size: 30px; color: #7d776b; letter-spacing: .01em; }
 </style>
 </head>
 <body>
 <div id="stage">
   <canvas id="silk" width="270" height="480"></canvas>
+  <canvas id="dust" width="1080" height="1920" style="position:absolute;inset:0"></canvas>
+  <div style="position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 45%, transparent 55%, rgba(0,0,0,.55) 100%);pointer-events:none"></div>
+  <svg width="0" height="0" style="position:absolute"><defs><symbol id="logo" viewBox="0 0 200 220"><g id="logo-g" fill="url(#gg)" stroke="none">
+    <path d="M58 64 L64 30 L82 48 L100 20 L118 48 L136 30 L142 64 Z"/><rect x="56" y="66" width="88" height="9" rx="2"/>
+    <circle cx="64" cy="27" r="5"/><circle cx="100" cy="16" r="6"/><circle cx="136" cy="27" r="5"/>
+    <circle cx="100" cy="142" r="50" fill="none" stroke="url(#gg)" stroke-width="5"/>
+    <circle cx="100" cy="142" r="42" fill="none" stroke="url(#gg)" stroke-width="1.5"/>
+    <text x="100" y="167" text-anchor="middle" font-family="Cinzel" font-weight="700" font-size="72">H</text>
+  </g></symbol>
+  <linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff1c4"/><stop offset=".5" stop-color="#d9b45a"/><stop offset="1" stop-color="#8a6a25"/></linearGradient></defs></svg>
 
   <!-- S1 · HOOK (white) -->
   <section class="scene" data-start="0" data-end="4.2">
@@ -115,13 +133,13 @@
       <h2><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M5 9l7 7 7-7"/></svg>
         <span>Ce qu'il te <span class="glow">faut.</span></span></h2>
       <i class="vline" id="s4line" data-line="13.4,18.2" style="height:1080px"></i>
-      <svg class="varrow" id="s4arrow" style="top:1272px" viewBox="0 0 24 24" fill="none" stroke="#6c7080" stroke-width="2" stroke-linecap="round"><path d="M5 9l7 7 7-7"/></svg>
+      <svg class="varrow" id="s4arrow" style="top:1272px" viewBox="0 0 24 24" fill="none" stroke="#b8964a" stroke-width="2" stroke-linecap="round"><path d="M5 9l7 7 7-7"/></svg>
       <div class="items">
-        <div class="item" data-t="14.0"><svg class="chk" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#3d63ff"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="item" data-t="14.0"><svg class="chk" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="url(#gg)"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#120f08" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Une <b>méthode claire</b><span class="sub">étape par étape.</span></div>
-        <div class="item" data-t="15.2"><svg class="chk" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#3d63ff"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="item" data-t="15.2"><svg class="chk" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="url(#gg)"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#120f08" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Un <b>cadre</b> qui t'aide<span class="sub">à rester <b>régulier·e.</b></span></div>
-        <div class="item" data-t="16.4"><svg class="chk" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#3d63ff"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="item" data-t="16.4"><svg class="chk" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="url(#gg)"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#120f08" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Des <b>coachings</b> &amp; une <b>communauté</b><span class="sub">pour ne plus avancer seul·e.</span></div>
       </div>
       <div class="foot" data-t="17.5">
@@ -133,43 +151,45 @@
 
   <!-- S5 · HERITAGE (blue) -->
   <section class="scene" data-start="19.0" data-end="24.6">
-    <div class="center" style="top:170px"><span class="label white" data-t="19.1">La formation<i class="label-rule"></i></span></div>
-    <div class="center" style="top:330px;color:#fff">
-      <span class="line" id="s5title" style="font-family:var(--serif);font-size:250px;line-height:1;letter-spacing:-0.01em"></span>
-      <span class="line serif-it" data-t="20.4" style="color:#dfe6ff;font-size:72px;margin-top:10px">Apprendre. Structurer. Avancer.</span>
+    <div class="center" style="top:100px"><span data-t="19.05" data-d="0.8"><svg class="logo"><use href="#logo"/></svg></span></div>
+    <div class="center" style="top:340px;color:#fff">
+      <span class="line" id="s5title" style="font-size:126px;line-height:1.1;letter-spacing:.02em"></span>
+      <span class="line label white" data-t="20.0" style="font-size:44px;margin-top:4px">par IHC</span>
+      <span class="line" data-t="20.4" style="font-family:var(--serif);font-style:italic;color:#e9dcc0;font-size:66px;margin-top:26px">Apprendre. Structurer. Avancer.</span>
     </div>
-    <div class="offer glass" style="top:830px" data-t="21.1">
+    <div class="offer glass" style="top:860px" data-t="21.1">
       <div class="n">Fondation <small>— en autonomie</small></div>
       <div class="d">Modules vidéo &amp; ressources, à ton rythme.</div>
     </div>
-    <div class="offer glass" style="top:1060px" data-t="21.7">
+    <div class="offer glass" style="top:1080px" data-t="21.7">
       <div class="n">Builder <small>— avec un cadre</small></div>
       <div class="d">+ un coaching collectif chaque semaine.</div>
     </div>
-    <div class="offer glass" style="top:1290px" data-t="22.3">
+    <div class="offer glass" style="top:1300px" data-t="22.3">
       <div class="n">Éternelle <small>— accompagnement renforcé</small></div>
       <div class="d">+ 2 coachings / semaine &amp; un groupe privé.</div>
     </div>
-    <div class="center" style="top:1560px"><span data-t="23.0" style="color:#e6ebff;font-size:34px;opacity:.9">Contenus, prix &amp; conditions : sur la page officielle.</span></div>
+    <div class="center" style="top:1560px"><span data-t="23.0" style="color:#a79f8e;font-size:34px;opacity:.9">Contenus, prix &amp; conditions : sur la page officielle.</span></div>
   </section>
 
   <!-- S6 · MINDSET (white) -->
   <section class="scene" data-start="24.6" data-end="28.6">
-    <div class="center" style="top:300px"><span class="label ink" data-t="24.7">Héritage<i class="label-rule"></i></span></div>
+    <div class="center" style="top:300px"><span class="label ink" data-t="24.7">Ton héritage<i class="label-rule"></i></span></div>
     <div class="center" style="top:620px" id="s6"></div>
   </section>
 
   <!-- S7 · CTA (dark card) -->
   <section class="scene" data-start="28.6" data-end="34.0">
-    <div class="dark" style="top:300px;height:1200px" data-t="28.65" data-d="0.6">
+    <div class="center" style="top:80px"><span data-t="28.6" data-d="0.6"><svg class="logo" style="width:170px;height:187px"><use href="#logo"/></svg></span></div>
+    <div class="dark" style="top:330px;height:1200px" data-t="28.65" data-d="0.6">
       <h2><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M5 9l7 7 7-7"/></svg>
         <span>Lien en <span class="glow">bio.</span></span></h2>
       <i class="vline" data-line="28.9,32.0" style="height:870px"></i>
-      <svg class="varrow" style="top:1062px" data-arrowat="32.0" viewBox="0 0 24 24" fill="none" stroke="#6c7080" stroke-width="2" stroke-linecap="round"><path d="M5 9l7 7 7-7"/></svg>
+      <svg class="varrow" style="top:1062px" data-arrowat="32.0" viewBox="0 0 24 24" fill="none" stroke="#b8964a" stroke-width="2" stroke-linecap="round"><path d="M5 9l7 7 7-7"/></svg>
       <div class="items">
-        <div class="item" data-t="29.4"><svg class="chk" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#3d63ff"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="item" data-t="29.4"><svg class="chk" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="url(#gg)"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#120f08" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Découvre <b>le programme</b><span class="sub">et ce que tu vas <b>vraiment apprendre.</b></span></div>
-        <div class="item" data-t="30.2"><svg class="chk" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#3d63ff"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="item" data-t="30.2"><svg class="chk" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="url(#gg)"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#120f08" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Lis <b>le prix &amp; les CGV</b><span class="sub">avant de te décider.</span></div>
       </div>
       <div class="foot" data-t="31.0">
@@ -177,8 +197,8 @@
         <div class="b">Sans pression.</div>
       </div>
     </div>
-    <div class="center" style="top:1580px"><span class="tiny" data-t="31.4">Lien affilié · Aucun revenu garanti</span></div>
-    <div class="center" style="top:1630px"><span class="tiny" data-t="31.5">Les résultats dépendent de ton implication.</span></div>
+    <div class="center" style="top:1610px"><span class="tiny" data-t="31.4">Lien affilié · Aucun revenu garanti</span></div>
+    <div class="center" style="top:1660px"><span class="tiny" data-t="31.5">Les résultats dépendent de ton implication.</span></div>
   </section>
 </div>
 
@@ -213,9 +233,10 @@ function kinetic(container, spec) {
     container.appendChild(line);
   }
 }
-function letters(container, text, t0, step) {
+function letters(container, text, t0, step, cls) {
   [...text].forEach((ch, i) => {
     const s = document.createElement('span');
+    if (cls) s.className = cls;
     s.dataset.t = (t0 + i * step).toFixed(3);
     s.dataset.d = '0.7';
     s.textContent = ch;
@@ -224,8 +245,8 @@ function letters(container, text, t0, step) {
 }
 
 kinetic(document.getElementById('s1'), [
-  { text: 'Tu veux te lancer', t: -0.25, step: 0.17 },
-  { text: 'en ligne…', t: 0.95, step: 0.17 },
+  { text: 'Tu veux te lancer', t: 0.5, step: 0.15 },
+  { text: 'en ligne…', t: 1.15, step: 0.15 },
   { text: 'mais tu ne sais pas', t: 1.7, step: 0.14, cls: 'light', style: 'margin-top:60px' },
   { text: 'par où commencer ?', t: 2.55, step: 0.2, cls: 'serif-it', style: 'font-size:124px;margin-top:6px' },
 ]);
@@ -239,7 +260,7 @@ kinetic(document.getElementById('s3'), [
   { text: "C'est", t: 11.2, step: 0.15, style: 'margin-top:90px' },
   { text: 'une méthode.', t: 11.5, step: 0.25, cls: 'serif-it', style: 'font-size:170px' },
 ]);
-letters(document.getElementById('s5title'), 'Heritage', 19.3, 0.08);
+letters(document.getElementById('s5title'), 'HÉRITAGE', 19.3, 0.07, 'goldtxt');
 kinetic(document.getElementById('s6'), [
   { text: 'Ne cherche pas', t: 24.9, step: 0.15 },
   { text: 'un raccourci.', t: 25.35, step: 0.18, strike: { word: 'raccourci.', at: 25.95 } },
@@ -247,20 +268,36 @@ kinetic(document.getElementById('s6'), [
   { text: 'quelque chose', t: 26.8, step: 0.15 },
   { text: 'qui dure.', t: 27.2, step: 0.25, cls: 'serif-it', style: 'font-size:170px' },
 ]);
+{ const fam = document.createElement('span'); fam.className = 'line label white'; fam.dataset.t = '27.8';
+  fam.style.cssText = 'font-size:34px;margin-top:70px'; fam.textContent = 'Pour toi · pour ta famille';
+  document.getElementById('s6').appendChild(fam); }
 
+/* laurel branches around the monogram */
+{ const g = document.getElementById('logo-g'), NS = 'http://www.w3.org/2000/svg';
+  for (const side of [-1, 1]) for (let i = 0; i < 9; i++) {
+    const ang = (200 - i * 17) * Math.PI / 180, R = 66;
+    const cx = 100 + side * Math.cos(ang) * -R, cy = 142 - Math.sin(ang) * R;
+    const e = document.createElementNS(NS, 'ellipse');
+    e.setAttribute('cx', cx); e.setAttribute('cy', cy); e.setAttribute('rx', 4.2); e.setAttribute('ry', 10 - i * 0.35);
+    const rot = side * (-(ang * 180 / Math.PI) + 90 + 35);
+    e.setAttribute('transform', `rotate(${rot} ${cx} ${cy})`); g.appendChild(e);
+  }
+  const stem = document.createElementNS(NS, 'path');
+  stem.setAttribute('d', 'M88 205 Q100 198 112 205'); stem.setAttribute('stroke', 'url(#gg)'); stem.setAttribute('stroke-width', '3'); stem.setAttribute('fill', 'none');
+  g.appendChild(stem); }
 /* ---------- silk background ---------- */
 const cv = document.getElementById('silk');
 const ctx = cv.getContext('2d');
 const W = cv.width, H = cv.height;
 const img = ctx.createImageData(W, H);
-function blueAmount(t) {
-  const ramps = [[4.2, 9.0], [19.0, 24.6]];
+function goldAmount(t) {
+  const ramps = [[M(4.2), M(9.0)], [M(19.0), M(24.6)]];
   let a = 0;
   for (const [s, e] of ramps) a = Math.max(a, clamp((t - s + 0.25) / 0.5) * clamp((e - t + 0.25) / 0.5));
   return easeInOut(a);
 }
 function drawSilk(t) {
-  const b = blueAmount(t);
+  const b = goldAmount(t);
   const d = img.data;
   let k = 0;
   for (let y = 0; y < H; y++) {
@@ -273,10 +310,11 @@ function drawSilk(t) {
       let l = 0.5 + 0.5 * Math.sin(ph * 1.0);
       l = l * 0.7 + 0.3 * (0.5 + 0.5 * Math.sin(ph * 2.3 + u * 2.0 - t * 0.3));
       const hi = Math.pow(l, 6);
-      // white silk
-      const wr = 222 + 33 * l + 4 * hi, wg = 225 + 30 * l + 4 * hi, wb = 234 + 21 * l;
-      // blue silk
-      const br = 10 + 50 * l + 190 * hi, bg = 22 + 70 * l + 175 * hi, bb = 105 + 120 * l + 30 * hi;
+      // black silk (subtle warm sheen)
+      const wr = 7 + 26 * l + 70 * hi, wg = 7 + 22 * l + 55 * hi, wb = 9 + 18 * l + 30 * hi;
+      // golden-hour silk: warm sheen + sunset glow rising from the bottom
+      const glow = Math.exp(-Math.pow(v - 1.78, 2) / 0.18);
+      const br = 14 + 46 * l + 120 * hi + 95 * glow, bg = 9 + 30 * l + 85 * hi + 50 * glow, bb = 6 + 12 * l + 28 * hi + 12 * glow;
       d[k++] = wr + (br - wr) * b;
       d[k++] = wg + (bg - wg) * b;
       d[k++] = wb + (bb - wb) * b;
@@ -285,6 +323,23 @@ function drawSilk(t) {
   }
   ctx.putImageData(img, 0, 0);
 }
+
+/* ---------- voice sync: remap the design timeline onto the voice-over ---------- */
+// window.TIMING = {anchors: [[designTime, voiceTime], ...], duration} is injected by render.js
+function M(t) {
+  const A = (window.TIMING && window.TIMING.anchors) || [[0, 0], [34, 34]];
+  if (t <= A[0][0]) return t + (A[0][1] - A[0][0]);
+  for (let i = 1; i < A.length; i++) if (t <= A[i][0]) {
+    const [o0, n0] = A[i - 1], [o1, n1] = A[i];
+    return n0 + (t - o0) / (o1 - o0) * (n1 - n0);
+  }
+  const [o, n] = A[A.length - 1]; return n + (t - o);
+}
+document.querySelectorAll('[data-t]').forEach(el => { if (+el.dataset.t >= 0) el.dataset.t = M(+el.dataset.t).toFixed(3); });
+document.querySelectorAll('[data-strike]').forEach(el => el.dataset.strike = M(+el.dataset.strike).toFixed(3));
+document.querySelectorAll('[data-line]').forEach(el => el.dataset.line = el.dataset.line.split(',').map(x => M(+x).toFixed(3)).join(','));
+document.querySelectorAll('.scene').forEach((el, i) => { el.dataset.start = i ? M(+el.dataset.start).toFixed(3) : 0; el.dataset.end = M(+el.dataset.end).toFixed(3); });
+EVENTS.forEach(e => e.t = M(e.t));
 
 /* ---------- timeline ---------- */
 const scenes = [...document.querySelectorAll('.scene')];
@@ -295,11 +350,26 @@ animated.forEach(el => {
 });
 scenes.forEach(s => EVENTS.push({ t: +s.dataset.start, kind: 'whoosh' }));
 
+const dctx = document.getElementById('dust').getContext('2d');
+const DUST = Array.from({ length: 70 }, (_, i) => { const r = k => { const x = Math.sin(i * 12.9898 + k * 78.233) * 43758.5453; return x - Math.floor(x); };
+  return { x: r(1) * 1080, y: r(2) * 1920, sp: 15 + r(3) * 45, sz: 1.2 + r(4) * 3.2, ph: r(5) * 6.28, a: 0.25 + r(6) * 0.6 }; });
+function drawDust(t) {
+  dctx.clearRect(0, 0, 1080, 1920);
+  const boost = 1 + goldAmount(t) * 0.8;
+  for (const p of DUST) {
+    const y = ((p.y - t * p.sp) % 1920 + 1920) % 1920, x = p.x + Math.sin(t * 0.6 + p.ph) * 30;
+    const a = p.a * (0.55 + 0.45 * Math.sin(t * 2.2 + p.ph)) * Math.min(1, boost);
+    const g = dctx.createRadialGradient(x, y, 0, x, y, p.sz * 4);
+    g.addColorStop(0, `rgba(255,226,150,${a})`); g.addColorStop(1, 'rgba(255,200,90,0)');
+    dctx.fillStyle = g; dctx.beginPath(); dctx.arc(x, y, p.sz * 4, 0, 6.29); dctx.fill();
+  }
+}
 function render(t) {
-  drawSilk(t);
+  drawSilk(t); drawDust(t);
+  document.querySelectorAll('.serif-it .w, .goldtxt').forEach(el => el.style.backgroundPosition = `${(100 - ((t * 35) % 220))}% 0`);
   for (const s of scenes) {
     const a = +s.dataset.start, e = +s.dataset.end;
-    const fin = a === 0 ? 1 : clamp((t - a + 0.2) / 0.4);
+    const fin = s === scenes[0] ? 1 : clamp((t - a + 0.2) / 0.4);
     const fout = clamp((e - t + 0.2) / 0.4);
     const o = Math.min(fin, fout);
     s.style.opacity = o;
@@ -341,7 +411,7 @@ function render(t) {
 }
 window.render = render;
 window.EVENTS = EVENTS;
-window.DURATION = 34.0;
+window.DURATION = window.TIMING ? window.TIMING.duration : 34.0;
 if (!navigator.webdriver) {
   const t0 = performance.now();
   (function loop() { render(((performance.now() - t0) / 1000) % window.DURATION); requestAnimationFrame(loop); })();
