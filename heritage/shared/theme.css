@@ -44,7 +44,7 @@ canvas#dust { position: absolute; inset: 0; }
 /* karaoke captions */
 .caps { position: absolute; left: 60px; right: 60px; display: flex; justify-content: center; }
 .cap { position: absolute; left: 0; right: 0; text-align: center; font-size: 74px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; text-shadow: 0 6px 30px rgba(0,0,0,.8); }
-.cap .w { opacity: 1; color: #fff; transition: none; }
+.cap .w { opacity: 1; color: #fff; transition: none; margin: 0 .2em; }
 .cap .w.on { color: #f3d27f; }
 
 /* social buttons */

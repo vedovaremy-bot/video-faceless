@@ -34,25 +34,29 @@ def gaps(a, min_len=0.09, thr=0.012):
 
 chunks, phrases, cur = [np.zeros(int(0.1 * SR), np.float32)], {}, 0.1
 for p in SCRIPT:
-    a = np.array(tts.tts(spoken(p["text"])), dtype=np.float32)
+    tts.synthesizer.tts_model.length_scale = p.get("ls", 0.88)  # per-phrase pace (hook faster)
+    a = np.array(tts.tts(spoken(p.get("say", p["text"]))), dtype=np.float32)
     nz = np.where(np.abs(a) > 0.01)[0]; a = a[max(0, nz[0] - int(0.02 * SR)): nz[-1] + int(0.1 * SR)]
     a = a / max(1e-6, np.max(np.abs(a))) * 0.9
     toks = p["text"].split(); L = len(a) / SR
     weight = [max(1, len(re.sub(r"[^\wÀ-ÿ']", "", w))) + 1.5 for w in toks]
     for i, w in enumerate(toks):
         if re.fullmatch(r"[«»:]", w): weight[i] = 0.01
-    # segment boundaries after punctuated words, matched to the longest internal gaps
+    # word times: proportional by length, then snapped to real pauses found near each punctuation mark
+    tot = sum(weight); cum = np.concatenate([[0], np.cumsum(weight)]) / tot * L
+    times = list(cum[:-1])
+    G = [g for g in gaps(a) if 0.1 < g[0] < L - 0.1]
     breaks = [i for i, w in enumerate(toks[:-1]) if re.search(r"[,.:?!…]$", w) and not re.fullmatch(r"[«»]", w)]
-    g = sorted([x for x in gaps(a) if 0.15 < x[0] < L - 0.15], key=lambda x: x[0] - x[1])[:len(breaks)]
-    g = sorted(g)
-    bounds = [(0, 0.0)]
-    if len(g) == len(breaks): bounds += [(b + 1, gg[1]) for b, gg in zip(breaks, g)]
-    bounds.append((len(toks), L))
-    times = [0.0] * len(toks)
-    for (i0, t0), (i1, t1) in zip(bounds, bounds[1:]):
-        seg = weight[i0:i1]; tot = sum(seg) or 1; acc = t0
-        end_t = t1 if i1 == len(toks) else (next((gg[0] for b, gg in zip(breaks, g) if b + 1 == i1), t1))
-        for k, wgt in enumerate(seg): times[i0 + k] = acc; acc += (end_t - t0) * wgt / tot
+    anchors = [(0, 0.0)]
+    for b in breaks:
+        exp = cum[b + 1]
+        cand = [g for g in G if abs(g[0] - exp) < 0.7 and g[1] > anchors[-1][1]]
+        if cand:
+            g = min(cand, key=lambda g: abs(g[0] - exp)); anchors.append((b + 1, g[1])); G.remove(g)
+    anchors.append((len(toks), L))
+    for (i0, t0), (i1, t1) in zip(anchors, anchors[1:]):
+        seg = weight[i0:i1]; st = sum(seg) or 1; acc = t0
+        for k, wgt in enumerate(seg): times[i0 + k] = acc; acc += (t1 - t0) * wgt / st
     words = [round(cur + x, 3) for x in times]
     phrases[p["id"]] = {"start": words[0], "end": round(cur + L, 3), "words": words}
     pause = p.get("pause", 0.3)

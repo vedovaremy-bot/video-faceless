@@ -1,5 +1,5 @@
 window.SCRIPT = [
- {"id":"p1","text":"N'achète aucune formation en ligne avant d'avoir vérifié ces cinq points.","pause":0.4},
+ {"id":"p1","ls":0.8,"text":"N'achète aucune formation en ligne avant d'avoir vérifié ces cinq points.","pause":0.4},
  {"id":"p2","text":"Un : tu sais exactement ce que tu vas apprendre, module par module.","pause":0.35},
  {"id":"p3","text":"Deux : il y a un vrai accompagnement. Pas juste des vidéos que tu regardes seul.","pause":0.35},
  {"id":"p4","text":"Trois : une communauté, pour poser tes questions et rester motivé.","pause":0.35},

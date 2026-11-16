@@ -6,7 +6,9 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 name=$1; voice=$2; seed=${3:-7}; out=out/$name; mkdir -p "$out"
-if [ "$voice" = coqui ]; then
+if [ -n "${SKIP_VOICE:-}" ]; then
+  echo "reusing $out/voice.wav"
+elif [ "$voice" = coqui ]; then
   "${COQUI_PY:?path to the venv python with coqui-tts}" voice_coqui.py "scripts/$name.js" "$out" "${COQUI_MODEL:?dir of tts_models--fr--css10--vits}"
 else
   python3 voice_el.py "scripts/$name.js" "$out" "$voice"

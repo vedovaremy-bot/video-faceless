@@ -195,7 +195,7 @@ function render(t) {
     const vis = t >= c.a && t < c.e, p = easeOut(clamp((t - c.a) / 0.18));
     c.el.style.opacity = vis ? p : 0; c.el.style.transform = `translateY(${(1 - p) * 20}px) scale(${0.94 + 0.06 * p})`;
     c.words.forEach((w, i) => { const on = t >= w.t && (i === c.words.length - 1 || t < c.words[i + 1].t);
-      w.w.classList.toggle('on', on); w.w.style.transform = on ? 'scale(1.08)' : 'none'; });
+      w.w.classList.toggle('on', on); w.w.style.transform = on ? 'scale(1.04)' : 'none'; });
   }
   document.querySelectorAll('.gold .w, .gold:not(.line), .goldtxt, .subbtn').forEach(el => el.style.backgroundPosition = `${100 - ((t * 35) % 220)}% 0`);
   if (window.onFrame) window.onFrame(t, { clamp, easeOut, easeInOut, backOut, cue });
