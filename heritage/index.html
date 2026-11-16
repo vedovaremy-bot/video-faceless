@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Heritage — vidéo faceless</title>
+<style>
+  @font-face { font-family: "Instrument Serif"; font-style: normal; src: url(fonts/InstrumentSerif-Regular.woff2) format("woff2"); }
+  @font-face { font-family: "Instrument Serif"; font-style: italic; src: url(fonts/InstrumentSerif-Italic.woff2) format("woff2"); }
+  :root {
+    --ink: #0d1020;
+    --muted: #8a8f9e;
+    --blue: #2f4bd8;
+    --serif: "Instrument Serif", Georgia, serif;
+    --sans: "Inter", "Inter Display", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #f4f5f8; }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: var(--sans); color: var(--ink); }
+  canvas#silk { position: absolute; inset: 0; width: 1080px; height: 1920px; }
+  .scene { position: absolute; inset: 0; opacity: 0; will-change: opacity, transform, filter; }
+  .center { position: absolute; left: 0; right: 0; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  [data-t] { display: inline-block; opacity: 0; will-change: opacity, transform, filter; }
+  .line { display: block; white-space: nowrap; }
+  .w { margin: 0 .12em; }
+
+  /* type */
+  .kin { font-weight: 600; font-size: 96px; letter-spacing: -0.035em; line-height: 1.12; }
+  .kin.light { font-weight: 400; color: #6b7080; }
+  .serif-it { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -0.01em; color: var(--blue); }
+  .label { font-family: var(--serif); font-size: 50px; letter-spacing: .38em; text-transform: uppercase; padding-left: .38em; }
+  .label.ink { color: #1a1d2b; }
+  .label.white { color: #fff; }
+  .label-rule { display: block; height: 2px; margin: 18px auto 0; width: 0; background: currentColor; opacity: .5; }
+
+  /* strike-through */
+  .strike { position: relative; color: #9aa0ae; font-weight: 400; }
+  .strike i { position: absolute; left: -2%; top: 54%; height: 7px; width: 0; background: #1a1d2b; border-radius: 4px; }
+
+  /* glass */
+  .glass {
+    background: linear-gradient(160deg, rgba(255,255,255,.28), rgba(255,255,255,.08));
+    border: 2px solid rgba(255,255,255,.45);
+    box-shadow: inset 0 2px 0 rgba(255,255,255,.35), 0 30px 80px rgba(5,15,70,.35);
+    backdrop-filter: blur(22px) saturate(140%);
+    -webkit-backdrop-filter: blur(22px) saturate(140%);
+  }
+  .card { position: absolute; left: 90px; right: 90px; border-radius: 64px; }
+  .bubble { position: absolute; padding: 24px 40px; border-radius: 999px; font-size: 42px; font-weight: 500; color: #fff; white-space: nowrap; }
+  .pillbar { position: absolute; left: 90px; right: 90px; height: 120px; border-radius: 999px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 40px; font-weight: 500; }
+  .pill-dark { display: inline-block; padding: 18px 40px; border-radius: 999px; background: #e9ebf1; color: #1a1d2b; font-size: 38px; font-weight: 500; border: 2px solid #fff; box-shadow: 0 8px 30px rgba(20,30,80,.12); }
+
+  /* dark checklist card */
+  .dark {
+    position: absolute; left: 60px; right: 60px; border-radius: 64px; background: #0b0c10; color: #fff;
+    box-shadow: 0 50px 120px rgba(10,15,40,.35), 0 10px 30px rgba(10,15,40,.25);
+    padding: 90px 60px 90px 70px;
+  }
+  .dark h2 { white-space: nowrap; font-size: 88px; font-weight: 600; letter-spacing: -0.035em; line-height: 1; display: flex; align-items: center; gap: 26px; }
+  .chev { width: 46px; height: 46px; opacity: .85; }
+  .glow { color: #eef1ff; text-shadow: 0 0 26px rgba(80,110,255,.95), 0 0 70px rgba(60,90,255,.7); }
+  .vline { position: absolute; left: 92px; top: 210px; width: 3px; background: #6c7080; transform-origin: top; }
+  .varrow { position: absolute; left: 78px; width: 32px; height: 32px; }
+  .items { margin: 70px 0 0 64px; display: flex; flex-direction: column; gap: 62px; }
+  .item { position: relative; padding-left: 72px; font-size: 50px; line-height: 1.28; letter-spacing: -0.02em; color: #8e93a3; }
+  .item b { color: #fff; font-weight: 600; }
+  .item .chk { position: absolute; left: 0; top: 10px; width: 52px; height: 52px; }
+  .item .sub { display: block; padding-left: 0; }
+  .item .sub::before { content: "↳ "; color: #6c7080; }
+  .foot { margin: 84px 0 0 64px; }
+  .foot .a { font-size: 60px; font-weight: 600; letter-spacing: -0.03em; }
+  .foot .b { font-size: 50px; color: #8e93a3; letter-spacing: -0.02em; margin-top: 8px; }
+
+  /* offers */
+  .offer { position: absolute; left: 100px; right: 100px; border-radius: 44px; padding: 38px 48px; color: #fff; display: flex; flex-direction: column; gap: 8px; }
+  .offer .n { font-size: 50px; font-weight: 650; letter-spacing: -0.02em; display: flex; align-items: center; gap: 18px; }
+  .offer .n small { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 46px; opacity: .8; letter-spacing: 0; }
+  .offer .d { font-size: 36px; opacity: .85; }
+  .tiny { font-size: 30px; color: #8a8f9e; letter-spacing: .01em; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="silk" width="270" height="480"></canvas>
+
+  <!-- S1 · HOOK (white) -->
+  <section class="scene" data-start="0" data-end="4.2">
+    <div class="center" style="top:250px"><span class="pill-dark" data-t="-1">Sois honnête.</span></div>
+    <div class="center" style="top:620px" id="s1"></div>
+  </section>
+
+  <!-- S2 · BLOCAGE (blue) -->
+  <section class="scene" data-start="4.2" data-end="9.0">
+    <div class="center" style="top:170px"><span class="label white" data-t="4.35">Le blocage<i class="label-rule"></i></span></div>
+    <div class="card glass" style="top:330px;height:1080px;" data-t="4.45" data-d="0.7" id="s2card">
+      <div class="bubble glass" style="left:60px;top:90px" data-t="4.8" data-pop>Je pars de zéro.</div>
+      <div class="bubble glass" style="right:60px;top:240px" data-t="5.25" data-pop>Encore une formation ?</div>
+      <div class="bubble glass" style="left:60px;top:390px" data-t="5.7" data-pop>Et si je perds mon temps ?</div>
+      <div class="center" style="top:600px;color:#fff">
+        <span class="line kin" style="font-size:130px;color:#fff" id="s2big"></span>
+      </div>
+      <div class="bubble glass" style="left:50%;top:900px;transform:translateX(-50%)" data-t="7.3" data-pop data-center>C'est normal.</div>
+    </div>
+    <div class="pillbar glass" style="top:1560px" data-t="7.7">Et surtout : ça se travaille.</div>
+  </section>
+
+  <!-- S3 · VÉRITÉ (white) -->
+  <section class="scene" data-start="9.0" data-end="13.0">
+    <div class="center" style="top:300px"><span class="label ink" data-t="9.1">La vérité<i class="label-rule"></i></span></div>
+    <div class="center" style="top:640px" id="s3"></div>
+  </section>
+
+  <!-- S4 · CE QU'IL TE FAUT (dark card) -->
+  <section class="scene" data-start="13.0" data-end="19.0">
+    <div class="dark" style="top:250px;height:1420px" data-t="13.05" data-d="0.6">
+      <h2><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M5 9l7 7 7-7"/></svg>
+        <span>Ce qu'il te <span class="glow">faut.</span></span></h2>
+      <i class="vline" id="s4line" data-line="13.4,18.2" style="height:1080px"></i>
+      <svg class="varrow" id="s4arrow" style="top:1272px" viewBox="0 0 24 24" fill="none" stroke="#6c7080" stroke-width="2" stroke-linecap="round"><path d="M5 9l7 7 7-7"/></svg>
+      <div class="items">
+        <div class="item" data-t="14.0"><svg class="chk" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#3d63ff"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Une <b>méthode claire</b><span class="sub">étape par étape.</span></div>
+        <div class="item" data-t="15.2"><svg class="chk" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#3d63ff"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Un <b>cadre</b> qui t'aide<span class="sub">à rester <b>régulier·e.</b></span></div>
+        <div class="item" data-t="16.4"><svg class="chk" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#3d63ff"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Des <b>coachings</b> &amp; une <b>communauté</b><span class="sub">pour ne plus avancer seul·e.</span></div>
+      </div>
+      <div class="foot" data-t="17.5">
+        <div class="a">C'est l'idée d'Heritage.</div>
+        <div class="b">Apprendre. Structurer. Avancer.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- S5 · HERITAGE (blue) -->
+  <section class="scene" data-start="19.0" data-end="24.6">
+    <div class="center" style="top:170px"><span class="label white" data-t="19.1">La formation<i class="label-rule"></i></span></div>
+    <div class="center" style="top:330px;color:#fff">
+      <span class="line" id="s5title" style="font-family:var(--serif);font-size:250px;line-height:1;letter-spacing:-0.01em"></span>
+      <span class="line serif-it" data-t="20.4" style="color:#dfe6ff;font-size:72px;margin-top:10px">Apprendre. Structurer. Avancer.</span>
+    </div>
+    <div class="offer glass" style="top:830px" data-t="21.1">
+      <div class="n">Fondation <small>— en autonomie</small></div>
+      <div class="d">Modules vidéo &amp; ressources, à ton rythme.</div>
+    </div>
+    <div class="offer glass" style="top:1060px" data-t="21.7">
+      <div class="n">Builder <small>— avec un cadre</small></div>
+      <div class="d">+ un coaching collectif chaque semaine.</div>
+    </div>
+    <div class="offer glass" style="top:1290px" data-t="22.3">
+      <div class="n">Éternelle <small>— accompagnement renforcé</small></div>
+      <div class="d">+ 2 coachings / semaine &amp; un groupe privé.</div>
+    </div>
+    <div class="center" style="top:1560px"><span data-t="23.0" style="color:#e6ebff;font-size:34px;opacity:.9">Contenus, prix &amp; conditions : sur la page officielle.</span></div>
+  </section>
+
+  <!-- S6 · MINDSET (white) -->
+  <section class="scene" data-start="24.6" data-end="28.6">
+    <div class="center" style="top:300px"><span class="label ink" data-t="24.7">Héritage<i class="label-rule"></i></span></div>
+    <div class="center" style="top:620px" id="s6"></div>
+  </section>
+
+  <!-- S7 · CTA (dark card) -->
+  <section class="scene" data-start="28.6" data-end="34.0">
+    <div class="dark" style="top:300px;height:1200px" data-t="28.65" data-d="0.6">
+      <h2><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M5 9l7 7 7-7"/></svg>
+        <span>Lien en <span class="glow">bio.</span></span></h2>
+      <i class="vline" data-line="28.9,32.0" style="height:870px"></i>
+      <svg class="varrow" style="top:1062px" data-arrowat="32.0" viewBox="0 0 24 24" fill="none" stroke="#6c7080" stroke-width="2" stroke-linecap="round"><path d="M5 9l7 7 7-7"/></svg>
+      <div class="items">
+        <div class="item" data-t="29.4"><svg class="chk" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#3d63ff"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Découvre <b>le programme</b><span class="sub">et ce que tu vas <b>vraiment apprendre.</b></span></div>
+        <div class="item" data-t="30.2"><svg class="chk" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#3d63ff"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Lis <b>le prix &amp; les CGV</b><span class="sub">avant de te décider.</span></div>
+      </div>
+      <div class="foot" data-t="31.0">
+        <div class="a">Puis choisis.</div>
+        <div class="b">Sans pression.</div>
+      </div>
+    </div>
+    <div class="center" style="top:1580px"><span class="tiny" data-t="31.4">Lien affilié · Aucun revenu garanti</span></div>
+    <div class="center" style="top:1630px"><span class="tiny" data-t="31.5">Les résultats dépendent de ton implication.</span></div>
+  </section>
+</div>
+
+<script>
+/* ---------- helpers ---------- */
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const easeOut = x => 1 - Math.pow(1 - x, 3);
+const easeInOut = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const backOut = x => { const c1 = 1.7, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+const EVENTS = []; // for sound design: {t, kind}
+
+/* Build kinetic lines: spec = [{text, t, step, cls, style, strike:{word, at}}] */
+function kinetic(container, spec) {
+  for (const ln of spec) {
+    const line = document.createElement('span');
+    line.className = 'line kin ' + (ln.cls || '');
+    if (ln.style) line.setAttribute('style', ln.style);
+    ln.text.split(' ').forEach((word, i) => {
+      const s = document.createElement('span');
+      s.className = 'w';
+      s.dataset.t = (ln.t + i * (ln.step ?? 0.16)).toFixed(3);
+      s.textContent = word;
+      if (ln.strike && ln.strike.word === word) {
+        s.classList.add('strike');
+        const bar = document.createElement('i');
+        bar.dataset.strike = ln.strike.at;
+        s.appendChild(bar);
+        EVENTS.push({ t: ln.strike.at, kind: 'strike' });
+      }
+      line.appendChild(s);
+    });
+    container.appendChild(line);
+  }
+}
+function letters(container, text, t0, step) {
+  [...text].forEach((ch, i) => {
+    const s = document.createElement('span');
+    s.dataset.t = (t0 + i * step).toFixed(3);
+    s.dataset.d = '0.7';
+    s.textContent = ch;
+    container.appendChild(s);
+  });
+}
+
+kinetic(document.getElementById('s1'), [
+  { text: 'Tu veux te lancer', t: -0.25, step: 0.17 },
+  { text: 'en ligne…', t: 0.95, step: 0.17 },
+  { text: 'mais tu ne sais pas', t: 1.7, step: 0.14, cls: 'light', style: 'margin-top:60px' },
+  { text: 'par où commencer ?', t: 2.55, step: 0.2, cls: 'serif-it', style: 'font-size:124px;margin-top:6px' },
+]);
+kinetic(document.getElementById('s2big'), [
+  { text: 'Tu doutes.', t: 6.3, step: 0.28, style: 'font-size:140px;color:#fff' },
+]);
+kinetic(document.getElementById('s3'), [
+  { text: "Ce n'est pas", t: 9.35, step: 0.15 },
+  { text: "l'ambition", t: 9.85, step: 0.15, strike: { word: "l'ambition", at: 10.5 }, style: 'font-size:120px' },
+  { text: 'qui te manque.', t: 10.2, step: 0.15, cls: 'light' },
+  { text: "C'est", t: 11.2, step: 0.15, style: 'margin-top:90px' },
+  { text: 'une méthode.', t: 11.5, step: 0.25, cls: 'serif-it', style: 'font-size:170px' },
+]);
+letters(document.getElementById('s5title'), 'Heritage', 19.3, 0.08);
+kinetic(document.getElementById('s6'), [
+  { text: 'Ne cherche pas', t: 24.9, step: 0.15 },
+  { text: 'un raccourci.', t: 25.35, step: 0.18, strike: { word: 'raccourci.', at: 25.95 } },
+  { text: 'Construis', t: 26.5, step: 0.15, style: 'margin-top:90px' },
+  { text: 'quelque chose', t: 26.8, step: 0.15 },
+  { text: 'qui dure.', t: 27.2, step: 0.25, cls: 'serif-it', style: 'font-size:170px' },
+]);
+
+/* ---------- silk background ---------- */
+const cv = document.getElementById('silk');
+const ctx = cv.getContext('2d');
+const W = cv.width, H = cv.height;
+const img = ctx.createImageData(W, H);
+function blueAmount(t) {
+  const ramps = [[4.2, 9.0], [19.0, 24.6]];
+  let a = 0;
+  for (const [s, e] of ramps) a = Math.max(a, clamp((t - s + 0.25) / 0.5) * clamp((e - t + 0.25) / 0.5));
+  return easeInOut(a);
+}
+function drawSilk(t) {
+  const b = blueAmount(t);
+  const d = img.data;
+  let k = 0;
+  for (let y = 0; y < H; y++) {
+    const v = y / W; // aspect-correct
+    for (let x = 0; x < W; x++) {
+      const u = x / W;
+      const diag = u * 0.75 + v * 0.55;
+      const warp = Math.sin(v * 2.3 + t * 0.35) * 0.9 + Math.sin(u * 3.1 - t * 0.22) * 0.5;
+      const ph = diag * 4.2 + warp + t * 0.18;
+      let l = 0.5 + 0.5 * Math.sin(ph * 1.0);
+      l = l * 0.7 + 0.3 * (0.5 + 0.5 * Math.sin(ph * 2.3 + u * 2.0 - t * 0.3));
+      const hi = Math.pow(l, 6);
+      // white silk
+      const wr = 222 + 33 * l + 4 * hi, wg = 225 + 30 * l + 4 * hi, wb = 234 + 21 * l;
+      // blue silk
+      const br = 10 + 50 * l + 190 * hi, bg = 22 + 70 * l + 175 * hi, bb = 105 + 120 * l + 30 * hi;
+      d[k++] = wr + (br - wr) * b;
+      d[k++] = wg + (bg - wg) * b;
+      d[k++] = wb + (bb - wb) * b;
+      d[k++] = 255;
+    }
+  }
+  ctx.putImageData(img, 0, 0);
+}
+
+/* ---------- timeline ---------- */
+const scenes = [...document.querySelectorAll('.scene')];
+const animated = [...document.querySelectorAll('[data-t]')];
+animated.forEach(el => {
+  const t = +el.dataset.t;
+  if (t > 0) EVENTS.push({ t, kind: el.hasAttribute('data-pop') ? 'pop' : (el.classList.contains('item') ? 'check' : 'word') });
+});
+scenes.forEach(s => EVENTS.push({ t: +s.dataset.start, kind: 'whoosh' }));
+
+function render(t) {
+  drawSilk(t);
+  for (const s of scenes) {
+    const a = +s.dataset.start, e = +s.dataset.end;
+    const fin = a === 0 ? 1 : clamp((t - a + 0.2) / 0.4);
+    const fout = clamp((e - t + 0.2) / 0.4);
+    const o = Math.min(fin, fout);
+    s.style.opacity = o;
+    s.style.visibility = o <= 0 ? 'hidden' : 'visible';
+    const sc = 1 + (1 - easeOut(fin)) * 0.04 - (1 - fout) * 0.03;
+    s.style.transform = `scale(${sc})`;
+    s.style.filter = (fout < 1 || fin < 1) ? `blur(${(1 - Math.min(fin, fout)) * 14}px)` : 'none';
+  }
+  for (const el of animated) {
+    const t0 = +el.dataset.t, dur = +(el.dataset.d || 0.55);
+    const p = clamp((t - t0) / dur);
+    const ep = easeOut(p);
+    el.style.opacity = t0 < 0 ? 1 : ep;
+    const base = el.hasAttribute('data-center') ? 'translateX(-50%) ' : '';
+    if (t0 < 0) { el.style.transform = base; continue; }
+    if (el.hasAttribute('data-pop')) {
+      const s = 0.6 + 0.4 * backOut(p);
+      el.style.transform = `${base}scale(${s})`;
+      el.style.filter = 'none';
+    } else {
+      el.style.transform = `${base}translateY(${(1 - ep) * 36}px)`;
+      el.style.filter = p < 1 ? `blur(${(1 - ep) * 14}px)` : 'none';
+    }
+  }
+  document.querySelectorAll('[data-strike]').forEach(bar => {
+    const p = easeInOut(clamp((t - +bar.dataset.strike) / 0.35));
+    bar.style.width = (104 * p) + '%';
+  });
+  document.querySelectorAll('.label-rule').forEach(r => {
+    const host = r.parentElement; const p = easeOut(clamp((t - +host.dataset.t - 0.2) / 0.6));
+    r.style.width = (p * 100) + '%';
+  });
+  document.querySelectorAll('[data-line]').forEach(l => {
+    const [a, b] = l.dataset.line.split(',').map(Number);
+    l.style.transform = `scaleY(${easeInOut(clamp((t - a) / (b - a)))})`;
+    const arrow = l.nextElementSibling;
+    if (arrow) arrow.style.opacity = clamp((t - b + 0.1) / 0.3);
+  });
+}
+window.render = render;
+window.EVENTS = EVENTS;
+window.DURATION = 34.0;
+if (!navigator.webdriver) {
+  const t0 = performance.now();
+  (function loop() { render(((performance.now() - t0) / 1000) % window.DURATION); requestAnimationFrame(loop); })();
+}
+</script>
+</body>
+</html>
