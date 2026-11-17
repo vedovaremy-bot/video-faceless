@@ -13,7 +13,7 @@ PROXY = os.environ.get("HTTPS_PROXY") or None
 SR = 24000
 src = open(script_file, encoding="utf-8").read()
 SCRIPT = json.loads(src[src.index("["):src.rindex("]") + 1])
-SAY = [(r"[«»]", ""), (r"HÉRITAGE", "Héritage"), (r"\b[Ll]ike\b", "laïke")]
+SAY = [(r"[«»]", ""), (r"\bGO\b", "go"), (r"HÉRITAGE", "Héritage"), (r"\b[Ll]ike\b", "laïke")]
 def spoken(s):
     for a, b in SAY: s = re.sub(a, b, s)
     return re.sub(r"\s+", " ", s).strip()
