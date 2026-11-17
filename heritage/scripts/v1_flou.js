@@ -5,6 +5,5 @@ window.SCRIPT = [
  {"id":"p4","text":"Le problème, c'est pas toi. C'est le flou.","pause":0.45},
  {"id":"p5","text":"Ce qu'il te faut, c'est un seul plan. Une étape à la fois. Et quelqu'un pour te recadrer quand tu décroches.","pause":0.4},
  {"id":"p6","text":"C'est exactement pour ça que je recommande Héritage : une méthode claire, des coachings collectifs, et une communauté qui avance avec toi.","pause":0.45},
- {"id":"p7","text":"Écris-moi « GO » en message privé, et je t'explique comment ça marche.","pause":0.35},
- {"id":"p8","text":"Et si ça t'a parlé, like et abonne-toi pour la suite.","pause":0.2}
+ {"id":"p7","text":"Écris-moi « GO » en message privé, et je t'explique comment ça marche.","pause":0.35}
 ];

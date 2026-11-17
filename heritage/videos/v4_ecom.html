@@ -54,8 +54,6 @@ window.onFrame = (t, { clamp, easeOut, cue }) => {
   el.textContent = v.toFixed(2).replace('.', ',') + ' €';
   const f = cue('p6.3'), k = t >= f ? 1 + 0.25 * Math.exp(-(t - f) * 6) : 1;
   el.style.transform = `scale(${k})`;
-  const hp = clamp((t - cue('p11.0')) / 0.35);
-  document.getElementById('heartfill').style.opacity = hp;
 };
 </script>
 </head>
@@ -114,25 +112,14 @@ window.onFrame = (t, { clamp, easeOut, cue }) => {
     <div class="center" style="top:1000px"><span class="kin" data-cue="p10.5" style="font-size:90px">Pas un <span class="strike" style="font-weight:700">bouton magique.<i data-strike="p10.8+0.15"></i></span></span></div>
   </section>
 
-  <!-- like + abonne + partie 2 -->
-  <section class="scene" data-from="p11">
-    <div class="center" style="top:220px"><span data-cue="p11.0" data-anim="pop" data-sfx="like">
-      <svg class="heart" viewBox="0 0 24 22"><path d="M12 21s-9-5.6-9-12A5 5 0 0 1 12 6a5 5 0 0 1 9 3c0 6.4-9 12-9 12z" fill="none" stroke="url(#gg)" stroke-width="1.4"/>
-        <path id="heartfill" d="M12 21s-9-5.6-9-12A5 5 0 0 1 12 6a5 5 0 0 1 9 3c0 6.4-9 12-9 12z" fill="url(#gg)"/></svg></span></div>
-    <div class="center" style="top:560px"><span class="kin" data-cue="p11.1" style="font-size:80px">si t'as appris un truc</span></div>
-    <div class="center" style="top:800px"><span data-cue="p11.7" data-anim="pop" data-sfx-at="p11.7+0.6|ding">
-      <span class="subbtn" data-class="p11.7+0.6|done"><span class="a">＋ S'abonner</span><span class="b">Abonné ✓</span></span></span></div>
-    <div class="teaser card" data-cue="p11.11" data-anim="up">
-      <div class="k">Partie 2</div><div class="t">Comment trouver<br>un produit gagnant</div></div>
-  </section>
 
   <!-- GO CTA -->
   <section class="scene" data-from="p12">
-    <div class="center" style="top:420px"><span class="kin light" data-cue="p12.1" style="font-size:90px">Tu veux te lancer ?</span></div>
-    <div class="center" style="top:580px"><span class="kin" data-cue="p12.6" style="font-size:110px">Écris-moi</span></div>
-    <div class="center" style="top:700px"><span class="goldtxt" style="font-size:300px;line-height:1.05" data-cue="p12.8" data-anim="slam" data-flash>GO</span></div>
-    <div class="center" style="top:1040px"><span class="kin light" data-cue="p12.10" style="font-size:90px">en DM 📩</span></div>
-    <div class="center" style="top:1200px"><span class="gold" data-cue="p12.13" style="font-size:96px">je te dis par où commencer.</span></div>
+    <div class="center" style="top:420px"><span class="kin light" data-cue="p12.3" style="font-size:90px">Tu veux te lancer ?</span></div>
+    <div class="center" style="top:580px"><span class="kin" data-cue="p12.7" style="font-size:110px">Écris-moi</span></div>
+    <div class="center" style="top:700px"><span class="goldtxt" style="font-size:300px;line-height:1.05" data-cue="p12.9" data-anim="slam" data-flash>GO</span></div>
+    <div class="center" style="top:1040px"><span class="kin light" data-cue="p12.11" style="font-size:90px">en DM 📩</span></div>
+    <div class="center" style="top:1200px"><span class="gold" data-cue="p12.14" style="font-size:96px">je te dis par où commencer.</span></div>
     <div class="center" style="top:1760px"><span class="tiny" data-cue="p12.0">Contenu éducatif · aucun résultat garanti</span></div>
   </section>
 </div><div id="flash"></div></div>

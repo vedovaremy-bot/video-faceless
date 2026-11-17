@@ -13,7 +13,9 @@ Le but : qualifier les prospects sur plusieurs vidéos **buzz** et **valeur**, p
 - Fin de vidéo : « écris-moi GO » ou « envoie-moi GO » en DM. Ne plus dire « HÉRITAGE » à la fin.
 - **Buzz et Valeur** : « Écris-moi GO en DM, et je te dis par où commencer. » (le propriétaire présente ensuite Héritage en DM).
 - **Promotion** : GO en DM pour recevoir le lien / les infos sur la formation.
-- « Like / abonne-toi » de temps en temps, pas dans toutes les vidéos.
+- **Un seul appel à l'action, à la fin : GO en DM.** Pas de « abonne-toi » en fin de vidéo (retour de la communauté : ça dilue le passage à l'action).
+- Si un « abonne-toi » est voulu, le placer au début de la vidéo, jamais à la fin, et seulement si c'est vrai (ex. « je partage une vidéo tous les jours »).
+- Formulation de fin conseillée : « Si toi aussi tu veux te lancer dans l'affiliation, écris-moi / envoie-moi GO en DM… » (jamais « gagner un revenu » : promesse de gains).
 
 ## Style
 - Voix off : Microsoft « Henri » (`./build2.sh <video> henri`, dans `heritage/`), débit rapide et entraînant (+18 %, hook +26 %, pauses courtes).

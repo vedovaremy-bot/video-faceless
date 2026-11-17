@@ -38,7 +38,7 @@
 window.build = ({ say }) => {
   say(document.getElementById('s6a'), 'p6', 3, 6);
   say(document.getElementById('s6b'), 'p6', 11, 14);
-  say(document.getElementById('s9a'), 'p9', 0, 1);
+  say(document.getElementById('s9a'), 'p9', 9, 10);
 };
 window.onFrame = (t, { clamp, easeInOut, cue }) => {
   document.querySelectorAll('[data-x]').forEach(x => x.style.width = (104 * easeInOut(clamp((t - cue(x.dataset.x)) / 0.3))) + '%');
@@ -112,25 +112,20 @@ const ICON = {
 
   <!-- DM CTA -->
   <section class="scene" data-from="p9">
+    <div class="center" style="top:120px"><span class="kin light" data-cue="p9.3" style="font-size:66px">Tu veux te lancer ?</span></div>
     <div class="center" style="top:220px"><span class="line kin" id="s9a" style="font-size:110px"></span></div>
-    <div class="center" style="top:360px"><span class="goldtxt" style="font-size:220px;line-height:1.1" data-cue="p9.2" data-anim="slam">GO</span></div>
-    <div class="center" style="top:560px"><span class="kin light" data-cue="p9.4" style="font-size:90px">en DM 📩</span></div>
+    <div class="center" style="top:360px"><span class="goldtxt" style="font-size:220px;line-height:1.1" data-cue="p9.11" data-anim="slam">GO</span></div>
+    <div class="center" style="top:560px"><span class="kin light" data-cue="p9.13" style="font-size:90px">en DM 📩</span></div>
     <div class="dm card" data-cue="p9.0" data-d="0.6">
       <div class="hd"><div class="av"><svg style="width:60px;height:66px"><use href="#logo"/></svg></div>Message</div>
-      <div class="bub me" style="top:220px" data-cue="p9.5+0.3" data-anim="pop">GO</div>
-      <div class="bub them" style="top:370px" data-cue="p9.8" data-anim="pop">Je te dis par où commencer 👇</div>
-      <div class="input"><span data-cue="p9.2" data-anim="type" data-d="0.7" data-out="p9.5+0.3" data-sfx="type">GO</span></div>
-      <div class="send" data-cue="p9.4" data-anim="pop"><svg width="44" height="44" viewBox="0 0 24 24" fill="#120f08"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></div>
+      <div class="bub me" style="top:220px" data-cue="p9.14+0.3" data-anim="pop">GO</div>
+      <div class="bub them" style="top:370px" data-cue="p9.16" data-anim="pop">Je te dis par où commencer 👇</div>
+      <div class="input"><span data-cue="p9.11" data-anim="type" data-d="0.5" data-out="p9.14+0.3" data-sfx="type">GO</span></div>
+      <div class="send" data-cue="p9.13" data-anim="pop"><svg width="44" height="44" viewBox="0 0 24 24" fill="#120f08"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></div>
     </div>
     <div class="center" style="top:1720px"><span class="tiny" data-cue="p9.0">Contenu éducatif · aucun résultat garanti</span></div>
   </section>
 
-  <!-- abonne-toi -->
-  <section class="scene" data-from="p10">
-    <div class="center" style="top:760px"><span data-cue="p10.1" data-anim="pop" data-sfx-at="p10.1+0.6|ding">
-      <span class="subbtn" data-class="p10.1+0.6|done"><span class="a">＋ S'abonner</span><span class="b">Abonné ✓</span></span></span></div>
-    <div class="center" style="top:960px"><span class="gold" data-cue="p10.2" style="font-size:80px">pour la suite.</span></div>
-  </section>
 </div><div id="flash"></div></div>
 </body>
 </html>

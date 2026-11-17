@@ -39,8 +39,6 @@ window.onFrame = (t, { clamp, easeOut, cue }) => {
     const b = m.offsetTop + m.offsetHeight; bottom = bottom + (b - bottom) * p;
   }
   document.getElementById('msgs').style.transform = `translateY(${-Math.max(0, bottom - area)}px)`;
-  const hp = clamp((t - cue('p7.0')) / 0.35);
-  document.getElementById('heartfill').style.opacity = hp;
 };
 </script>
 </head>
@@ -69,16 +67,6 @@ window.onFrame = (t, { clamp, easeOut, cue }) => {
     </div>
   </section>
 
-  <section class="scene" data-from="p7" data-to="END">
-    <div class="dim"></div>
-    <div class="center" style="top:480px"><span data-cue="p7.0" data-anim="pop" data-sfx="like">
-      <svg class="heart" viewBox="0 0 24 22"><path d="M12 21s-9-5.6-9-12A5 5 0 0 1 12 6a5 5 0 0 1 9 3c0 6.4-9 12-9 12z" fill="none" stroke="url(#gg)" stroke-width="1.4"/>
-        <path id="heartfill" d="M12 21s-9-5.6-9-12A5 5 0 0 1 12 6a5 5 0 0 1 9 3c0 6.4-9 12-9 12z" fill="url(#gg)"/></svg></span></div>
-    <div class="center" style="top:860px"><span data-cue="p7.1" data-anim="pop" data-sfx-at="p7.1+0.6|ding">
-      <span class="subbtn" data-class="p7.1+0.6|done"><span class="a">＋ S'abonner</span><span class="b">Abonné ✓</span></span></span></div>
-    <div class="center" style="top:1080px"><span class="gold" data-cue="p7.5" style="font-size:76px">à la prochaine vidéo.</span></div>
-    <div class="center" style="top:1760px"><span class="tiny" data-cue="p7.0">Lien affilié · aucun résultat garanti</span></div>
-  </section>
 </div><div id="flash"></div></div>
 </body>
 </html>
