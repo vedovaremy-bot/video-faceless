@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>3 erreurs en affiliation</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+  :root { --bad: #e8866a; }
+  .chips { display: flex; gap: 34px; }
+  .chip { width: 130px; height: 130px; border-radius: 50%; border: 4px solid var(--bad); color: var(--bad); font-size: 76px; font-weight: 800; display: flex; align-items: center; justify-content: center; background: rgba(232,134,106,.08); }
+  .dots { position: absolute; left: 0; right: 0; top: 120px; display: flex; justify-content: center; gap: 22px; }
+  .dot { width: 20px; height: 20px; border-radius: 50%; background: rgba(233,204,127,.25); }
+  .dot.on { background: var(--gold); box-shadow: 0 0 18px rgba(233,204,127,.8); }
+  .wm { position: absolute; right: -40px; top: 1180px; font-size: 640px; line-height: 1; color: rgba(217,180,90,.07); font-family: var(--cinzel); font-weight: 800; }
+  .stage3d { position: absolute; left: 90px; right: 90px; top: 420px; height: 900px; perspective: 2600px; }
+  .flip { position: absolute; inset: 0; transform-style: preserve-3d; }
+  .face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 60px; padding: 80px 70px; display: flex; flex-direction: column; justify-content: center; gap: 30px; }
+  .front { background: linear-gradient(170deg, #1d1612 0%, #0c0b0a 60%); border: 3px solid rgba(232,134,106,.55); box-shadow: 0 50px 120px rgba(0,0,0,.7), 0 0 80px rgba(232,134,106,.12); }
+  .back { transform: rotateY(180deg); background: linear-gradient(170deg, #1d1810 0%, #0c0b0a 60%); border: 3px solid rgba(233,204,127,.6); box-shadow: 0 50px 120px rgba(0,0,0,.7), 0 0 90px rgba(217,180,90,.2); }
+  .badge { display: flex; align-items: center; gap: 26px; font-family: var(--cinzel); font-weight: 700; font-size: 40px; letter-spacing: .25em; }
+  .badge i { width: 110px; height: 110px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-style: normal; font-size: 64px; font-weight: 800; letter-spacing: 0; font-family: var(--sans); }
+  .front .badge { color: var(--bad); } .front .badge i { border: 4px solid var(--bad); }
+  .back .badge { color: var(--gold); } .back .badge i { background: var(--gold-grad); color: #120f08; }
+  .face .t { font-size: 86px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.08; }
+  .face .s { font-family: var(--serif); font-style: italic; font-size: 64px; color: #e2c67d; line-height: 1.15; }
+  .front .s { color: #c9a796; }
+  .under { position: absolute; left: 60px; right: 60px; top: 1420px; text-align: center; font-family: var(--serif); font-style: italic; font-size: 70px; color: #e9dcc0; }
+  .note { position: absolute; left: 110px; right: 110px; top: 1180px; padding: 40px 48px; border-radius: 36px; font-size: 40px; line-height: 1.35; color: #e9dcc0; }
+</style>
+<script src="../scripts/v6_erreurs.js"></script>
+<script src="../shared/engine.js"></script>
+<script>
+window.build = ({ say }) => {
+  say(document.getElementById('h2'), 'p1', 8, 11); say(document.getElementById('h3'), 'p1', 11, 14);
+};
+window.onFrame = (t, { clamp, easeInOut, cue }) => {
+  document.querySelectorAll('[data-flip]').forEach(f => {
+    const p = easeInOut(clamp((t - cue(f.dataset.flip)) / 0.6));
+    f.style.transform = `rotateY(${180 * p}deg) scale(${1 - 0.06 * Math.sin(Math.PI * p)})`;
+  });
+};
+</script>
+</head>
+<body>
+<div id="stage"><div id="cam">
+  <canvas id="silk" width="270" height="480"></canvas><canvas id="dust" width="1080" height="1920"></canvas><div class="vignette"></div>
+
+  <!-- HOOK -->
+  <section class="scene">
+    <div class="center" style="top:200px"><span class="pill" data-cue="-0.5" data-anim="none">Tu débutes en affiliation ? 👇</span></div>
+    <div class="center" style="top:420px"><span class="goldtxt" data-cue="-0.5" data-anim="none" style="font-size:150px;line-height:1">3 ERREURS</span></div>
+    <div class="center" style="top:620px"><span class="line kin light" id="h2" style="font-size:76px"></span><span class="line kin" id="h3" style="font-size:96px"></span></div>
+    <div class="center" style="top:960px"><div class="chips">
+      <span class="chip" data-cue="p1.5" data-anim="pop">✗</span><span class="chip" data-cue="p1.6" data-anim="pop">✗</span><span class="chip" data-cue="p1.7" data-anim="pop">✗</span></div></div>
+    <div class="center" style="top:1240px"><span class="sub" data-cue="p1.2" style="font-size:66px;font-family:var(--serif);font-style:italic;color:#e2c67d">à éviter dès le début</span></div>
+  </section>
+
+  <!-- ERREUR 1 -->
+  <section class="scene" data-from="p2">
+    <div class="dots"><span class="dot on"></span><span class="dot"></span><span class="dot"></span></div>
+    <div class="center" style="top:200px"><span class="label" data-cue="p2.0">Erreur 1 / 3</span></div>
+    <span class="wm">01</span>
+    <div class="stage3d" data-cue="p2.0" data-anim="pop" data-d="0.45"><div class="flip" data-flip="p3.13">
+      <div class="face front"><div class="badge"><i>✗</i>L'erreur</div><div class="t">Recommander un produit que tu ne connais pas</div></div>
+      <div class="face back"><div class="badge"><i>✓</i>À faire</div><div class="t">Recommande seulement ce que tu maîtrises</div><div class="s">testé ou vraiment étudié.</div></div>
+    </div></div>
+    <div class="under" data-cue="p3.9" data-out="p3.13">« Ton audience le sent. »</div>
+    <i data-cue="p3.13" data-anim="none" data-sfx="check"></i>
+  </section>
+
+  <!-- ERREUR 2 -->
+  <section class="scene" data-from="p4">
+    <div class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot"></span></div>
+    <div class="center" style="top:200px"><span class="label" data-cue="p4.0">Erreur 2 / 3</span></div>
+    <span class="wm">02</span>
+    <div class="stage3d" data-cue="p4.0" data-anim="pop" data-d="0.45"><div class="flip" data-flip="p5.5">
+      <div class="face front"><div class="badge"><i>✗</i>L'erreur</div><div class="t">Mettre ton lien partout, sans rien apporter</div></div>
+      <div class="face back"><div class="badge"><i>✓</i>À faire</div><div class="t">Donne d'abord de la valeur</div><div class="s">le lien vient après la confiance.</div></div>
+    </div></div>
+    <div class="under" data-cue="p5.0" data-out="p5.5">Personne n'achète à un inconnu.</div>
+    <i data-cue="p5.5" data-anim="none" data-sfx="check"></i>
+  </section>
+
+  <!-- ERREUR 3 -->
+  <section class="scene" data-from="p6">
+    <div class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span></div>
+    <div class="center" style="top:200px"><span class="label" data-cue="p6.0">Erreur 3 / 3</span></div>
+    <span class="wm">03</span>
+    <div class="stage3d" data-cue="p6.0" data-anim="pop" data-d="0.45"><div class="flip" data-flip="p7.0">
+      <div class="face front"><div class="badge"><i>✗</i>L'erreur</div><div class="t">Changer de stratégie chaque semaine</div></div>
+      <div class="face back"><div class="badge"><i>✓</i>À faire</div><div class="t">Une plateforme, un sujet</div><div class="s">et tiens au moins 30 jours avant de juger.</div></div>
+    </div></div>
+    <div class="center" style="top:1400px"><span class="goldtxt" data-cue="p7.9" data-anim="slam" style="font-size:170px;line-height:1">30 JOURS</span></div>
+    <i data-cue="p7.0" data-anim="none" data-sfx="check"></i>
+  </section>
+
+  <!-- BONUS -->
+  <section class="scene" data-from="p8" data-glow>
+    <div class="center" style="top:300px"><span class="goldtxt" data-cue="p8.0" data-anim="slam" style="font-size:150px;line-height:1">BONUS</span></div>
+    <div class="center" style="top:540px"><span class="line kin" data-cue="p8.2" style="font-size:96px">Dis toujours que</span>
+      <span class="line gold" data-cue="p8.5" style="font-size:120px">ton lien est affilié.</span></div>
+    <div class="note card" data-cue="p8.8" data-anim="up">Exemple : « Lien affilié : je peux toucher une commission si tu achètes, sans surcoût pour toi. »</div>
+    <div class="center" style="top:1560px"><span class="kin light" data-cue="p8.10" style="font-size:78px">La transparence, ça rassure.</span></div>
+  </section>
+
+  <!-- CTA GO -->
+  <section class="scene" data-from="p9">
+    <div class="center" style="top:300px"><span class="kin light" data-cue="p9.3" style="font-size:84px">Tu veux te lancer ?</span></div>
+    <div class="center" style="top:420px"><span class="kin light" data-cue="p9.9" style="font-size:66px">sans faire ces erreurs</span></div>
+    <div class="center" style="top:580px"><span class="kin" data-cue="p9.13" style="font-size:110px">Écris-moi</span></div>
+    <div class="center" style="top:700px"><span class="goldtxt" style="font-size:300px;line-height:1.05" data-cue="p9.15" data-anim="slam" data-flash>GO</span></div>
+    <div class="center" style="top:1040px"><span class="kin light" data-cue="p9.17" style="font-size:90px">en DM 📩</span></div>
+    <div class="center" style="top:1200px"><span class="gold" data-cue="p9.20" style="font-size:96px">je te dis par où commencer.</span></div>
+    <div class="center" style="top:1760px"><span class="tiny" data-cue="p9.0">Contenu éducatif · aucun résultat garanti</span></div>
+  </section>
+</div><div id="flash"></div></div>
+</body>
+</html>
