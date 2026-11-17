@@ -16,6 +16,6 @@ Le but : qualifier les prospects sur plusieurs vidéos **buzz** et **valeur**, p
 - « Like / abonne-toi » de temps en temps, pas dans toutes les vidéos.
 
 ## Style
-- Voix off : Microsoft « Henri » (`./build2.sh <video> henri`, dans `heritage/`).
+- Voix off : Microsoft « Henri » (`./build2.sh <video> henri`, dans `heritage/`), débit rapide et entraînant (+18 %, hook +26 %, pauses courtes).
 - DA : noir & doré (`heritage/shared/theme.css`), hook fort dans les 3 premières secondes, formats variés.
 - Ne pas parler de prix, aucune promesse de gains ; garder les mentions « lien affilié · aucun résultat garanti » quand un lien est évoqué.

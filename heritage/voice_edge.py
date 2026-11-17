@@ -55,7 +55,8 @@ def align(tokens, marks, L):
 
 chunks, phrases, cur = [np.zeros(int(0.1 * SR), np.float32)], {}, 0.1
 for p in SCRIPT:
-    rate = p.get("rate") or ("+16%" if p.get("ls", 1) < 0.85 else "+8%")
+    # pace: faster, more energetic delivery (hook phrase even faster); VOICE_RATE / HOOK_RATE env vars override
+    rate = p.get("rate") or (os.environ.get("HOOK_RATE", "+26%") if p.get("ls", 1) < 0.85 else os.environ.get("VOICE_RATE", "+18%"))
     a, marks = asyncio.run(synth(spoken(p.get("say", p["text"])), rate))
     nz = np.where(np.abs(a) > 0.01)[0]
     a0 = max(0, nz[0] - int(0.03 * SR)); a1 = min(len(a), nz[-1] + int(0.12 * SR))
@@ -64,7 +65,7 @@ for p in SCRIPT:
     times = align(p["text"].split(), marks, L)
     words = [round(cur + t, 3) for t in times]
     phrases[p["id"]] = {"start": round(cur, 3), "end": round(cur + L, 3), "words": words}
-    pause = p.get("pause", 0.3)
+    pause = p.get("pause", 0.3) * float(os.environ.get("PAUSE_SCALE", "0.7"))  # tighter gaps between phrases
     chunks += [a, np.zeros(int(pause * SR), np.float32)]; cur += L + pause
     print(p["id"], f"{L:.2f}s", len(marks), "mots", flush=True)
 tail = 1.6
