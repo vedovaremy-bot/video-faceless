@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Build one video:
+#   ./build2.sh <name> henri [music_seed]        Microsoft neural voice Henri (edge-tts)
 #   ./build2.sh <name> tom [music_seed]          Piper voice Tom (needs PIPER_MODEL env var)
 #   ./build2.sh <name> coqui [music_seed]        free male voice (needs COQUI_PY + COQUI_MODEL env vars)
 #   ./build2.sh <name> <elevenlabs_voice_id> [music_seed]
@@ -9,6 +10,8 @@ cd "$(dirname "$0")"
 name=$1; voice=$2; seed=${3:-7}; out=out/$name; mkdir -p "$out"
 if [ -n "${SKIP_VOICE:-}" ]; then
   echo "reusing $out/voice.wav"
+elif [ "$voice" = henri ]; then
+  SSL_CERT_FILE=/root/.ccr/ca-bundle.crt python3 voice_edge.py "scripts/$name.js" "$out" fr-FR-HenriNeural
 elif [ "$voice" = tom ]; then
   python3 voice_piper.py "scripts/$name.js" "$out" "${PIPER_MODEL:?path to fr_FR-tom-medium.onnx}"
 elif [ "$voice" = coqui ]; then
