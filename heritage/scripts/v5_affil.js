@@ -6,7 +6,6 @@ window.SCRIPT = [
  {"id":"p5","text":"Quelqu'un achète grâce à toi ? Tu touches une commission.","pause":0.45},
  {"id":"p6","text":"Mais attention : pas de stock, ça ne veut pas dire pas de travail.","pause":0.4},
  {"id":"p7","text":"Ton vrai métier, c'est de créer du contenu qui aide les gens à choisir. Sans audience, pas de ventes.","pause":0.45},
- {"id":"p8","text":"C'est exactement ce qu'on apprend dans Héritage : les bases de l'affiliation et du marketing, étape par étape.","pause":0.4},
- {"id":"p9","text":"Écris-moi « GO » en DM, et je t'envoie le lien pour voir le programme.","pause":0.3},
+ {"id":"p9","text":"Écris-moi « GO » en DM, et je te dis par où commencer.","pause":0.3},
  {"id":"p10","text":"Et abonne-toi pour la suite.","pause":0.2}
 ];

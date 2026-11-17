@@ -11,6 +11,8 @@ Le but : qualifier les prospects sur plusieurs vidéos **buzz** et **valeur**, p
 
 ## Appel à l'action
 - Fin de vidéo : « écris-moi GO » ou « envoie-moi GO » en DM. Ne plus dire « HÉRITAGE » à la fin.
+- **Buzz et Valeur** : « Écris-moi GO en DM, et je te dis par où commencer. » (le propriétaire présente ensuite Héritage en DM).
+- **Promotion** : GO en DM pour recevoir le lien / les infos sur la formation.
 - « Like / abonne-toi » de temps en temps, pas dans toutes les vidéos.
 
 ## Style

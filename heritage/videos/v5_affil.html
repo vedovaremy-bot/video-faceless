@@ -39,8 +39,6 @@ window.build = ({ say }) => {
   say(document.getElementById('s6a'), 'p6', 3, 6);
   say(document.getElementById('s6b'), 'p6', 11, 14);
   say(document.getElementById('s9a'), 'p9', 0, 1);
-  const h = document.getElementById('herit');
-  [...'HÉRITAGE'].forEach((c, i) => { const s = document.createElement('span'); s.className = 'goldtxt'; s.textContent = c; s.dataset.cue = `p8.6+${(i * 0.05).toFixed(2)}`; s.dataset.d = '0.6'; h.appendChild(s); });
 };
 window.onFrame = (t, { clamp, easeInOut, cue }) => {
   document.querySelectorAll('[data-x]').forEach(x => x.style.width = (104 * easeInOut(clamp((t - cue(x.dataset.x)) / 0.3))) + '%');
@@ -112,16 +110,6 @@ const ICON = {
     <div class="center" style="top:1050px"><span class="goldtxt" style="font-size:160px;line-height:1.05" data-cue="p7.16" data-anim="slam">= 0 vente</span></div>
   </section>
 
-  <!-- Heritage -->
-  <section class="scene" data-from="p8" data-glow>
-    <div class="center" style="top:170px"><span data-cue="p8.0" data-anim="pop" data-d="0.6"><svg class="logo"><use href="#logo"/></svg></span></div>
-    <div class="center" style="top:430px"><span class="line" id="herit" style="font-size:130px;line-height:1.1;letter-spacing:.02em"></span>
-      <span class="label" data-cue="p8.6+0.5" style="font-size:42px;margin-top:6px">par IHC</span></div>
-    <div class="center" style="top:800px"><span class="line kin" data-cue="p8.8" style="font-size:84px">Les bases de l'affiliation</span>
-      <span class="line kin light" data-cue="p8.12" style="font-size:84px">& du marketing</span>
-      <span class="line gold" data-cue="p8.15" style="font-size:110px;margin-top:20px">étape par étape.</span></div>
-  </section>
-
   <!-- DM CTA -->
   <section class="scene" data-from="p9">
     <div class="center" style="top:220px"><span class="line kin" id="s9a" style="font-size:110px"></span></div>
@@ -130,11 +118,11 @@ const ICON = {
     <div class="dm card" data-cue="p9.0" data-d="0.6">
       <div class="hd"><div class="av"><svg style="width:60px;height:66px"><use href="#logo"/></svg></div>Message</div>
       <div class="bub me" style="top:220px" data-cue="p9.5+0.3" data-anim="pop">GO</div>
-      <div class="bub them" style="top:370px" data-cue="p9.8" data-anim="pop">Je t'envoie le lien 🔗</div>
+      <div class="bub them" style="top:370px" data-cue="p9.8" data-anim="pop">Je te dis par où commencer 👇</div>
       <div class="input"><span data-cue="p9.2" data-anim="type" data-d="0.7" data-out="p9.5+0.3" data-sfx="type">GO</span></div>
       <div class="send" data-cue="p9.4" data-anim="pop"><svg width="44" height="44" viewBox="0 0 24 24" fill="#120f08"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></div>
     </div>
-    <div class="center" style="top:1720px"><span class="tiny" data-cue="p9.0">Lien affilié : je peux toucher une commission · aucun résultat garanti</span></div>
+    <div class="center" style="top:1720px"><span class="tiny" data-cue="p9.0">Contenu éducatif · aucun résultat garanti</span></div>
   </section>
 
   <!-- abonne-toi -->

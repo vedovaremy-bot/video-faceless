@@ -9,5 +9,6 @@ window.SCRIPT = [
  {"id":"p8","text":"Alors, l'e-commerce, c'est une arnaque ? Non.","pause":0.4},
  {"id":"p9","text":"Mais ceux qui s'en sortent maîtrisent trois choses : un produit qui règle un vrai problème, une pub qui convertit, et des chiffres qu'ils suivent chaque jour.","pause":0.4},
  {"id":"p10","text":"L'e-commerce, c'est un vrai business. Pas un bouton magique.","pause":0.4},
- {"id":"p11","text":"Like si t'as appris un truc, et abonne-toi : dans la partie deux, je te montre comment trouver un produit gagnant.","pause":0.2}
+ {"id":"p11","text":"Like si t'as appris un truc, et abonne-toi : dans la partie deux, je te montre comment trouver un produit gagnant.","pause":0.4},
+ {"id":"p12","text":"Et si tu veux te lancer, écris-moi « GO » en DM : je te dis par où commencer.","pause":0.2}
 ];
