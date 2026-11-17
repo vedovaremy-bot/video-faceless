@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Affiliation vs e-commerce</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+  .sans { position: absolute; left: 140px; right: 140px; display: flex; align-items: center; gap: 40px; font-size: 96px; font-weight: 800; letter-spacing: -0.03em; }
+  .sans svg { flex: 0 0 120px; height: 120px; }
+  .sans .w2 { position: relative; color: #f3d27f; }
+  .sans .w2 small { font-size: 54px; font-weight: 500; color: #a29a8a; margin-right: 22px; }
+  .sans .w2 .x { position: absolute; left: -2%; top: 52%; height: 9px; width: 0; background: var(--gold); border-radius: 5px; box-shadow: 0 0 18px rgba(233,204,127,.8); }
+  .tbl { position: absolute; left: 50px; right: 50px; top: 300px; border-radius: 48px; padding: 30px 30px 40px; }
+  .tr { display: grid; grid-template-columns: 1.05fr 1fr 1fr; align-items: center; gap: 16px; padding: 30px 10px; border-bottom: 1px solid rgba(233,204,127,.15); }
+  .tr:last-child { border-bottom: 0; }
+  .th { font-family: var(--cinzel); font-weight: 700; font-size: 31px; color: var(--gold); letter-spacing: .06em; text-align: center; }
+  .rl { font-size: 46px; font-weight: 700; letter-spacing: -0.02em; }
+  .cell { text-align: center; font-size: 38px; font-weight: 650; line-height: 1.15; }
+  .cell.me { color: #f0a77f; } .cell.br { color: #ffe3a0; }
+  .cell b { display: block; font-size: 56px; }
+  .flow { position: absolute; left: 110px; right: 110px; padding: 40px 50px; border-radius: 40px; text-align: center; }
+  .flow .k { font-family: var(--cinzel); color: var(--gold); font-size: 34px; letter-spacing: .25em; }
+  .flow .t { font-size: 60px; font-weight: 750; letter-spacing: -0.03em; margin-top: 8px; }
+  .arrow { position: absolute; left: 50%; width: 6px; margin-left: -3px; background: linear-gradient(#d9b45a, rgba(217,180,90,.2)); transform-origin: top; }
+  .dm { position: absolute; left: 110px; right: 110px; top: 840px; height: 700px; padding: 40px; }
+  .dm .hd { display: flex; align-items: center; gap: 24px; padding-bottom: 30px; border-bottom: 1px solid rgba(233,204,127,.2); font-size: 40px; font-weight: 600; }
+  .dm .av { width: 84px; height: 84px; border-radius: 50%; border: 2px solid rgba(233,204,127,.6); display: flex; align-items: center; justify-content: center; background: #0d0c09; }
+  .bub { position: absolute; padding: 26px 40px; border-radius: 40px; font-size: 44px; font-weight: 600; white-space: nowrap; }
+  .bub.me { right: 40px; background: var(--gold-grad); background-size: 220% 100%; color: #120f08; border-bottom-right-radius: 10px; }
+  .bub.them { left: 40px; background: #24211a; color: #f4efe4; border-bottom-left-radius: 10px; }
+  .input { position: absolute; left: 40px; right: 40px; bottom: 40px; height: 110px; border-radius: 999px; border: 2px solid rgba(233,204,127,.4); display: flex; align-items: center; padding: 0 40px; font-size: 46px; font-weight: 600; color: #fff; letter-spacing: .04em; }
+  .send { position: absolute; right: 54px; bottom: 52px; width: 86px; height: 86px; border-radius: 50%; background: var(--gold-grad); display: flex; align-items: center; justify-content: center; }
+  .subbtn .b { display: none; } .subbtn.done .a { display: none; } .subbtn.done .b { display: inline; }
+</style>
+<script src="../scripts/v5_affil.js"></script>
+<script src="../shared/engine.js"></script>
+<script>
+window.build = ({ say }) => {
+  say(document.getElementById('s6a'), 'p6', 3, 6);
+  say(document.getElementById('s6b'), 'p6', 11, 14);
+  say(document.getElementById('s9a'), 'p9', 0, 1);
+  const h = document.getElementById('herit');
+  [...'HÉRITAGE'].forEach((c, i) => { const s = document.createElement('span'); s.className = 'goldtxt'; s.textContent = c; s.dataset.cue = `p8.6+${(i * 0.05).toFixed(2)}`; s.dataset.d = '0.6'; h.appendChild(s); });
+};
+window.onFrame = (t, { clamp, easeInOut, cue }) => {
+  document.querySelectorAll('[data-x]').forEach(x => x.style.width = (104 * easeInOut(clamp((t - cue(x.dataset.x)) / 0.3))) + '%');
+};
+const ICON = {
+  box: '<svg viewBox="0 0 48 48" fill="none" stroke="url(#gg)" stroke-width="2.6" stroke-linejoin="round"><path d="M6 14l18-8 18 8v20l-18 8-18-8z"/><path d="M6 14l18 8 18-8M24 22v20"/></svg>',
+  shop: '<svg viewBox="0 0 48 48" fill="none" stroke="url(#gg)" stroke-width="2.6" stroke-linejoin="round"><path d="M6 18l4-10h28l4 10M8 18v22h32V18M6 18h36"/><path d="M19 40V28h10v12"/></svg>',
+  truck: '<svg viewBox="0 0 48 48" fill="none" stroke="url(#gg)" stroke-width="2.6" stroke-linejoin="round"><path d="M4 12h24v20H4zM28 20h9l7 7v5H28z"/><circle cx="12" cy="35" r="4"/><circle cx="36" cy="35" r="4"/></svg>',
+};
+</script>
+</head>
+<body>
+<div id="stage"><div id="cam">
+  <canvas id="silk" width="270" height="480"></canvas><canvas id="dust" width="1080" height="1920"></canvas><div class="vignette"></div>
+
+  <!-- HOOK -->
+  <section class="scene">
+    <div class="center" style="top:110px"><span class="pill" data-cue="-0.5" data-anim="none">Le business que personne ne t'explique 👇</span></div>
+    <div class="center" style="top:250px"><span class="kin" data-cue="-0.5" data-anim="none" style="font-size:104px;line-height:1.05">Vendre sur internet</span></div>
+    <div class="center" style="top:370px"><span class="gold" data-cue="-0.5" data-anim="none" style="font-size:96px">sans…</span></div>
+    <div class="sans" style="top:640px" data-cue="p1.7" data-anim="left"><span id="i1"></span><span class="w2"><small>sans</small>stock</span></div>
+    <div class="sans" style="top:900px" data-cue="p1.9" data-anim="left"><span id="i2"></span><span class="w2"><small>sans</small>boutique</span></div>
+    <div class="sans" style="top:1160px" data-cue="p1.12" data-anim="left"><span id="i3"></span><span class="w2"><small>sans</small>livraison</span></div>
+    <script>i1.outerHTML = ICON.box; i2.outerHTML = ICON.shop; i3.outerHTML = ICON.truck;</script>
+  </section>
+
+  <!-- ça s'appelle l'affiliation -->
+  <section class="scene" data-from="p2" data-cut>
+    <div class="center" style="top:700px"><span class="label" data-cue="p2.0" style="font-size:46px">Ça s'appelle</span></div>
+    <div class="center" style="top:800px"><span class="goldtxt" style="font-size:116px;line-height:1.1" data-cue="p2.2" data-anim="slam" data-flash>L'AFFILIATION</span></div>
+  </section>
+
+  <!-- VS table -->
+  <section class="scene" data-from="p3">
+    <div class="tbl card">
+      <div class="tr"><span></span><span class="th" data-cue="p3.0">E-commerce</span><span class="th" data-cue="p4.0">Affiliation</span></div>
+      <div class="tr"><span class="rl" data-cue="p3.5">Le stock</span><span class="cell me" data-cue="p3.7" data-anim="pop"><b>✗</b>toi</span><span class="cell br" data-cue="p4.3" data-anim="pop"><b>✓</b>la marque</span></div>
+      <div class="tr"><span class="rl" data-cue="p3.9">La boutique</span><span class="cell me" data-cue="p3.11" data-anim="pop"><b>✗</b>toi</span><span class="cell br" data-cue="p4.4" data-anim="pop"><b>✓</b>la marque</span></div>
+      <div class="tr"><span class="rl" data-cue="p3.12">Les livraisons</span><span class="cell me" data-cue="p3.13" data-anim="pop"><b>✗</b>toi</span><span class="cell br" data-cue="p4.5" data-anim="pop"><b>✓</b>la marque</span></div>
+      <div class="tr"><span class="rl" data-cue="p3.15">Le SAV</span><span class="cell me" data-cue="p3.17" data-anim="pop"><b>✗</b>toi</span><span class="cell br" data-cue="p4.6" data-anim="pop"><b>✓</b>la marque</span></div>
+      <div class="tr"><span class="rl" data-cue="p4.8" style="color:var(--gold)">Ton rôle</span><span></span><span class="cell br" data-cue="p4.10" data-anim="pop" data-sfx="check"><b>🔗</b>recommander avec ton lien</span></div>
+    </div>
+  </section>
+
+  <!-- commission flow -->
+  <section class="scene" data-from="p5">
+    <div class="flow card" style="top:220px" data-cue="p5.0" data-anim="up"><div class="k">Toi</div><div class="t">Ton contenu + ton lien</div></div>
+    <i class="arrow" style="top:470px;height:150px" data-grow="p5.0+0.2,p5.1"></i>
+    <div class="flow card" style="top:640px" data-cue="p5.1" data-anim="up"><div class="k">Le client</div><div class="t">achète chez la marque</div></div>
+    <i class="arrow" style="top:890px;height:150px" data-grow="p5.2,p5.6"></i>
+    <div class="flow glass" style="top:1060px" data-cue="p5.6" data-anim="up"><div class="k">Pour toi</div>
+      <div class="goldtxt" style="font-size:96px;line-height:1.15" data-cue="p5.9" data-anim="slam">COMMISSION</div></div>
+  </section>
+
+  <!-- pas de stock ≠ pas de travail -->
+  <section class="scene" data-from="p6">
+    <div class="center" style="top:200px"><span class="label" data-cue="p6.0">Attention</span></div>
+    <div class="center" style="top:520px"><span class="line kin" id="s6a" style="font-size:120px"></span></div>
+    <div class="center" style="top:680px"><span class="goldtxt" style="font-size:300px;line-height:1" data-cue="p6.9" data-anim="slam">≠</span></div>
+    <div class="center" style="top:1000px"><span class="line kin" id="s6b" style="font-size:120px"></span></div>
+  </section>
+
+  <!-- ton vrai métier -->
+  <section class="scene" data-from="p7">
+    <div class="center" style="top:220px"><span class="label" data-cue="p7.0">Ton vrai métier</span></div>
+    <div class="center" style="top:330px"><span class="line gold" data-cue="p7.5" style="font-size:150px">créer du contenu</span>
+      <span class="line kin light" data-cue="p7.8" style="font-size:72px;margin-top:10px">qui aide les gens à choisir</span></div>
+    <div class="center" style="top:900px"><span class="kin" data-cue="p7.14" style="font-size:110px">Sans audience</span></div>
+    <div class="center" style="top:1050px"><span class="goldtxt" style="font-size:160px;line-height:1.05" data-cue="p7.16" data-anim="slam">= 0 vente</span></div>
+  </section>
+
+  <!-- Heritage -->
+  <section class="scene" data-from="p8" data-glow>
+    <div class="center" style="top:170px"><span data-cue="p8.0" data-anim="pop" data-d="0.6"><svg class="logo"><use href="#logo"/></svg></span></div>
+    <div class="center" style="top:430px"><span class="line" id="herit" style="font-size:130px;line-height:1.1;letter-spacing:.02em"></span>
+      <span class="label" data-cue="p8.6+0.5" style="font-size:42px;margin-top:6px">par IHC</span></div>
+    <div class="center" style="top:800px"><span class="line kin" data-cue="p8.8" style="font-size:84px">Les bases de l'affiliation</span>
+      <span class="line kin light" data-cue="p8.12" style="font-size:84px">& du marketing</span>
+      <span class="line gold" data-cue="p8.15" style="font-size:110px;margin-top:20px">étape par étape.</span></div>
+  </section>
+
+  <!-- DM CTA -->
+  <section class="scene" data-from="p9">
+    <div class="center" style="top:220px"><span class="line kin" id="s9a" style="font-size:110px"></span></div>
+    <div class="center" style="top:360px"><span class="goldtxt" style="font-size:150px;line-height:1.1" data-cue="p9.2" data-anim="slam">HÉRITAGE</span></div>
+    <div class="center" style="top:560px"><span class="kin light" data-cue="p9.4" style="font-size:90px">en DM 📩</span></div>
+    <div class="dm card" data-cue="p9.0" data-d="0.6">
+      <div class="hd"><div class="av"><svg style="width:60px;height:66px"><use href="#logo"/></svg></div>Message</div>
+      <div class="bub me" style="top:220px" data-cue="p9.5+0.3" data-anim="pop">HERITAGE</div>
+      <div class="bub them" style="top:370px" data-cue="p9.8" data-anim="pop">Je t'envoie le lien 🔗</div>
+      <div class="input"><span data-cue="p9.2" data-anim="type" data-d="0.7" data-out="p9.5+0.3" data-sfx="type">HERITAGE</span></div>
+      <div class="send" data-cue="p9.4" data-anim="pop"><svg width="44" height="44" viewBox="0 0 24 24" fill="#120f08"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></div>
+    </div>
+    <div class="center" style="top:1720px"><span class="tiny" data-cue="p9.0">Lien affilié : je peux toucher une commission · aucun résultat garanti</span></div>
+  </section>
+
+  <!-- abonne-toi -->
+  <section class="scene" data-from="p10">
+    <div class="center" style="top:760px"><span data-cue="p10.1" data-anim="pop" data-sfx-at="p10.1+0.6|ding">
+      <span class="subbtn" data-class="p10.1+0.6|done"><span class="a">＋ S'abonner</span><span class="b">Abonné ✓</span></span></span></div>
+    <div class="center" style="top:960px"><span class="gold" data-cue="p10.2" style="font-size:80px">pour la suite.</span></div>
+  </section>
+</div><div id="flash"></div></div>
+</body>
+</html>
