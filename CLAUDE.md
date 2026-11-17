@@ -18,6 +18,8 @@ Le but : qualifier les prospects sur plusieurs vidéos **buzz** et **valeur**, p
 - Formulation de fin conseillée : « Si toi aussi tu veux te lancer dans l'affiliation, écris-moi / envoie-moi GO en DM… » (jamais « gagner un revenu » : promesse de gains).
 
 ## Style
-- Voix off : Microsoft « Henri » (`./build2.sh <video> henri`, dans `heritage/`), débit rapide et entraînant (+18 %, hook +26 %, pauses courtes).
+- **Voix off par défaut : ElevenLabs, voice ID `3Tp5mYhT9wrfnry9pzvV`** (voix de la bibliothèque, choisie par le propriétaire) : `./build2.sh <video> 3Tp5mYhT9wrfnry9pzvV <seed>` dans `heritage/`. Débit ×1,1 (hook ×1,18), pauses courtes. Clé API via le proxy (abonnement Creator, ~2 000 caractères par vidéo).
+- Ne jamais cloner ni copier cette voix hors d'ElevenLabs (voix d'un comédien réel, interdit par les CGU).
+- Voix de secours : Microsoft « Henri » (`./build2.sh <video> henri`).
 - DA : noir & doré (`heritage/shared/theme.css`), hook fort dans les 3 premières secondes, formats variés.
 - Ne pas parler de prix, aucune promesse de gains ; garder les mentions « lien affilié · aucun résultat garanti » quand un lien est évoqué.

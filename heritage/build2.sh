@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Build one video:
+#   ./build2.sh <name> el [music_seed]           DEFAULT voice: ElevenLabs voice 3Tp5mYhT9wrfnry9pzvV
 #   ./build2.sh <name> henri [music_seed]        Microsoft neural voice Henri (edge-tts)
 #   ./build2.sh <name> tom [music_seed]          Piper voice Tom (needs PIPER_MODEL env var)
 #   ./build2.sh <name> coqui [music_seed]        free male voice (needs COQUI_PY + COQUI_MODEL env vars)
@@ -7,7 +8,7 @@
 #   name = v1_flou | v2_5points | v3_dm   -> <name>.mp4
 set -euo pipefail
 cd "$(dirname "$0")"
-name=$1; voice=$2; seed=${3:-7}; out=out/$name; mkdir -p "$out"
+name=$1; voice=$2; [ "$voice" = el ] && voice=3Tp5mYhT9wrfnry9pzvV; seed=${3:-7}; out=out/$name; mkdir -p "$out"
 if [ -n "${SKIP_VOICE:-}" ]; then
   echo "reusing $out/voice.wav"
 elif [ "$voice" = henri ]; then
