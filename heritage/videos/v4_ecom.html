@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Le vrai calcul e-commerce</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+  .ticket { position: absolute; left: 110px; right: 110px; top: 420px; height: 1180px; padding: 56px 60px; border-radius: 26px;
+    background: linear-gradient(175deg, #1a1712 0%, #0d0c0a 60%); border: 2px solid rgba(233,204,127,.45);
+    box-shadow: 0 50px 120px rgba(0,0,0,.75), 0 0 80px rgba(217,180,90,.12); }
+  .ticket::after { content: ""; position: absolute; left: 0; right: 0; bottom: -18px; height: 36px;
+    background: radial-gradient(circle at 18px 0, transparent 17px, #0d0c0a 18px) repeat-x; background-size: 36px 36px; }
+  .tk-h { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--cinzel); color: var(--gold); font-size: 40px; letter-spacing: .25em; }
+  .tk-h small { font-family: var(--sans); font-size: 26px; letter-spacing: .05em; color: #8d877b; }
+  .dash { border-top: 3px dashed rgba(233,204,127,.3); margin: 30px 0; }
+  .row { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; font-size: 50px; font-weight: 600; letter-spacing: -0.02em; padding: 18px 0; }
+  .row .l small { display: block; font-size: 30px; font-weight: 500; color: #8d877b; letter-spacing: 0; }
+  .row .v { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .row.minus .v { color: #e9a07a; }
+  .row.price .v { color: #fff; font-size: 64px; font-weight: 800; }
+  .total { position: absolute; left: 60px; right: 60px; bottom: 60px; display: flex; justify-content: space-between; align-items: center; }
+  .total .lab { font-family: var(--cinzel); color: var(--gold); font-size: 40px; letter-spacing: .18em; line-height: 1.2; }
+  #total { font-size: 130px; font-weight: 800; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; color: #fff; transform-origin: right center; }
+  #total.final { color: #ffe7a6; text-shadow: 0 0 30px rgba(233,190,90,.9), 0 0 80px rgba(217,160,60,.6); }
+  .vs { position: absolute; left: 80px; right: 80px; padding: 50px 56px; border-radius: 48px; }
+  .vs .k { font-family: var(--cinzel); color: var(--gold); font-size: 34px; letter-spacing: .22em; }
+  .vs .t { font-size: 62px; font-weight: 750; letter-spacing: -0.03em; margin-top: 14px; }
+  .vs .n { font-size: 150px; font-weight: 800; letter-spacing: -0.04em; margin-top: 6px; line-height: 1; }
+  .vs .s { font-size: 26px; color: #8d877b; margin-top: 14px; }
+  .node { position: absolute; left: 150px; right: 60px; display: flex; gap: 46px; align-items: flex-start; }
+  .node .num { flex: 0 0 104px; height: 104px; border-radius: 50%; background: var(--gold-grad); background-size: 220% 100%; color: #120f08; font-family: var(--cinzel); font-weight: 800; font-size: 58px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 50px rgba(217,180,90,.5); }
+  .node .tx { font-size: 66px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; padding-top: 10px; }
+  .node .tx em { display: block; font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 54px; color: #d9b45a; letter-spacing: 0; margin-top: 6px; }
+  .subbtn .b { display: none; } .subbtn.done .a { display: none; } .subbtn.done .b { display: inline; }
+  .teaser { position: absolute; left: 110px; right: 110px; top: 1250px; padding: 44px 50px; border-radius: 44px; text-align: center; }
+  .teaser .k { font-family: var(--cinzel); color: var(--gold); font-size: 36px; letter-spacing: .3em; }
+  .teaser .t { font-size: 58px; font-weight: 750; letter-spacing: -0.03em; margin-top: 12px; line-height: 1.15; }
+</style>
+<script src="../scripts/v4_ecom.js"></script>
+<script src="../shared/engine.js"></script>
+<script>
+const STEPS = [['p2.3', -8], ['p3.3', -5], ['p4.7', -12], ['p5.5', -1]];
+window.build = ({ say }) => {
+  say(document.getElementById('h2'), 'p1', 6, 14);
+  say(document.getElementById('s8a'), 'p8', 0, 2);
+  say(document.getElementById('s8b'), 'p8', 2, 6);
+  say(document.getElementById('s10a'), 'p10', 0, 2);
+  say(document.getElementById('s10b'), 'p10', 2, 5);
+};
+window.onFrame = (t, { clamp, easeOut, cue }) => {
+  let v = 30;
+  for (const [c, d] of STEPS) v += d * easeOut(clamp((t - cue(c)) / 0.45));
+  const el = document.getElementById('total');
+  el.textContent = v.toFixed(2).replace('.', ',') + ' €';
+  const f = cue('p6.3'), k = t >= f ? 1 + 0.25 * Math.exp(-(t - f) * 6) : 1;
+  el.style.transform = `scale(${k})`;
+  const hp = clamp((t - cue('p11.0')) / 0.35);
+  document.getElementById('heartfill').style.opacity = hp;
+};
+</script>
+</head>
+<body>
+<div id="stage"><div id="cam">
+  <canvas id="silk" width="270" height="480"></canvas><canvas id="dust" width="1080" height="1920"></canvas><div class="vignette"></div>
+
+  <!-- HOOK + RECEIPT -->
+  <section class="scene">
+    <div class="center" style="top:120px"><span class="line kin" data-cue="-0.5" data-anim="none" style="font-size:84px">Tu vends un produit <span class="goldtxt">30 €</span>.</span></div>
+    <div class="center" style="top:230px"><span class="line gold" id="h2" style="font-size:64px"></span></div>
+    <div class="ticket" data-cue="-0.6" data-d="0.5">
+      <div class="tk-h">TICKET <small>exemple</small></div>
+      <div class="dash"></div>
+      <div class="row price" data-cue="-0.5" data-anim="none"><span class="l">Prix de vente</span><span class="v">30,00 €</span></div>
+      <div class="row minus" data-cue="p2.3" data-anim="left" data-sfx="pop"><span class="l">Le produit</span><span class="v">− 8,00 €</span></div>
+      <div class="row minus" data-cue="p3.3" data-anim="left" data-sfx="pop"><span class="l">La livraison</span><span class="v">− 5,00 €</span></div>
+      <div class="row minus" data-cue="p4.7" data-anim="left" data-sfx="pop"><span class="l">La pub<small>pour trouver le client</small></span><span class="v">− 12,00 €</span></div>
+      <div class="row minus" data-cue="p5.5" data-anim="left" data-sfx="pop"><span class="l">Frais de paiement</span><span class="v">− 1,00 €</span></div>
+      <div class="total" data-cue="-0.5" data-anim="none" data-sfx="none">
+        <div class="lab">Il te<br>reste</div><div id="total" data-class="p6.3|final">30,00 €</div></div>
+      <span data-cue="p6.3" data-anim="none" data-flash data-punch data-sfx="hit"></span>
+    </div>
+    <div class="center" style="top:1690px"><span class="tiny" data-cue="p2.0">Exemple illustratif : les coûts varient selon le produit et la boutique.</span></div>
+  </section>
+
+  <!-- CA vs bénéfice -->
+  <section class="scene" data-from="p7">
+    <div class="vs card" style="top:300px" data-cue="p7.1" data-anim="left">
+      <div class="k">Ce qu'on te montre</div><div class="t">Chiffre d'affaires</div>
+      <div class="n goldtxt">12 480 €</div><div class="s">capture type, chiffre fictif</div></div>
+    <div class="vs card" style="top:1000px" data-cue="p7.11" data-anim="right">
+      <div class="k">Ce qui compte</div><div class="t">Ce qu'il reste à la fin</div>
+      <div class="n" style="color:#fff">?</div></div>
+  </section>
+
+  <!-- arnaque ? non -->
+  <section class="scene" data-from="p8">
+    <div class="center" style="top:560px"><span class="line kin light" id="s8a" style="font-size:90px"></span><span class="line kin" id="s8b" style="font-size:110px"></span></div>
+    <div class="center" style="top:900px"><span class="goldtxt" style="font-size:300px;line-height:1" data-cue="p8.6" data-anim="slam" data-flash>NON.</span></div>
+  </section>
+
+  <!-- 3 choses -->
+  <section class="scene" data-from="p9">
+    <div class="center" style="top:170px"><span class="label" data-cue="p9.0">Ceux qui s'en sortent</span></div>
+    <div class="center" style="top:270px"><span class="line kin gold" data-cue="p9.5" style="font-size:130px">maîtrisent 3 choses</span></div>
+    <i style="position:absolute;left:201px;top:700px;width:4px;height:840px;background:linear-gradient(#d9b45a,rgba(217,180,90,.1));transform-origin:top" data-grow="p9.9,p9$"></i>
+    <div class="node" style="top:640px" data-cue="p9.9" data-anim="left" data-sfx="check"><div class="num">1</div><div class="tx">Un produit<em>qui règle un vrai problème.</em></div></div>
+    <div class="node" style="top:1000px" data-cue="p9.16" data-anim="left" data-sfx="check"><div class="num">2</div><div class="tx">Une pub<em>qui convertit.</em></div></div>
+    <div class="node" style="top:1360px" data-cue="p9.21" data-anim="left" data-sfx="check"><div class="num">3</div><div class="tx">Leurs chiffres<em>suivis chaque jour.</em></div></div>
+  </section>
+
+  <!-- vrai business -->
+  <section class="scene" data-from="p10" data-glow>
+    <div class="center" style="top:560px"><span class="line kin light" id="s10a" style="font-size:90px"></span><span class="line gold" id="s10b" style="font-size:150px"></span></div>
+    <div class="center" style="top:1000px"><span class="kin" data-cue="p10.5" style="font-size:90px">Pas un <span class="strike" style="font-weight:700">bouton magique.<i data-strike="p10.8+0.15"></i></span></span></div>
+  </section>
+
+  <!-- like + abonne + partie 2 -->
+  <section class="scene" data-from="p11">
+    <div class="center" style="top:220px"><span data-cue="p11.0" data-anim="pop" data-sfx="like">
+      <svg class="heart" viewBox="0 0 24 22"><path d="M12 21s-9-5.6-9-12A5 5 0 0 1 12 6a5 5 0 0 1 9 3c0 6.4-9 12-9 12z" fill="none" stroke="url(#gg)" stroke-width="1.4"/>
+        <path id="heartfill" d="M12 21s-9-5.6-9-12A5 5 0 0 1 12 6a5 5 0 0 1 9 3c0 6.4-9 12-9 12z" fill="url(#gg)"/></svg></span></div>
+    <div class="center" style="top:560px"><span class="kin" data-cue="p11.1" style="font-size:80px">si t'as appris un truc</span></div>
+    <div class="center" style="top:800px"><span data-cue="p11.7" data-anim="pop" data-sfx-at="p11.7+0.6|ding">
+      <span class="subbtn" data-class="p11.7+0.6|done"><span class="a">＋ S'abonner</span><span class="b">Abonné ✓</span></span></span></div>
+    <div class="teaser card" data-cue="p11.11" data-anim="up">
+      <div class="k">Partie 2</div><div class="t">Comment trouver<br>un produit gagnant</div></div>
+    <div class="center" style="top:1760px"><span class="tiny" data-cue="p11.0">Contenu éducatif · aucun résultat garanti</span></div>
+  </section>
+</div><div id="flash"></div></div>
+</body>
+</html>
