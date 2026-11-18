@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>De quel côté de l'écran</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+  .widget { position: absolute; left: 150px; right: 150px; top: 520px; padding: 50px 56px; border-radius: 56px; }
+  .widget .k { display: flex; align-items: center; gap: 18px; font-size: 38px; font-weight: 600; color: #a29a8a; }
+  .widget .k svg { width: 46px; height: 46px; }
+  #screen { font-size: 190px; font-weight: 800; letter-spacing: -0.05em; line-height: 1.05; margin-top: 16px; font-variant-numeric: tabular-nums; }
+  .bars { display: flex; align-items: flex-end; gap: 14px; height: 120px; margin-top: 26px; }
+  .bars i { flex: 1; border-radius: 8px; background: linear-gradient(#e9cc7f, #8a6a25); transform-origin: bottom; }
+  .widget .s { font-size: 28px; color: #7d776b; margin-top: 16px; }
+  .feed { position: absolute; left: 150px; right: 150px; top: 300px; height: 1380px; overflow: hidden; border-radius: 56px; }
+  #feedcol { position: absolute; left: 0; right: 0; top: 0; display: flex; flex-direction: column; gap: 36px; }
+  .post { height: 560px; border-radius: 44px; background: #15130f; border: 2px solid rgba(233,204,127,.25); padding: 30px; display: flex; flex-direction: column; gap: 22px; }
+  .post .hd { display: flex; align-items: center; gap: 18px; }
+  .post .av { width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, #3a3326, #6b5730); }
+  .post .ln { height: 22px; border-radius: 11px; background: #2a261e; }
+  .post .img { flex: 1; border-radius: 30px; background: radial-gradient(120% 90% at 30% 20%, #4a3c22, #1a1610 70%); }
+  .paid { position: absolute; padding: 22px 38px; border-radius: 999px; background: var(--gold-grad); color: #120f08; font-size: 52px; font-weight: 800; box-shadow: 0 0 60px rgba(217,180,90,.5); }
+  .who { position: absolute; left: 100px; right: 100px; padding: 50px 56px; border-radius: 48px; }
+  .who .k { font-family: var(--cinzel); color: var(--gold); font-size: 40px; letter-spacing: .25em; }
+  .who .t { font-size: 76px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-top: 12px; }
+  .side { position: absolute; left: 0; right: 0; text-align: center; transition: none; }
+  .side .k { font-family: var(--cinzel); font-weight: 700; font-size: 64px; letter-spacing: .14em; }
+  .side .t { font-family: var(--serif); font-style: italic; font-size: 76px; margin-top: 10px; }
+  .side.top .k { color: #8d877b; } .side.top .t { color: #a29a8a; }
+  .side.bot .k { color: var(--gold); } .side.bot .t { color: #f3dc9a; }
+  .side.dim { opacity: .3 !important; filter: blur(2px) !important; }
+  .screenline { position: absolute; left: 60px; right: 60px; top: 1010px; height: 6px; border-radius: 3px; background: linear-gradient(90deg, transparent, #f3dc9a, transparent); box-shadow: 0 0 40px rgba(243,220,154,.9); transform-origin: center; }
+</style>
+<script src="../scripts/v7_ecran.js"></script>
+<script src="../shared/engine.js"></script>
+<script>
+window.build = ({ say }) => {
+  say(document.getElementById('h2'), 'p1', 9, 13);
+  say(document.getElementById('h3'), 'p1', 13, 17);
+  say(document.getElementById('q6'), 'p6', 2, 7);
+  say(document.getElementById('q6b'), 'p6', 7, 11);
+  say(document.getElementById('s4a'), 'p4', 3, 7);
+  say(document.getElementById('s4b'), 'p4', 7, 10);
+  const col = document.getElementById('feedcol');
+  for (let i = 0; i < 8; i++) col.insertAdjacentHTML('beforeend', '<div class="post"><div class="hd"><div class="av"></div><div style="flex:1;display:grid;gap:12px"><div class="ln" style="width:60%"></div><div class="ln" style="width:35%"></div></div></div><div class="img"></div><div class="ln" style="width:85%"></div></div>');
+};
+window.onFrame = (t, { clamp, easeOut, cue }) => {
+  // screen-time counter (illustrative): 2 h 58 -> 3 h 47 during the hook
+  const m = Math.round(178 + 49 * easeOut(clamp(t / Math.max(0.5, cue('p1.8')))));
+  document.getElementById('screen').textContent = `${Math.floor(m / 60)} h ${String(m % 60).padStart(2, '0')}`;
+  document.querySelectorAll('.bars i').forEach((b, i) => b.style.transform = `scaleY(${0.25 + 0.75 * clamp((t * 1.6) - i * 0.12) * (0.5 + 0.5 * Math.abs(Math.sin(i * 1.7)))})`);
+  // endless feed scroll
+  const a = cue('p2'); document.getElementById('feedcol').style.transform = `translateY(${-Math.max(0, t - a) * 260}px)`;
+};
+</script>
+</head>
+<body>
+<div id="stage"><div id="cam">
+  <canvas id="silk" width="270" height="480"></canvas><canvas id="dust" width="1080" height="1920"></canvas><div class="vignette"></div>
+
+  <!-- HOOK: screen time -->
+  <section class="scene">
+    <div class="center" style="top:200px"><span class="kin" data-cue="-0.5" data-anim="none" style="font-size:80px;line-height:1.1">Tu passes des heures<br>sur ton téléphone.</span></div>
+    <div class="widget card" data-cue="-0.5" data-anim="none">
+      <div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="#d9b45a" stroke-width="2"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg>Temps d'écran · aujourd'hui</div>
+      <div id="screen">2 h 58</div>
+      <div class="bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="s">exemple</div>
+    </div>
+    <div class="center" style="top:1250px"><span class="line kin light" id="h2" style="font-size:76px"></span><span class="line gold" id="h3" style="font-size:104px"></span></div>
+    <div class="center" style="top:1530px"><span data-cue="p1.13" data-anim="pop" style="font-size:130px">💰</span></div>
+  </section>
+
+  <!-- endless feed: someone is paid behind each post -->
+  <section class="scene" data-from="p2">
+    <div class="center" style="top:150px"><span class="label" data-cue="p2.0" style="font-size:32px">Chaque vidéo · chaque produit</span></div>
+    <div class="feed"><div id="feedcol"></div></div>
+    <div class="paid" style="left:560px;top:520px" data-cue="p2.1" data-anim="pop">€ payé</div>
+    <div class="paid" style="left:200px;top:900px" data-cue="p2.6" data-anim="pop">€ payé</div>
+    <div class="paid" style="left:480px;top:1280px" data-cue="p2.12" data-anim="pop">€ payé</div>
+    <div class="center" style="top:1720px"><span class="gold" data-cue="p2.10" style="font-size:84px">quelqu'un est payé derrière.</span></div>
+  </section>
+
+  <!-- brands & creators -->
+  <section class="scene" data-from="p3">
+    <div class="who card" style="top:330px" data-cue="p3.0" data-anim="left"><div class="k">Les marques</div><div class="t">paient pour ton attention.</div></div>
+    <div class="who glass" style="top:820px" data-cue="p3.7" data-anim="right"><div class="k">Les créateurs</div><div class="t">touchent une <span class="goldtxt">commission</span></div></div>
+    <div class="center" style="top:1330px"><span class="pill" data-cue="p3.12" data-anim="pop" style="font-size:46px">quand tu achètes via leur lien 🔗</span></div>
+  </section>
+
+  <!-- l'affiliation -->
+  <section class="scene" data-from="p4">
+    <div class="center" style="top:560px"><span class="label" data-cue="p4.0" style="font-size:46px">Ça s'appelle</span></div>
+    <div class="center" style="top:650px"><span class="goldtxt" style="font-size:116px;line-height:1.1" data-cue="p4.2" data-anim="slam" data-flash>L'AFFILIATION</span></div>
+    <div class="center" style="top:900px"><span class="line kin light" id="s4a" style="font-size:80px"></span><span class="line kin" id="s4b" style="font-size:82px"></span></div>
+  </section>
+
+  <!-- la vraie question -->
+  <section class="scene" data-from="p5">
+    <div class="center" style="top:420px"><span class="label" data-cue="p5.0">La vraie question</span></div>
+    <div class="center" style="top:640px"><span class="kin" data-cue="p5.3" style="font-size:96px;line-height:1.15">Ce n'est pas<br><span class="strike" style="font-weight:700">combien de temps<i data-strike="p5.9"></i></span><br><span class="strike" style="font-weight:700">tu passes dessus.<i data-strike="p5.12"></i></span></span></div>
+  </section>
+
+  <!-- de quel côté de l'écran -->
+  <section class="scene" data-from="p6">
+    <div class="center" style="top:150px"><span class="line kin light" id="q6" style="font-size:72px"></span><span class="line kin" id="q6b" style="font-size:96px"></span></div>
+    <div class="side top" style="top:620px" data-cue="p6.4" data-class="p7.2|dim"><div class="k">Devant l'écran</div><div class="t">tu consommes.</div></div>
+    <i class="screenline" data-grow="p6.5,p6.7" data-axis="x"></i>
+    <div class="side bot" style="top:1150px" data-cue="p6.6"><div class="k">Derrière l'écran</div><div class="t">tu crées.</div></div>
+    <div class="center" style="top:1560px"><span class="goldtxt" data-cue="p7.2" data-anim="slam" data-flash style="font-size:180px;line-height:1">CRÉER.</span></div>
+  </section>
+
+  <!-- CTA GO -->
+  <section class="scene" data-from="p8">
+    <div class="center" style="top:300px"><span class="kin light" data-cue="p8.3" style="font-size:76px">Tu veux passer de l'autre côté ?</span></div>
+    <div class="center" style="top:520px"><span class="kin" data-cue="p8.11" style="font-size:110px">Écris-moi</span></div>
+    <div class="center" style="top:640px"><span class="goldtxt" style="font-size:300px;line-height:1.05" data-cue="p8.13" data-anim="slam" data-flash>GO</span></div>
+    <div class="center" style="top:980px"><span class="kin light" data-cue="p8.15" style="font-size:90px">en DM 📩</span></div>
+    <div class="center" style="top:1140px"><span class="gold" data-cue="p8.18" style="font-size:96px">je te dis par où commencer.</span></div>
+    <div class="center" style="top:1760px"><span class="tiny" data-cue="p8.0">Contenu éducatif · aucun résultat garanti</span></div>
+  </section>
+</div><div id="flash"></div></div>
+</body>
+</html>

@@ -30,3 +30,5 @@ ffmpeg -loglevel error -y -i "$out/video_noaudio.mp4" -i "$out/voice.wav" -i "$o
  [v][md]amix=inputs=2:normalize=0,loudnorm=I=-14:TP=-1.5:LRA=9[a]" \
  -map 0:v -map "[a]" -c:v copy -c:a aac -b:a 192k -shortest "$name.mp4"
 echo "OK -> $name.mp4"
+# Final check: the finished video must say the whole script, up to the last word
+HF_HUB_DISABLE_XET=1 python3 check_voice.py "$name.mp4" "scripts/$name.js" 2>/dev/null | grep -E "MANQUANT|ATTENTION|RESULTAT" || true

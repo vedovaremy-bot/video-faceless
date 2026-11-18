@@ -26,10 +26,17 @@ def tts(text, prev, nxt, speed):
     req = urllib.request.Request(
         f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}/with-timestamps?output_format=pcm_24000",
         data=json.dumps(body).encode(), headers={"Content-Type": "application/json", "xi-api-key": "proxy-injected"})
-    try:
-        d = json.load(urllib.request.urlopen(req, timeout=180))
-    except urllib.error.HTTPError as e:
-        sys.exit(f"ElevenLabs error {e.code}: {e.read().decode()[:300]}")
+    d = None
+    for attempt in range(5):  # the API is sometimes slow or returns 5xx: retry instead of failing
+        try:
+            d = json.load(urllib.request.urlopen(req, timeout=60)); break
+        except urllib.error.HTTPError as e:
+            if e.code < 500 and e.code != 429: sys.exit(f"ElevenLabs error {e.code}: {e.read().decode()[:300]}")
+            print(f"  retry ({e.code})", flush=True)
+        except Exception as e:
+            print(f"  retry ({type(e).__name__})", flush=True)
+        __import__("time").sleep(3 * (attempt + 1))
+    if d is None: sys.exit("ElevenLabs unreachable after 5 attempts")
     pcm = np.frombuffer(base64.b64decode(d["audio_base64"]), dtype="<i2").astype(np.float32) / 32768
     al = d["alignment"]
     # characters -> spoken words with their start time
@@ -76,7 +83,7 @@ for i, p in enumerate(SCRIPT):
     pause = p.get("pause", 0.3) * float(os.environ.get("PAUSE_SCALE", "0.7"))
     chunks += [a, np.zeros(int(pause * SR), np.float32)]; cur += L + pause
     print(p["id"], f"{L:.2f}s", flush=True)
-tail = 1.6
+tail = float(os.environ.get("TAIL", "0.8"))  # short silent tail: the video ends right after the last word
 out = np.concatenate(chunks + [np.zeros(int(tail * SR), np.float32)])
 out = out / max(1e-6, np.max(np.abs(out))) * 0.9
 w = wave.open(f"{out_dir}/voice.wav", "wb"); w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR)

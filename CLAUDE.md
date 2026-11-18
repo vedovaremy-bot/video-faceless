@@ -20,6 +20,7 @@ Le but : qualifier les prospects sur plusieurs vidéos **buzz** et **valeur**, p
 ## Style
 - **Voix off par défaut : ElevenLabs, voice ID `3Tp5mYhT9wrfnry9pzvV`** (voix de la bibliothèque, choisie par le propriétaire) : `./build2.sh <video> 3Tp5mYhT9wrfnry9pzvV <seed>` dans `heritage/`. Débit ×1,1 (hook ×1,18), pauses courtes. Clé API via le proxy (abonnement Creator, ~2 000 caractères par vidéo).
 - Ne jamais cloner ni copier cette voix hors d'ElevenLabs (voix d'un comédien réel, interdit par les CGU).
+- **La voix doit aller jusqu'au bout** : chaque rendu se termine par `check_voice.py` (transcription automatique) qui vérifie que chaque phrase est dite en entier, et que la vidéo s'arrête peu après le dernier mot (blanc final ≈ 0,8 s).
 - Voix de secours : Microsoft « Henri » (`./build2.sh <video> henri`).
 - DA : noir & doré (`heritage/shared/theme.css`), hook fort dans les 3 premières secondes, formats variés.
 - Ne pas parler de prix, aucune promesse de gains ; garder les mentions « lien affilié · aucun résultat garanti » quand un lien est évoqué.
