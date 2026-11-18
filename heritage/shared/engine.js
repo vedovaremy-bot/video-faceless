@@ -15,10 +15,10 @@ function estimateTiming(script) {
   const phrases = {}; let t = 0.15;
   for (const p of script) {
     const words = p.text.split(/\s+/).filter(Boolean), ws = [];
-    for (const w of words) { ws.push(t); t += 0.17 + 0.045 * w.length + (/[.,:?!…»]$/.test(w) ? 0.18 : 0); }
-    phrases[p.id] = { start: ws[0], end: t, words: ws }; t += p.pause ?? 0.3;
+    for (const w of words) { ws.push(t); t += 0.1 + 0.033 * w.length + (/[.,:?!…»]$/.test(w) ? 0.12 : 0); }  // ≈ ElevenLabs pace (×1.1)
+    phrases[p.id] = { start: ws[0], end: t, words: ws }; t += (p.pause ?? 0.3) * 0.7;
   }
-  return { phrases, duration: t + 1.2 };
+  return { phrases, duration: t + 0.8 };
 }
 const TIMING = window.TIMING || estimateTiming(window.SCRIPT || []);
 window.TIMING = TIMING;
@@ -199,6 +199,12 @@ function render(t) {
   }
   document.querySelectorAll('.gold .w, .gold:not(.line), .goldtxt, .subbtn').forEach(el => el.style.backgroundPosition = `${100 - ((t * 35) % 220)}% 0`);
   if (window.onFrame) window.onFrame(t, { clamp, easeOut, easeInOut, backOut, cue });
+  if (window.PREVIEW) {  // preview without voice: show the line the voice will say
+    let pv = document.getElementById('pv');
+    if (!pv) { pv = document.createElement('div'); pv.id = 'pv'; pv.style.cssText = 'position:absolute;left:40px;right:40px;bottom:40px;padding:22px 30px;border-radius:24px;background:rgba(0,0,0,.82);border:2px dashed #d9b45a;color:#fff;font:600 34px/1.3 Inter,sans-serif;text-align:center;z-index:99'; document.getElementById('stage').appendChild(pv); }
+    const cur = (window.SCRIPT || []).find(p => { const ph = TIMING.phrases[p.id]; return t >= ph.start - 0.05 && t < ph.end + 0.25; });
+    pv.textContent = cur ? '🎙 ' + cur.text : ''; pv.style.opacity = cur ? 1 : 0;
+  }
 }
 window.render = render;
 window.H = { clamp, easeOut, easeInOut, backOut, cue };

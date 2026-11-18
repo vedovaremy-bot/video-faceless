@@ -11,6 +11,7 @@ const FPS = 30;
   page.on('pageerror', e => console.error('PAGE ERROR', e.message));
   const tf = path.join(outDir, 'timing.json');
   if (fs.existsSync(tf)) await page.addInitScript(t => { window.TIMING = t; }, JSON.parse(fs.readFileSync(tf, 'utf8')));
+  if (process.env.PREVIEW) await page.addInitScript(() => { window.PREVIEW = true; });
   await page.goto('file://' + path.resolve(html));
   await page.evaluate(() => document.fonts.ready);
   await page.waitForFunction(() => window.DURATION > 0);

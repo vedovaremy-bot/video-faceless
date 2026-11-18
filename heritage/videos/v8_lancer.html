@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Te lancer en ligne</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+  .pinq { width: 300px; height: 300px; }
+  .subbtn .b { display: none; } .subbtn.done .a { display: none; } .subbtn.done .b { display: inline; }
+  #map { position: absolute; left: 0; top: 250px; width: 1080px; height: 1000px; overflow: visible; }
+  .pin circle.bg { fill: #15130f; stroke: rgba(233,204,127,.35); stroke-width: 4; }
+  .pin text { font-family: "Cinzel", serif; font-weight: 800; font-size: 46px; fill: #8d877b; }
+  .pin.reached circle.bg { fill: url(#gg); stroke: #fff1c4; }
+  .pin.reached text { fill: #120f08; }
+  .step { position: absolute; left: 80px; right: 80px; top: 1330px; padding: 46px 54px; border-radius: 48px; }
+  .step .k { font-family: var(--cinzel); color: var(--gold); font-size: 36px; letter-spacing: .3em; }
+  .step .t { font-size: 76px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.08; margin-top: 10px; }
+  .step .s { font-family: var(--serif); font-style: italic; font-size: 54px; color: #e2c67d; margin-top: 10px; line-height: 1.15; }
+  .chips { display: flex; gap: 18px; margin-top: 22px; flex-wrap: wrap; }
+  .chip { padding: 14px 28px; border-radius: 999px; border: 2px solid rgba(233,204,127,.5); font-size: 36px; font-weight: 650; color: #f1dfae; }
+</style>
+<script src="../scripts/v8_lancer.js"></script>
+<script src="../shared/engine.js"></script>
+<script>
+const PINS = [0.04, 0.36, 0.67, 0.97];           // where each step sits along the route
+const ARRIVE = ['p3.3', 'p4.3', 'p5.3', 'p6.3']; // the dot reaches step k when its verb is spoken
+window.build = ({ say }) => {
+  say(document.getElementById('h2'), 'p1', 7, 12);
+  say(document.getElementById('h3'), 'p1', 12, 16);
+  say(document.getElementById('s2a'), 'p2', 0, 4);
+  say(document.getElementById('s2b'), 'p2', 6, 9);
+  say(document.getElementById('s2c'), 'p2', 9, 12);
+  const path = document.getElementById('route'), L = path.getTotalLength(), g = document.getElementById('pins');
+  PINS.forEach((f, i) => {
+    const p = path.getPointAtLength(f * L);
+    g.insertAdjacentHTML('beforeend', `<g class="pin" data-class="${ARRIVE[i]}|reached" transform="translate(${p.x} ${p.y})"><circle class="bg" r="44"/><text text-anchor="middle" y="16">${i + 1}</text></g>`);
+  });
+};
+window.onFrame = (t, { clamp, easeInOut, cue }) => {
+  const path = document.getElementById('route'), L = path.getTotalLength();
+  let f = 0;
+  ARRIVE.forEach((c, i) => { const a = cue(c) - 0.8; if (t >= a) f = Math.max(f, (i ? PINS[i - 1] : 0) + (PINS[i] - (i ? PINS[i - 1] : 0)) * easeInOut(clamp((t - a) / 0.8))); });
+  const p = path.getPointAtLength(f * L);
+  document.getElementById('dot').setAttribute('transform', `translate(${p.x} ${p.y})`);
+  const done = document.getElementById('done'); done.style.strokeDasharray = `${f * L} ${L}`;
+};
+</script>
+</head>
+<body>
+<div id="stage"><div id="cam">
+  <canvas id="silk" width="270" height="480"></canvas><canvas id="dust" width="1080" height="1920"></canvas><div class="vignette"></div>
+
+  <!-- HOOK -->
+  <section class="scene">
+    <div class="center" style="top:180px"><span class="pill" data-cue="-0.5" data-anim="none">Business en ligne 👇</span></div>
+    <div class="center" style="top:330px"><span class="kin" data-cue="-0.5" data-anim="none" style="font-size:92px;line-height:1.08">Tu veux te lancer<br>en ligne…</span></div>
+    <div class="center" style="top:640px"><span class="line kin light" id="h2" style="font-size:76px"></span><span class="line gold" id="h3" style="font-size:118px"></span></div>
+    <div class="center" style="top:1060px"><span data-cue="-0.5" data-anim="none">
+      <svg class="pinq" viewBox="0 0 100 100"><path d="M50 94 C30 66 18 52 18 36 a32 32 0 0 1 64 0 c0 16-12 30-32 58z" fill="none" stroke="url(#gg)" stroke-width="4"/>
+        <text x="50" y="50" text-anchor="middle" font-family="Cinzel" font-weight="800" font-size="34" fill="url(#gg)">?</text></svg></span></div>
+  </section>
+
+  <!-- au bon endroit + abonne-toi (au début, jamais à la fin) -->
+  <section class="scene" data-from="p2">
+    <div class="center" style="top:420px"><span class="line kin" id="s2a" style="font-size:100px"></span></div>
+    <div class="center" style="top:640px"><span data-cue="p2.4" data-anim="pop" data-sfx-at="p2.4+0.6|ding">
+      <span class="subbtn" data-class="p2.4+0.6|done"><span class="a">＋ S'abonner</span><span class="b">Abonné ✓</span></span></span></div>
+    <div class="center" style="top:880px"><span class="line kin light" id="s2b" style="font-size:80px"></span><span class="line gold" id="s2c" style="font-size:118px"></span></div>
+  </section>
+
+  <!-- l'itinéraire en 4 étapes -->
+  <section class="scene" data-from="p3">
+    <div class="center" style="top:130px"><span class="label" data-cue="p3.0">Ton itinéraire</span></div>
+    <svg id="map" viewBox="0 0 1080 1000">
+      <path id="route" d="M150 930 C150 760 920 820 910 640 S170 520 180 360 S900 230 930 70" fill="none" stroke="rgba(233,204,127,.22)" stroke-width="10" stroke-dasharray="4 22" stroke-linecap="round"/>
+      <path id="done" d="M150 930 C150 760 920 820 910 640 S170 520 180 360 S900 230 930 70" fill="none" stroke="url(#gg)" stroke-width="10" stroke-linecap="round" style="filter:drop-shadow(0 0 14px rgba(233,204,127,.7))"/>
+      <g id="pins"></g>
+      <g id="dot"><circle r="26" fill="#fff1c4" style="filter:drop-shadow(0 0 20px rgba(255,236,190,1))"/><circle r="12" fill="#d9b45a"/></g>
+    </svg>
+    <div class="step card" data-cue="p3.0" data-out="p4.0-0.1" data-anim="up">
+      <div class="k">Étape 1</div><div class="t">Un seul modèle</div>
+      <div class="chips"><span class="chip" data-cue="p3.7" data-anim="pop">Affiliation</span><span class="chip" data-cue="p3.8" data-anim="pop">E-commerce</span><span class="chip" data-cue="p3.10" data-anim="pop">Services</span></div>
+      <div class="s" data-cue="p3.11">pas les trois en même temps.</div></div>
+    <div class="step card" data-cue="p4.0" data-out="p5.0-0.1" data-anim="up">
+      <div class="k">Étape 2</div><div class="t">Apprends les bases</div><div class="s">avant de dépenser le moindre euro.</div></div>
+    <div class="step card" data-cue="p5.0" data-out="p6.0-0.1" data-anim="up">
+      <div class="k">Étape 3</div><div class="t">Une plateforme, de la régularité</div><div class="s">c'est comme ça qu'on construit une audience.</div></div>
+    <div class="step card" data-cue="p6.0" data-anim="up">
+      <div class="k">Étape 4</div><div class="t">Mesure &amp; ajuste</div><div class="s">tes chiffres, chaque semaine.</div></div>
+  </section>
+
+  <!-- patience -->
+  <section class="scene" data-from="p7" data-glow>
+    <div class="center" style="top:300px"><span class="label" data-cue="p7.0">Le plus important</span></div>
+    <div class="center" style="top:420px"><span class="goldtxt" data-cue="p7.2" data-anim="slam" style="font-size:130px;line-height:1.1">SOIS PATIENT.</span></div>
+    <div class="center" style="top:640px"><span data-cue="p7.3" data-anim="pop" style="font-size:200px">⏳</span></div>
+    <div class="center" style="top:960px"><span class="kin light" data-cue="p7.5" style="font-size:72px;line-height:1.2">Les premiers résultats<br>prennent du temps…</span></div>
+    <div class="center" style="top:1200px"><span class="gold" data-cue="p7.11" style="font-size:110px">et c'est normal.</span></div>
+  </section>
+
+  <!-- CTA GO -->
+  <section class="scene" data-from="p8">
+    <div class="center" style="top:300px"><span class="kin light" data-cue="p8.3" style="font-size:80px">Tu veux te lancer en ligne ?</span></div>
+    <div class="center" style="top:520px"><span class="kin" data-cue="p8.9" style="font-size:110px">Écris-moi</span></div>
+    <div class="center" style="top:640px"><span class="goldtxt" style="font-size:300px;line-height:1.05" data-cue="p8.11" data-anim="slam" data-flash>GO</span></div>
+    <div class="center" style="top:980px"><span class="kin light" data-cue="p8.13" style="font-size:90px">en DM 📩</span></div>
+    <div class="center" style="top:1140px"><span class="gold" data-cue="p8.16" style="font-size:96px">je te dis par où commencer.</span></div>
+    <div class="center" style="top:1760px"><span class="tiny" data-cue="p8.0">Contenu éducatif · aucun résultat garanti</span></div>
+  </section>
+</div><div id="flash"></div></div>
+</body>
+</html>
