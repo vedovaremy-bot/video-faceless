@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Son histoire avec l'affiliation</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+  .caps { top: 100px; height: 330px; }
+  .cap { font-size: 68px; }
+  .chapter { position: absolute; left: 0; right: 0; top: 455px; text-align: center; }
+  .chapter span { display: inline-block; font-family: var(--cinzel); font-weight: 800; font-size: 58px; letter-spacing: .16em; padding: 10px 40px; border-top: 2px solid rgba(233,204,127,.5); border-bottom: 2px solid rgba(233,204,127,.5);
+    background: var(--gold-grad); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .phone { position: absolute; left: 255px; right: 255px; top: 600px; height: 1180px; border-radius: 84px; background: #050505; border: 10px solid #221e17;
+    box-shadow: 0 0 0 2px rgba(233,204,127,.35), 0 50px 120px rgba(0,0,0,.8), 0 0 90px rgba(217,180,90,.15); }
+  .screen { position: absolute; inset: 14px; border-radius: 68px; overflow: hidden; background: radial-gradient(120% 70% at 50% 0%, #241d12, #0b0a08 70%); padding: 90px 40px 40px; }
+  .notch { position: absolute; top: 26px; left: 50%; width: 150px; height: 40px; margin-left: -75px; border-radius: 20px; background: #000; z-index: 3; }
+  .clock { text-align: center; font-size: 150px; font-weight: 300; letter-spacing: -0.04em; line-height: 1; }
+  .date { text-align: center; font-size: 34px; color: #a29a8a; margin-top: 10px; }
+  .alarm { margin: 40px auto 0; width: fit-content; padding: 16px 30px; border-radius: 999px; background: rgba(233,204,127,.15); border: 2px solid rgba(233,204,127,.5); font-size: 34px; font-weight: 600; color: #f1dfae; }
+  .bank { position: absolute; left: 30px; right: 30px; bottom: 60px; padding: 34px; border-radius: 40px; background: #16140f; border: 2px solid rgba(255,255,255,.08); }
+  .bank .k { font-size: 26px; color: #8d877b; } .bank .v { font-size: 92px; font-weight: 800; letter-spacing: -0.04em; color: #f08a7a; margin-top: 6px; font-variant-numeric: tabular-nums; }
+  .tile { position: relative; padding: 26px; border-radius: 30px; background: #16140f; border: 2px solid rgba(255,255,255,.07); margin-bottom: 24px; }
+  .tile .img { height: 150px; border-radius: 20px; background: radial-gradient(120% 90% at 30% 20%, #4a3c22, #1a1610 70%); }
+  .tile .t { font-size: 34px; font-weight: 700; margin-top: 16px; line-height: 1.2; }
+  .stamp { position: absolute; right: 20px; top: 20px; width: 110px; height: 110px; border-radius: 50%; border: 6px solid #e8866a; color: #e8866a; font-size: 70px; font-weight: 900; display: flex; align-items: center; justify-content: center; background: rgba(10,9,8,.7); }
+  .flowl { display: flex; flex-direction: column; gap: 22px; margin-top: 40px; }
+  .flowl div { padding: 24px 28px; border-radius: 26px; background: #16140f; border: 2px solid rgba(233,204,127,.35); font-size: 36px; font-weight: 700; text-align: center; }
+  .views { margin-top: 30px; text-align: center; font-size: 64px; font-weight: 800; }
+  .cal { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-top: 30px; }
+  .cal i { aspect-ratio: 1; border-radius: 18px; border: 2px solid rgba(233,204,127,.3); display: flex; align-items: center; justify-content: center; font-style: normal; font-size: 40px; color: #120f08; }
+  .cal i.on { background: var(--gold-grad); border-color: transparent; }
+  .notif { position: absolute; left: 22px; right: 22px; top: 70px; padding: 26px 28px; border-radius: 34px; background: rgba(40,35,26,.96); border: 2px solid rgba(233,204,127,.6); box-shadow: 0 20px 60px rgba(0,0,0,.6), 0 0 50px rgba(217,180,90,.35); z-index: 2; }
+  .notif .a { font-size: 24px; color: #a29a8a; } .notif .b { font-size: 36px; font-weight: 800; margin-top: 6px; }
+  .chart { margin-top: 40px; height: 520px; border-radius: 30px; background: #16140f; border: 2px solid rgba(255,255,255,.07); padding: 26px; }
+  .chart .k { font-size: 30px; color: #a29a8a; }
+  .tinyfix { position: absolute; left: 0; right: 0; bottom: 30px; text-align: center; }
+  .subbtn { display: none; }
+</style>
+<script src="../scripts/v9_histoire.js"></script>
+<script src="../shared/engine.js"></script>
+<script>
+window.build = ({ captions }) => {
+  captions(document.getElementById('caps'), ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7', 'p8'], 5);
+  const cal = document.getElementById('cal');
+  for (let i = 0; i < 15; i++) cal.insertAdjacentHTML('beforeend', `<i data-class="p5.0+${(i * 0.17).toFixed(2)}|on">✓</i>`);
+};
+</script>
+</head>
+<body>
+<div id="stage"><div id="cam">
+  <canvas id="silk" width="270" height="480"></canvas><canvas id="dust" width="1080" height="1920"></canvas><div class="vignette"></div>
+  <div class="caps" id="caps"></div>
+
+  <!-- 1. LE RÉVEIL -->
+  <section class="scene" data-to="p2">
+    <div class="chapter"><span data-cue="-0.5" data-anim="none">LE RÉVEIL</span></div>
+    <div class="phone" data-cue="-0.5" data-anim="none"><div class="notch"></div><div class="screen">
+      <div class="clock">07:00</div><div class="date">lundi</div>
+      <div class="alarm" data-cue="-0.5" data-anim="none">⏰ Réveil</div>
+      <div class="bank" data-cue="p1.6" data-anim="up" data-sfx="pop"><div class="k">Compte courant · solde</div><div class="v">12,40 €</div></div>
+    </div></div>
+  </section>
+
+  <!-- 2. AVANT -->
+  <section class="scene" data-from="p2">
+    <div class="chapter"><span data-cue="p2.0">AVANT</span></div>
+    <div class="phone"><div class="notch"></div><div class="screen">
+      <div class="tile"><div class="img"></div><div class="t">Deviens riche en 7 jours 🤑</div><span class="stamp" data-cue="p2.11" data-anim="slam">✗</span></div>
+      <div class="tile"><div class="img"></div><div class="t">La méthode miracle</div><span class="stamp" data-cue="p2.16" data-anim="slam">✗</span></div>
+      <div class="tile"><div class="img"></div><div class="t">Le secret qu'on te cache</div><span class="stamp" data-cue="p2.19" data-anim="slam">✗</span></div>
+    </div></div>
+  </section>
+
+  <!-- 3. LE DÉCLIC -->
+  <section class="scene" data-from="p3">
+    <div class="chapter"><span data-cue="p3.0">LE DÉCLIC</span></div>
+    <div class="phone"><div class="notch"></div><div class="screen">
+      <div style="text-align:center;font-size:120px;margin-top:20px" data-cue="p3.9" data-anim="pop">🔗</div>
+      <div style="text-align:center;margin-top:10px"><span class="goldtxt" data-cue="p3.10" data-anim="slam" style="font-size:66px">L'AFFILIATION</span></div>
+      <div class="flowl">
+        <div data-cue="p3.12" data-anim="up">Tu recommandes un produit</div>
+        <div data-cue="p3.15" data-anim="up">avec ton lien</div>
+        <div data-cue="p3.19" data-anim="up" style="border-color:rgba(233,204,127,.8)"><span class="goldtxt">= une commission</span></div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- 4. JOUR 1 -->
+  <section class="scene" data-from="p4" data-cut>
+    <div class="chapter"><span data-cue="p4.0" data-anim="slam">JOUR 1</span></div>
+    <div class="phone"><div class="notch"></div><div class="screen">
+      <div class="tile" data-cue="p4.9" data-anim="up"><div class="img" style="height:420px"></div><div class="t">Ma première vidéo 🎬</div></div>
+      <div class="views" data-cue="p4.13" data-anim="pop">👁 12 vues</div>
+    </div></div>
+  </section>
+
+  <!-- 5. JOUR 15 -->
+  <section class="scene" data-from="p5" data-cut>
+    <div class="chapter"><span data-cue="p5.0" data-anim="slam">JOUR 15</span></div>
+    <div class="phone"><div class="notch"></div><div class="screen">
+      <div style="text-align:center;font-size:34px;color:#a29a8a">Vidéos publiées</div>
+      <div class="cal" id="cal"></div>
+      <div class="views" data-cue="p5.3" data-anim="pop" style="color:#f08a7a;font-size:56px">0 vente</div>
+      <div style="text-align:center;font-size:40px;font-weight:700;margin-top:24px" data-cue="p5.9" data-anim="up">mais il continue 💪</div>
+    </div></div>
+  </section>
+
+  <!-- 6. JOUR 34 -->
+  <section class="scene" data-from="p6" data-cut>
+    <div class="chapter"><span data-cue="p6.0" data-anim="slam">JOUR 34</span></div>
+    <div class="phone"><div class="notch"></div><div class="screen">
+      <div class="clock" style="margin-top:200px;font-size:130px">21:47</div><div class="date">jeudi</div>
+      <div class="notif" data-cue="p6.4" data-anim="up" data-flash data-sfx="ding"><div class="a">💰 Programme d'affiliation · maintenant</div><div class="b">Nouvelle commission : 4,80 €</div></div>
+      <div style="position:absolute;left:0;right:0;bottom:120px;text-align:center" data-cue="p6.15" data-anim="up"><span class="gold" style="font-size:60px">la preuve que ça marche.</span></div>
+    </div></div>
+  </section>
+
+  <!-- 7. JOUR 90 -->
+  <section class="scene" data-from="p7" data-cut>
+    <div class="chapter"><span data-cue="p7.0" data-anim="slam">JOUR 90</span></div>
+    <div class="phone"><div class="notch"></div><div class="screen">
+      <div style="display:flex;flex-direction:column;gap:18px;margin-top:10px">
+        <div class="tile" style="margin:0;padding:20px 26px;font-size:34px;font-weight:700" data-cue="p7.4" data-anim="left">✓ connaît son audience</div>
+        <div class="tile" style="margin:0;padding:20px 26px;font-size:34px;font-weight:700" data-cue="p7.8" data-anim="left">✓ teste</div>
+        <div class="tile" style="margin:0;padding:20px 26px;font-size:34px;font-weight:700" data-cue="p7.10" data-anim="left">✓ ajuste</div>
+      </div>
+      <div class="chart" data-cue="p7.11" data-anim="up"><div class="k">Ventes</div>
+        <svg viewBox="0 0 400 300" style="width:100%;height:400px"><path d="M10 280 L60 270 L100 275 L150 240 L200 230 L250 190 L300 170 L350 130 L390 100" fill="none" stroke="url(#gg)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" data-cue="p7.12" data-anim="draw" data-d="1.4"/></svg></div>
+    </div></div>
+  </section>
+
+  <!-- 8. LA VÉRITÉ (twist) -->
+  <section class="scene" data-from="p8" data-glow>
+    <div class="chapter"><span data-cue="p8.0">LA VÉRITÉ</span></div>
+    <div class="center" style="top:640px"><span data-cue="p8.6" data-anim="pop" style="font-size:200px">🏎️</span></div>
+    <div class="center" style="top:880px"><span class="kin" data-cue="p8.7" style="font-size:96px">Une Lamborghini ?</span></div>
+    <div class="center" style="top:1000px"><span class="goldtxt" data-cue="p8.9" data-anim="slam" data-flash style="font-size:220px;line-height:1">NON.</span></div>
+    <div class="center" style="top:1290px"><span class="kin light" data-cue="p8.14" style="font-size:72px">Il a construit quelque chose</span></div>
+    <div class="center" style="top:1390px"><span class="gold" data-cue="p8.18" style="font-size:110px">qui lui appartient.</span></div>
+  </section>
+
+  <!-- 9. CTA -->
+  <section class="scene" data-from="p9">
+    <div class="center" style="top:300px"><span class="kin light" data-cue="p9.3" style="font-size:76px">Tu veux écrire ton histoire ?</span></div>
+    <div class="center" style="top:520px"><span class="kin" data-cue="p9.10" style="font-size:110px">Écris-moi</span></div>
+    <div class="center" style="top:640px"><span class="goldtxt" style="font-size:300px;line-height:1.05" data-cue="p9.12" data-anim="slam" data-flash>GO</span></div>
+    <div class="center" style="top:980px"><span class="kin light" data-cue="p9.14" style="font-size:90px">en DM 📩</span></div>
+    <div class="center" style="top:1140px"><span class="gold" data-cue="p9.17" style="font-size:96px">je te dis par où commencer.</span></div>
+  </section>
+
+  <div class="tinyfix"><span class="tiny" style="font-size:24px">Histoire fictive à but pédagogique · aucun résultat garanti</span></div>
+</div><div id="flash"></div></div>
+</body>
+</html>
