@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Même téléphone, pas le même choix</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+  .caps { top: 100px; height: 300px; }
+  .cap { font-size: 66px; }
+  .who { position: absolute; top: 470px; width: 440px; text-align: center; font-family: var(--cinzel); font-weight: 800; font-size: 54px; letter-spacing: .2em; }
+  .who.l { left: 70px; color: #a29a8a; } .who.r { left: 570px; color: var(--gold); }
+  .ph { position: absolute; top: 560px; width: 440px; height: 960px; border-radius: 64px; background: #050505; border: 8px solid #221e17;
+    box-shadow: 0 0 0 2px rgba(233,204,127,.3), 0 40px 100px rgba(0,0,0,.8); }
+  .ph.l { left: 70px; } .ph.r { left: 570px; }
+  .ph.r.hi { box-shadow: 0 0 0 3px rgba(233,204,127,.9), 0 40px 100px rgba(0,0,0,.8), 0 0 80px rgba(217,180,90,.35); }
+  .ph.dim { opacity: .3 !important; filter: blur(2px) saturate(.4) !important; }
+  .sc { position: absolute; inset: 12px; border-radius: 52px; overflow: hidden; background: radial-gradient(120% 70% at 50% 0%, #211b11, #0b0a08 70%); padding: 70px 26px 26px; }
+  .notch { position: absolute; top: 20px; left: 50%; width: 110px; height: 30px; margin-left: -55px; border-radius: 15px; background: #000; z-index: 3; }
+  .tags { position: absolute; left: 60px; right: 60px; top: 1560px; display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; }
+  .tg { padding: 14px 28px; border-radius: 999px; border: 2px solid rgba(233,204,127,.5); font-size: 36px; font-weight: 650; color: #f1dfae; }
+  .feedcol { display: flex; flex-direction: column; gap: 18px; }
+  .post { height: 300px; border-radius: 26px; background: radial-gradient(120% 90% at 30% 20%, #4a3c22, #1a1610 70%); border: 2px solid rgba(255,255,255,.06); }
+  .big { text-align: center; font-size: 84px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
+  .small { text-align: center; font-size: 30px; color: #a29a8a; margin-top: 10px; }
+  .row { padding: 20px 22px; border-radius: 24px; background: #16140f; border: 2px solid rgba(233,204,127,.3); font-size: 30px; font-weight: 700; margin-top: 16px; line-height: 1.25; }
+  .bubble { position: absolute; left: 90px; right: 90px; top: 900px; padding: 34px 44px; text-align: center; border-radius: 44px; border-bottom-left-radius: 12px; background: #2a261e; border: 2px solid rgba(255,255,255,.12);
+    font-size: 54px; font-weight: 700; box-shadow: 0 30px 80px rgba(0,0,0,.7); }
+  .bubble small { display: block; font-size: 28px; color: #a29a8a; font-weight: 500; margin-bottom: 8px; }
+  .tinyfix { position: absolute; left: 0; right: 0; bottom: 30px; text-align: center; }
+</style>
+<script src="../scripts/v10_choix.js"></script>
+<script src="../shared/engine.js"></script>
+<script>
+window.build = ({ captions }) => {
+  captions(document.getElementById('caps'), ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7'], 5);
+  document.querySelectorAll('.feedcol').forEach(c => { for (let i = 0; i < 10; i++) c.insertAdjacentHTML('beforeend', '<div class="post"></div>'); });
+};
+window.onFrame = (t, { cue }) => {
+  const a = cue('p2'); document.querySelectorAll('.feedcol').forEach(c => c.style.transform = `translateY(${-Math.max(0, t - a) * 320 % 2000}px)`);
+};
+</script>
+</head>
+<body>
+<div id="stage"><div id="cam">
+  <canvas id="silk" width="270" height="480"></canvas><canvas id="dust" width="1080" height="1920"></canvas><div class="vignette"></div>
+  <div class="caps" id="caps"></div>
+
+  <!-- 1. same start -->
+  <section class="scene" data-to="p2">
+    <div class="who l" data-cue="-0.5" data-anim="none">LÉO</div><div class="who r" data-cue="-0.5" data-anim="none">SAM</div>
+    <div class="ph l" data-cue="-0.5" data-anim="none"><div class="notch"></div><div class="sc"><div class="big" style="margin-top:250px;font-weight:300">22:00</div><div class="small">mardi</div></div></div>
+    <div class="ph r" data-cue="-0.5" data-anim="none"><div class="notch"></div><div class="sc"><div class="big" style="margin-top:250px;font-weight:300">22:00</div><div class="small">mardi</div></div></div>
+    <div class="tags"><span class="tg" data-cue="p1.6" data-anim="pop">même âge</span><span class="tg" data-cue="p1.9" data-anim="pop">même salaire</span><span class="tg" data-cue="p1.13" data-anim="pop">même téléphone</span></div>
+  </section>
+
+  <!-- 2. Léo scrolle -->
+  <section class="scene" data-from="p2">
+    <div class="who l">LÉO</div><div class="who r">SAM</div>
+    <div class="ph l"><div class="notch"></div><div class="sc"><div class="feedcol"></div></div></div>
+    <div class="ph r dim"><div class="notch"></div><div class="sc"></div></div>
+    <div class="tags"><span class="tg" data-cue="p2.5" data-anim="pop">📱 2 h / jour à scroller</span></div>
+  </section>
+
+  <!-- 3. Sam apprend -->
+  <section class="scene" data-from="p3">
+    <div class="who l">LÉO</div><div class="who r">SAM</div>
+    <div class="ph l dim"><div class="notch"></div><div class="sc"><div class="feedcol"></div></div></div>
+    <div class="ph r hi"><div class="notch"></div><div class="sc">
+      <div class="row" data-cue="p3.7" data-anim="up">📚 Leçon : l'affiliation</div>
+      <div class="row" data-cue="p3.8" data-anim="up">🔗 Mon lien affilié</div>
+      <div class="row" data-cue="p3.10" data-anim="up" style="border-color:rgba(233,204,127,.8)">🎬 Vidéo publiée ✓</div>
+    </div></div>
+    <div class="tags"><span class="tg" data-cue="p3.4" data-anim="pop">⏱ les mêmes 2 h</span></div>
+  </section>
+
+  <!-- 4. one month -->
+  <section class="scene" data-from="p4" data-cut>
+    <div class="center" style="top:440px"><span class="label" data-cue="p4.0" data-anim="slam" style="font-size:50px">1 mois plus tard</span></div>
+    <div class="ph l" style="top:600px"><div class="notch"></div><div class="sc"><div class="big" style="margin-top:220px" data-cue="p4.7" data-anim="pop">1 000</div><div class="small">vidéos regardées</div></div></div>
+    <div class="ph r" style="top:600px"><div class="notch"></div><div class="sc"><div class="big" style="margin-top:220px" data-cue="p4.13" data-anim="pop"><span class="goldtxt">30</span></div><div class="small">vidéos publiées</div>
+      <div class="small" data-cue="p4.15" data-anim="up" style="margin-top:60px;color:#f08a7a;font-weight:700;font-size:34px">👁 presque 0 vue</div></div></div>
+  </section>
+
+  <!-- 5. Léo se moque -->
+  <section class="scene" data-from="p5">
+    <div class="who l">LÉO</div><div class="who r">SAM</div>
+    <div class="ph l dim"><div class="notch"></div><div class="sc"></div></div>
+    <div class="ph r dim"><div class="notch"></div><div class="sc"></div></div>
+    <div class="bubble" data-cue="p5.0" data-anim="pop" data-sfx="pop"><small>Léo</small>« Tu perds ton temps 😂 »</div>
+  </section>
+
+  <!-- 6. six months: Léo -->
+  <section class="scene" data-from="p6" data-cut>
+    <div class="center" style="top:440px"><span class="label" data-cue="p6.0" data-anim="slam" style="font-size:50px">6 mois plus tard</span></div>
+    <div class="ph l" style="top:600px"><div class="notch"></div><div class="sc"><div class="big" style="margin-top:200px;font-size:120px" data-cue="p6.7" data-anim="slam">360 h</div><div class="small">à scroller</div>
+      <div class="small" data-cue="p6.12" data-anim="up" style="margin-top:50px;font-size:34px">≈ 15 jours entiers</div></div></div>
+    <div class="ph r dim" style="top:600px"><div class="notch"></div><div class="sc"></div></div>
+  </section>
+
+  <!-- 7. six months: Sam -->
+  <section class="scene" data-from="p7">
+    <div class="center" style="top:440px"><span class="label" style="font-size:50px">6 mois plus tard</span></div>
+    <div class="ph l dim" style="top:600px"><div class="notch"></div><div class="sc"><div class="big" style="margin-top:200px;font-size:120px">360 h</div><div class="small">à scroller</div></div></div>
+    <div class="ph r hi" style="top:600px"><div class="notch"></div><div class="sc">
+      <div class="row" data-cue="p7.3" data-anim="up">👥 une audience qui lui fait confiance</div>
+      <div class="row" data-cue="p7.9" data-anim="up" data-sfx="ding">💰 ses premières commissions</div>
+      <div class="row" data-cue="p7.13" data-anim="up" style="border-color:rgba(233,204,127,.8)">🧠 une compétence que personne ne peut lui enlever</div>
+    </div></div>
+  </section>
+
+  <!-- 8. punchline -->
+  <section class="scene" data-from="p8" data-glow>
+    <div class="who l" style="top:330px">LÉO</div><div class="who r" style="top:330px">SAM</div>
+    <div class="ph l dim" style="top:420px;height:700px"><div class="notch"></div><div class="sc"></div></div>
+    <div class="ph r hi" style="top:420px;height:700px"><div class="notch"></div><div class="sc"></div></div>
+    <div class="center" style="top:1220px"><span class="kin" data-cue="p8.0" style="font-size:100px">Même téléphone.</span></div>
+    <div class="center" style="top:1360px"><span class="goldtxt" data-cue="p8.2" data-anim="slam" data-flash style="font-size:84px;line-height:1.1">PAS LE MÊME CHOIX.</span></div>
+  </section>
+
+  <!-- 9. CTA -->
+  <section class="scene" data-from="p9">
+    <div class="center" style="top:300px"><span class="kin light" data-cue="p9.3" style="font-size:76px">Tu veux être du côté de Sam ?</span></div>
+    <div class="center" style="top:520px"><span class="kin" data-cue="p9.10" style="font-size:110px">Écris-moi</span></div>
+    <div class="center" style="top:640px"><span class="goldtxt" style="font-size:300px;line-height:1.05" data-cue="p9.12" data-anim="slam" data-flash>GO</span></div>
+    <div class="center" style="top:980px"><span class="kin light" data-cue="p9.14" style="font-size:90px">en DM 📩</span></div>
+    <div class="center" style="top:1140px"><span class="gold" data-cue="p9.17" style="font-size:96px">je te dis par où commencer.</span></div>
+  </section>
+
+  <div class="tinyfix"><span class="tiny" style="font-size:24px">Histoire fictive à but pédagogique · aucun résultat garanti</span></div>
+</div><div id="flash"></div></div>
+</body>
+</html>
