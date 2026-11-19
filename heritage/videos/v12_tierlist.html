@@ -10,7 +10,8 @@
   .title .t { font-size: 66px; font-weight: 800; letter-spacing: -0.03em; margin-top: 8px; }
   .grid { position: absolute; left: 50px; right: 50px; top: 340px; display: flex; flex-direction: column; gap: 18px; }
   .row { position: relative; height: 196px; display: flex; gap: 18px; }
-  .lab { flex: 0 0 170px; border-radius: 30px; display: flex; align-items: center; justify-content: center; font-family: var(--cinzel); font-weight: 900; font-size: 110px; color: #120f08; }
+  .lab { flex: 0 0 170px; border-radius: 30px; display: flex; align-items: center; justify-content: center; font-family: var(--cinzel); font-weight: 900; font-size: 100px; color: #120f08; }
+  .lab.medal { font-size: 120px; background: rgba(20,18,14,.85) !important; border: 3px solid rgba(233,204,127,.5); }
   .slot { flex: 1; border-radius: 30px; border: 2px dashed rgba(233,204,127,.28); background: rgba(20,18,14,.55); position: relative; overflow: hidden; }
   .row.cur .slot { border: 3px solid rgba(243,220,154,.85); box-shadow: 0 0 50px rgba(217,180,90,.3); }
   .q { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 80px; font-weight: 800; color: rgba(233,204,127,.25); }
@@ -27,20 +28,20 @@
 <script>
 // each row: tier, colour, which phrase fills it, emoji, name, reason, which word reveals the reason
 const TIERS = [
-  ['S', 'linear-gradient(135deg,#fff1c4,#d9b45a)', 'p6', '🔗', "L'affiliation", 'pas de stock · petit budget · du contenu chaque semaine', 'p6.5'],
-  ['A', 'linear-gradient(135deg,#f0d488,#b8913f)', 'p5', '💼', 'Le freelance', 'tu vends ce que tu sais déjà faire', 'p5.3'],
-  ['B', 'linear-gradient(135deg,#d9b45a,#8a6a25)', 'p4', '📦', 'Le e-commerce', 'il faut un budget', 'p4.3'],
-  ['C', 'linear-gradient(135deg,#a88746,#5e4a22)', 'p3', '🎓', 'Vendre sa formation', 'il faut déjà une audience', 'p3.4'],
-  ['D', 'linear-gradient(135deg,#7a6640,#3a3020)', 'p2', '📱', 'Créer une appli', 'technique et cher', 'p2.4'],
+  ['🥇', 'linear-gradient(135deg,#fff1c4,#d9b45a)', 'p6', '🔗', "L'affiliation", 'pas de stock · petit budget · du contenu chaque semaine', 'p6.5'],
+  ['🥈', 'linear-gradient(135deg,#f2f2f2,#9da3ad)', 'p5', '💼', 'Le freelance', 'tu vends ce que tu sais déjà faire', 'p5.3'],
+  ['🥉', 'linear-gradient(135deg,#f0b98a,#9a5b2e)', 'p4', '📦', 'Le e-commerce', 'il faut un budget', 'p4.3'],
+  ['4', 'linear-gradient(135deg,#a88746,#5e4a22)', 'p3', '🎓', 'Vendre sa formation', 'il faut déjà une audience', 'p3.4'],
+  ['5', 'linear-gradient(135deg,#7a6640,#3a3020)', 'p2', '📱', 'Créer une appli', 'technique et cher', 'p2.4'],
 ];
 window.build = () => {
   const g = document.getElementById('grid');
   TIERS.forEach(([t, col, p, e, n, r, rc], i) => {
     const next = i === 0 ? 'p7' : TIERS[i - 1][2];
     g.insertAdjacentHTML('beforeend', `<div class="row" data-class="${p}|cur;${next}-0.05|was">
-      <div class="lab" style="background:${col}">${t}</div>
+      <div class="lab${/[0-9]/.test(t) ? '' : ' medal'}" style="background:${col}">${t}</div>
       <div class="slot"><div class="q">?</div>
-        <div class="item${t === 'S' ? ' top' : ''}" data-cue="${p}.${t === 'S' ? 4 : 0}" data-anim="${t === 'S' ? 'slam' : 'right'}" ${t === 'S' ? 'data-flash' : 'data-sfx="pop"'}>
+        <div class="item${t === '🥇' ? ' top' : ''}" data-cue="${p}.${t === '🥇' ? 4 : 0}" data-anim="${t === '🥇' ? 'slam' : 'right'}" ${t === '🥇' ? 'data-flash' : 'data-sfx="pop"'}>
           <span class="e">${e}</span><div><div class="n">${n}</div><div class="r" data-cue="${rc}" data-anim="up">${r}</div></div></div></div></div>`);
   });
 };
@@ -55,7 +56,7 @@ window.onFrame = (t, { cue }) => {
 
   <!-- tier list (hook = empty list already on screen) -->
   <section class="scene" data-to="p7">
-    <div class="title"><div class="k" data-cue="-0.5" data-anim="none">TIER LIST</div><div class="t" data-cue="-0.5" data-anim="none">Business en ligne · débutant</div></div>
+    <div class="title"><div class="k" data-cue="-0.5" data-anim="none">LE CLASSEMENT</div><div class="t" data-cue="-0.5" data-anim="none">Business en ligne · débutant</div></div>
     <div class="grid" id="grid"></div>
     <div class="opinion" data-cue="p1.0">Classement selon la facilité à démarrer · mon avis</div>
   </section>

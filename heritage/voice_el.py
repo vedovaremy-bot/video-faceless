@@ -73,7 +73,17 @@ for i, p in enumerate(SCRIPT):
     prev = " ".join(spoken(q["text"]) for q in SCRIPT[max(0, i - 2):i])
     nxt = spoken(SCRIPT[i + 1]["text"]) if i + 1 < len(SCRIPT) else ""
     speed = min(1.2, SPEED + (0.08 if p.get("ls", 1) < 0.85 else 0))  # hook phrase a bit faster
-    a, marks = tts(spoken(p.get("say", p["text"])), prev, nxt, speed)
+    # phrase cache: an unchanged phrase is reused instead of being paid for again
+    import hashlib
+    key = hashlib.sha1(f"{voice_id}|{MODEL}|{speed}|{spoken(p.get('say', p['text']))}".encode()).hexdigest()[:16]
+    cdir = os.path.join(out_dir, "el_cache"); os.makedirs(cdir, exist_ok=True)
+    cf = os.path.join(cdir, key)
+    if os.path.exists(cf + ".npy"):
+        a, marks = np.load(cf + ".npy"), [tuple(m) for m in json.load(open(cf + ".json"))]
+        print(f"  ({p['id']} reused, 0 credit)", flush=True)
+    else:
+        a, marks = tts(spoken(p.get("say", p["text"])), prev, nxt, speed)
+        np.save(cf + ".npy", a); json.dump(marks, open(cf + ".json", "w"))
     nz = np.where(np.abs(a) > 0.01)[0]
     a0 = max(0, nz[0] - int(0.03 * SR)); a1 = min(len(a), nz[-1] + int(0.12 * SR))
     lead = a0 / SR; a = a[a0:a1]; L = len(a) / SR
