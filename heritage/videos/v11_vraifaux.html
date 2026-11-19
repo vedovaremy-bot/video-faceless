@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Vrai ou faux affiliation</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+  :root { --bad: #e8866a; }
+  .tag { position: absolute; left: 0; right: 0; top: 200px; text-align: center; }
+  .tag span { display: inline-block; font-family: var(--cinzel); font-weight: 800; font-size: 56px; letter-spacing: .12em; padding: 14px 40px; border-radius: 999px; border: 3px solid rgba(233,204,127,.7); color: #f3dc9a; background: rgba(20,18,14,.8); }
+  .dots { position: absolute; left: 0; right: 0; top: 330px; display: flex; justify-content: center; gap: 20px; }
+  .dot { width: 22px; height: 22px; border-radius: 50%; background: rgba(233,204,127,.25); } .dot.on { background: var(--gold); box-shadow: 0 0 18px rgba(233,204,127,.8); }
+  .q { position: absolute; left: 80px; right: 80px; top: 420px; min-height: 440px; padding: 60px 60px; border-radius: 56px; display: flex; align-items: center; justify-content: center; text-align: center; }
+  .q .t { font-size: 84px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.1; }
+  .q .t::before { content: "« "; color: var(--gold); } .q .t::after { content: " »"; color: var(--gold); }
+  .btns { position: absolute; left: 80px; right: 80px; top: 950px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  .btn { height: 190px; border-radius: 40px; display: flex; align-items: center; justify-content: center; gap: 18px; font-family: var(--cinzel); font-weight: 800; font-size: 76px; letter-spacing: .06em;
+    border: 4px solid rgba(233,204,127,.5); background: rgba(20,18,14,.85); color: #f4efe4; transition: none; }
+  .btn.faux { border-color: rgba(232,134,106,.6); }
+  .btn.win { background: var(--gold-grad); color: #120f08; border-color: #fff1c4; transform: scale(1.06); box-shadow: 0 0 80px rgba(217,180,90,.6); }
+  .btn.faux.win { background: linear-gradient(100deg, #b5482f, #f08a6c 50%, #c4553a); color: #fff; border-color: #ffd2c4; box-shadow: 0 0 80px rgba(232,134,106,.6); }
+  .btn.lose { opacity: .25; transform: scale(.94); }
+  .timer { position: absolute; left: 50%; top: 1210px; width: 220px; height: 220px; margin-left: -110px; }
+  .timer svg { width: 220px; height: 220px; transform: rotate(-90deg); }
+  .timer b { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 110px; font-weight: 800; color: #f3dc9a; }
+  .expl { position: absolute; left: 70px; right: 70px; top: 1230px; text-align: center; }
+  .hint { position: absolute; left: 0; right: 0; top: 1470px; text-align: center; font-size: 40px; color: #a29a8a; font-weight: 600; }
+</style>
+<script src="../scripts/v11_vraifaux.js"></script>
+<script src="../shared/engine.js"></script>
+<script>
+const QS = [
+  { q: 'p2', a: 'p3', text: "Il faut des milliers d'abonnés pour commencer", ok: 'faux', from: 1, n: 1 },
+  { q: 'p4', a: 'p5', text: "Tu n'as pas besoin de stock", ok: 'vrai', from: 1, n: 2 },
+  { q: 'p6', a: 'p7', text: "C'est de l'argent facile", ok: 'faux', from: 1, n: 3 },
+];
+window.build = ({ say }) => {
+  const host = document.getElementById('cam'), anchor = document.getElementById('qanchor');
+  for (const Q of QS) {
+    const sc = document.createElement('section'); sc.className = 'scene'; sc.dataset.from = Q.q; sc.setAttribute('data-cut', '');
+    const dots = [1, 2, 3].map(i => `<span class="dot${i <= Q.n ? ' on' : ''}"></span>`).join('');
+    const cls = w => `btn ${w}" data-class="${Q.a}.0|${Q.ok === w ? 'win' : 'lose'}`;
+    sc.innerHTML = `
+      <div class="tag"><span>VRAI OU FAUX ?</span></div><div class="dots">${dots}</div>
+      <div class="q card" data-cue="${Q.q}.0" data-anim="pop" data-d="0.35"><div class="t">${Q.text}</div></div>
+      <div class="btns"><div class="${cls('vrai')}">✓ VRAI</div><div class="${cls('faux')}">✗ FAUX</div></div>
+      <div class="timer" data-cue="${Q.q}$" data-anim="none" data-out="${Q.a}.0-0.05" data-sfx="none"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="none" stroke="rgba(233,204,127,.2)" stroke-width="8"/>
+        <circle class="ring" data-from="${Q.q}$" data-to="${Q.a}" cx="50" cy="50" r="44" fill="none" stroke="url(#gg)" stroke-width="8" stroke-linecap="round" stroke-dasharray="276.5"/></svg><b class="num"></b></div>
+      <div class="hint" data-cue="${Q.q}$" data-anim="none" data-out="${Q.a}.0-0.05" data-sfx="none">Réponds avant la fin du chrono 👇</div>
+      <div class="expl"><span class="line kin" id="e${Q.n}" style="font-size:62px;line-height:1.2;white-space:normal"></span></div>
+      <i data-cue="${Q.a}.0" data-anim="none" data-flash data-punch data-sfx="check"></i>`;
+    host.insertBefore(sc, anchor);
+  }
+  say(document.getElementById('e1'), 'p3', 1, 14);
+  say(document.getElementById('e2'), 'p5', 1, 11);
+  say(document.getElementById('e3'), 'p7', 1, 15);
+};
+window.onFrame = (t, { clamp, cue }) => {
+  document.querySelectorAll('.ring').forEach(r => {
+    const a = cue(r.dataset.from), b = cue(r.dataset.to), p = clamp((t - a) / Math.max(0.3, b - a));
+    r.style.strokeDashoffset = 276.5 * p;
+    const num = r.closest('.timer').querySelector('.num'); num.textContent = Math.max(1, Math.ceil(3 * (1 - p)));
+  });
+};
+</script>
+</head>
+<body>
+<div id="stage"><div id="cam">
+  <canvas id="silk" width="270" height="480"></canvas><canvas id="dust" width="1080" height="1920"></canvas><div class="vignette"></div>
+
+  <!-- HOOK -->
+  <section class="scene">
+    <div class="tag"><span data-cue="-0.5" data-anim="none">VRAI OU FAUX ?</span></div>
+    <div class="center" style="top:420px"><span class="goldtxt" data-cue="-0.5" data-anim="none" style="font-size:104px;line-height:1.05">3 IDÉES REÇUES</span></div>
+    <div class="center" style="top:600px"><span class="kin" data-cue="-0.5" data-anim="none" style="font-size:90px">sur l'affiliation</span></div>
+    <div class="btns" style="top:860px"><div class="btn vrai" data-cue="p1.0" data-anim="pop">✓ VRAI</div><div class="btn faux" data-cue="p1.2" data-anim="pop">✗ FAUX</div></div>
+    <div class="center" style="top:1160px"><span class="gold" data-cue="p1.9" style="font-size:96px">Compte tes points 👇</span></div>
+  </section>
+
+  <i id="qanchor"></i>
+
+  <!-- CTA -->
+  <section class="scene" data-from="p8" data-glow>
+    <div class="center" style="top:300px"><span class="kin" data-cue="p8.0" style="font-size:110px">3 sur 3 ?</span></div>
+    <div class="center" style="top:480px"><span class="kin" data-cue="p8.4" style="font-size:110px">Écris-moi</span></div>
+    <div class="center" style="top:600px"><span class="goldtxt" style="font-size:300px;line-height:1.05" data-cue="p8.6" data-anim="slam" data-flash>GO</span></div>
+    <div class="center" style="top:940px"><span class="kin light" data-cue="p8.8" style="font-size:90px">en DM 📩</span></div>
+    <div class="center" style="top:1100px"><span class="gold" data-cue="p8.11" style="font-size:96px">je te dis par où commencer.</span></div>
+    <div class="center" style="top:1420px"><span class="tiny" data-cue="p8.0" style="font-size:28px">Contenu éducatif · aucun résultat garanti</span></div>
+  </section>
+</div><div id="flash"></div></div>
+</body>
+</html>
