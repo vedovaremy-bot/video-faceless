@@ -27,11 +27,11 @@
 <script>
 // each row: tier, colour, which phrase fills it, emoji, name, reason, which word reveals the reason
 const TIERS = [
-  ['S', 'linear-gradient(135deg,#fff1c4,#d9b45a)', 'p6', '🔗', "L'affiliation", 'pas de stock · petit budget · du contenu régulier', 'p6.6'],
-  ['A', 'linear-gradient(135deg,#f0d488,#b8913f)', 'p5', '💼', 'Le freelance', 'tu vends une compétence que tu as déjà', 'p5.3'],
-  ['B', 'linear-gradient(135deg,#d9b45a,#8a6a25)', 'p4', '📦', 'Le e-commerce', 'stock, pub, SAV : il faut un budget', 'p4.5'],
-  ['C', 'linear-gradient(135deg,#a88746,#5e4a22)', 'p3', '🎓', 'Vendre sa formation', "d'abord une expertise et une audience", 'p3.5'],
-  ['D', 'linear-gradient(135deg,#7a6640,#3a3020)', 'p2', '📱', 'Créer une appli', 'technique, long et cher', 'p2.7'],
+  ['S', 'linear-gradient(135deg,#fff1c4,#d9b45a)', 'p6', '🔗', "L'affiliation", 'pas de stock · petit budget · du contenu chaque semaine', 'p6.5'],
+  ['A', 'linear-gradient(135deg,#f0d488,#b8913f)', 'p5', '💼', 'Le freelance', 'tu vends ce que tu sais déjà faire', 'p5.3'],
+  ['B', 'linear-gradient(135deg,#d9b45a,#8a6a25)', 'p4', '📦', 'Le e-commerce', 'il faut un budget', 'p4.3'],
+  ['C', 'linear-gradient(135deg,#a88746,#5e4a22)', 'p3', '🎓', 'Vendre sa formation', 'il faut déjà une audience', 'p3.4'],
+  ['D', 'linear-gradient(135deg,#7a6640,#3a3020)', 'p2', '📱', 'Créer une appli', 'technique et cher', 'p2.4'],
 ];
 window.build = () => {
   const g = document.getElementById('grid');
@@ -40,7 +40,7 @@ window.build = () => {
     g.insertAdjacentHTML('beforeend', `<div class="row" data-class="${p}|cur;${next}-0.05|was">
       <div class="lab" style="background:${col}">${t}</div>
       <div class="slot"><div class="q">?</div>
-        <div class="item${t === 'S' ? ' top' : ''}" data-cue="${p}.${t === 'S' ? 5 : 0}" data-anim="${t === 'S' ? 'slam' : 'right'}" ${t === 'S' ? 'data-flash' : 'data-sfx="pop"'}>
+        <div class="item${t === 'S' ? ' top' : ''}" data-cue="${p}.${t === 'S' ? 4 : 0}" data-anim="${t === 'S' ? 'slam' : 'right'}" ${t === 'S' ? 'data-flash' : 'data-sfx="pop"'}>
           <span class="e">${e}</span><div><div class="n">${n}</div><div class="r" data-cue="${rc}" data-anim="up">${r}</div></div></div></div></div>`);
   });
 };
@@ -62,11 +62,11 @@ window.onFrame = (t, { cue }) => {
 
   <!-- CTA -->
   <section class="scene" data-from="p7" data-glow>
-    <div class="center" style="top:300px"><span class="kin light" data-cue="p7.3" style="font-size:58px">Tu veux te lancer dans l'affiliation ?</span></div>
-    <div class="center" style="top:520px"><span class="kin" data-cue="p7.9" style="font-size:110px">Écris-moi</span></div>
-    <div class="center" style="top:640px"><span class="goldtxt" style="font-size:300px;line-height:1.05" data-cue="p7.11" data-anim="slam" data-flash>GO</span></div>
-    <div class="center" style="top:980px"><span class="kin light" data-cue="p7.13" style="font-size:90px">en DM 📩</span></div>
-    <div class="center" style="top:1140px"><span class="gold" data-cue="p7.16" style="font-size:96px">je te dis par où commencer.</span></div>
+    <div class="center" style="top:300px"><span class="kin light" data-cue="p7.0" style="font-size:80px">Tu veux te lancer ?</span></div>
+    <div class="center" style="top:520px"><span class="kin" data-cue="p7.5" style="font-size:110px">Écris-moi</span></div>
+    <div class="center" style="top:640px"><span class="goldtxt" style="font-size:300px;line-height:1.05" data-cue="p7.7" data-anim="slam" data-flash>GO</span></div>
+    <div class="center" style="top:980px"><span class="kin light" data-cue="p7.9" style="font-size:90px">en DM 📩</span></div>
+    <div class="center" style="top:1140px"><span class="gold" data-cue="p7.11" style="font-size:96px">je te dis par où commencer.</span></div>
     <div class="center" style="top:1420px"><span class="tiny" data-cue="p7.0" style="font-size:28px">Contenu éducatif · aucun résultat garanti</span></div>
   </section>
 </div><div id="flash"></div></div>

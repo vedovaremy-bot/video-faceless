@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Build one video:
 #   ./build2.sh <name> el [music_seed]           DEFAULT voice: ElevenLabs voice 3Tp5mYhT9wrfnry9pzvV
+#   ./build2.sh <name> cb [music_seed]           Chatterbox, owner's own voice (needs CB_PY + CB_REF)
 #   ./build2.sh <name> henri [music_seed]        Microsoft neural voice Henri (edge-tts)
 #   ./build2.sh <name> tom [music_seed]          Piper voice Tom (needs PIPER_MODEL env var)
 #   ./build2.sh <name> coqui [music_seed]        free male voice (needs COQUI_PY + COQUI_MODEL env vars)
@@ -11,6 +12,8 @@ cd "$(dirname "$0")"
 name=$1; voice=$2; [ "$voice" = el ] && voice=3Tp5mYhT9wrfnry9pzvV; seed=${3:-7}; out=out/$name; mkdir -p "$out"
 if [ -n "${SKIP_VOICE:-}" ]; then
   echo "reusing $out/voice.wav"
+elif [ "$voice" = cb ]; then
+  python3 voice_cb.py "scripts/$name.js" "$out" "${CB_REF:?owner voice reference wav}"
 elif [ "$voice" = henri ]; then
   SSL_CERT_FILE=/root/.ccr/ca-bundle.crt python3 voice_edge.py "scripts/$name.js" "$out" fr-FR-HenriNeural
 elif [ "$voice" = tom ]; then
