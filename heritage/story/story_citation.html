@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Story citation</title>
+<style>
+  @font-face { font-family: "Cinzel"; font-weight: 400 900; src: url(../fonts/Cinzel.woff2) format("woff2"); }
+  @font-face { font-family: "Instrument Serif"; font-style: italic; src: url(../fonts/InstrumentSerif-Italic.woff2) format("woff2"); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #000; }
+  .story { position: relative; width: 1080px; height: 1920px; overflow: hidden; color: #f4efe4; font-family: "Inter", system-ui, sans-serif;
+    background: radial-gradient(70% 40% at 80% 8%, rgba(217,180,90,.22), transparent 70%), radial-gradient(80% 45% at 10% 95%, rgba(217,180,90,.2), transparent 70%), #070605; }
+  canvas { position: absolute; inset: 0; }
+  .silk { position: absolute; inset: -20%; background: repeating-linear-gradient(118deg, rgba(255,240,200,.035) 0 3px, transparent 3px 70px); filter: blur(1px); }
+  .frame { position: absolute; left: 70px; right: 70px; top: 300px; bottom: 380px; border: 2px solid rgba(233,204,127,.35); border-radius: 40px; }
+  .frame::before, .frame::after { content: "✦"; position: absolute; left: 50%; transform: translateX(-50%); color: #d9b45a; font-size: 40px; background: #0b0a08; padding: 0 22px; }
+  .frame::before { top: -28px; } .frame::after { bottom: -28px; }
+  .inner { position: absolute; left: 130px; right: 130px; top: 300px; bottom: 380px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 46px; }
+  .q1 { font-size: 92px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.08; }
+  .q2 { font-family: "Instrument Serif", serif; font-style: italic; font-size: 118px; line-height: 1.02; color: #f0d488; }
+  .gold { font-family: "Cinzel", serif; font-weight: 800; background: linear-gradient(100deg, #8a6a25 0%, #e9cc7f 28%, #fff1c4 46%, #d4a94c 64%, #8a6a25 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .rule { width: 180px; height: 3px; background: linear-gradient(90deg, transparent, #d9b45a, transparent); }
+  .foot { position: absolute; left: 0; right: 0; bottom: 420px; text-align: center; font-size: 38px; font-weight: 600; color: #cdbf9f; letter-spacing: .02em; }
+  .foot b { color: #f3dc9a; font-family: "Cinzel", serif; font-size: 44px; letter-spacing: .1em; }
+</style>
+</head>
+<body>
+
+<!-- 1 -->
+<section class="story" id="v1"><div class="silk"></div>
+  <div class="frame"></div>
+  <div class="inner">
+    <div class="q1">Tes choix<br>d'aujourd'hui</div>
+    <div class="rule"></div>
+    <div class="q2">écrivent ta vie<br>de demain.</div>
+  </div>
+  <div class="foot">Prêt à te lancer ? Envoie-moi <b>GO</b> en DM 📩</div>
+</section>
+
+<!-- 2 -->
+<section class="story" id="v2"><div class="silk"></div>
+  <div class="frame"></div>
+  <div class="inner">
+    <div class="q1" style="font-size:80px">Le meilleur moment<br>pour te lancer,<br>c'était hier.</div>
+    <div class="rule"></div>
+    <div class="q2" style="font-size:96px">Le deuxième meilleur,</div>
+    <div class="gold" style="font-size:106px;line-height:1">MAINTENANT.</div>
+  </div>
+  <div class="foot">Prêt à te lancer ? Envoie-moi <b>GO</b> en DM 📩</div>
+</section>
+
+<!-- 3 -->
+<section class="story" id="v3"><div class="silk"></div>
+  <div class="frame"></div>
+  <div class="inner">
+    <div class="q1" style="font-size:84px">Ce que tu construis<br>aujourd'hui,</div>
+    <div class="rule"></div>
+    <div class="q2" style="font-size:100px">c'est ton</div>
+    <div class="gold" style="font-size:150px;line-height:1">HÉRITAGE</div>
+    <div class="q2" style="font-size:100px;margin-top:-20px">de demain.</div>
+  </div>
+  <div class="foot">Prêt à te lancer ? Envoie-moi <b>GO</b> en DM 📩</div>
+</section>
+
+<script>
+  document.querySelectorAll('.story').forEach((s, k) => {
+    const c = document.createElement('canvas'); c.width = 1080; c.height = 1920; s.prepend(c);
+    const g = c.getContext('2d');
+    for (let i = 0; i < 80; i++) {
+      const r = n => { const x = Math.sin((i + k * 131) * 12.9898 + n * 78.233) * 43758.5453; return x - Math.floor(x); };
+      const x = r(1) * 1080, y = r(2) * 1920, z = 1 + r(3) * 3.4, a = .15 + r(4) * .55;
+      const gr = g.createRadialGradient(x, y, 0, x, y, z * 4); gr.addColorStop(0, `rgba(255,226,150,${a})`); gr.addColorStop(1, 'rgba(255,200,90,0)');
+      g.fillStyle = gr; g.beginPath(); g.arc(x, y, z * 4, 0, 6.29); g.fill();
+    }
+  });
+</script>
+</body>
+</html>
