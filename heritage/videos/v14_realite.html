@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Ce qu'on te montre vs la réalité</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+  :root { --bad: #e8866a; }
+  .hd { position: absolute; left: 0; right: 0; text-align: center; font-family: var(--cinzel); font-weight: 800; letter-spacing: .14em; }
+  .hd.top { top: 170px; font-size: 52px; background: linear-gradient(100deg, #ff9fd0, #ffd27a, #9fd8ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hd.bot { top: 990px; font-size: 52px; color: #f3dc9a; }
+  .vs { position: absolute; left: 60px; right: 60px; top: 910px; height: 4px; background: linear-gradient(90deg, transparent, #f3dc9a, transparent); box-shadow: 0 0 30px rgba(243,220,154,.8); }
+  .vsb { position: absolute; left: 50%; top: 872px; width: 84px; height: 80px; margin-left: -42px; border-radius: 40px; background: #0b0a08; border: 3px solid #f3dc9a; color: #f3dc9a; font-family: var(--cinzel); font-weight: 900; font-size: 34px; display: flex; align-items: center; justify-content: center; }
+  .card { position: absolute; left: 80px; right: 80px; padding: 46px 50px; border-radius: 48px; text-align: center; }
+  .shown { top: 290px; min-height: 520px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+    background: linear-gradient(160deg, rgba(255,159,208,.14), rgba(159,216,255,.1)); border: 2px solid rgba(255,210,122,.45); box-shadow: 0 0 60px rgba(255,180,200,.15); }
+  .shown .e { font-size: 130px; line-height: 1; } .shown .t { font-size: 66px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
+  .shown.dim { opacity: .35 !important; filter: grayscale(.7) blur(1px) !important; }
+  .x { position: absolute; right: 30px; top: 30px; width: 110px; height: 110px; border-radius: 50%; border: 6px solid var(--bad); color: var(--bad); font-size: 70px; font-weight: 900; display: flex; align-items: center; justify-content: center; background: rgba(10,9,8,.8); }
+  .real { top: 1080px; min-height: 400px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
+    background: linear-gradient(170deg, #1d1810, #0c0b0a 60%); border: 3px solid rgba(233,204,127,.6); box-shadow: 0 0 80px rgba(217,180,90,.2); }
+  .real .e { font-size: 100px; line-height: 1; } .real .t { font-size: 62px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.12; color: #fff3d6; }
+</style>
+<script src="../scripts/v14_realite.js"></script>
+<script src="../shared/engine.js"></script>
+<script>
+const PAIRS = [
+  ['p2', '📸', 'Des captures à 10 000 € 🤑', 'p2.9', '🌱', 'Tes premières commissions seront petites'],
+  ['p3', '🔗', 'Un lien posté… et c\'est tout', 'p3.9', '📅', 'Du contenu, tous les jours'],
+  ['p4', '😴', 'De l\'argent en dormant', 'p4.7', '🧱', 'Ça se construit, mois après mois'],
+];
+window.build = () => {
+  const host = document.getElementById('cam'), anchor = document.getElementById('anchor');
+  PAIRS.forEach(([p, e1, t1, real, e2, t2]) => {
+    const sc = document.createElement('section'); sc.className = 'scene'; sc.dataset.from = p; sc.setAttribute('data-cut', '');
+    sc.innerHTML = `
+      <div class="hd top">CE QU'ON TE MONTRE</div><div class="vs"></div><div class="vsb">VS</div><div class="hd bot">LA RÉALITÉ</div>
+      <div class="card shown" data-cue="${p}.0" data-anim="pop" data-class="${real}|dim"><span class="e">${e1}</span><div class="t">${t1}</div>
+        <span class="x" data-cue="${real}" data-anim="slam" data-sfx="none">✗</span></div>
+      <div class="card real" data-cue="${real}" data-anim="up" data-sfx="check"><span class="e">${e2}</span><div class="t">${t2}</div></div>`;
+    host.insertBefore(sc, anchor);
+  });
+};
+</script>
+</head>
+<body>
+<div id="stage"><div id="cam">
+  <canvas id="silk" width="270" height="480"></canvas><canvas id="dust" width="1080" height="1920"></canvas><div class="vignette"></div>
+
+  <!-- HOOK: split screen already on the first frame -->
+  <section class="scene">
+    <div class="hd top" data-cue="-0.5" data-anim="none">CE QU'ON TE MONTRE</div><div class="vs"></div><div class="vsb">VS</div>
+    <div class="hd bot" data-cue="-0.5" data-anim="none">LA RÉALITÉ</div>
+    <div class="card shown" data-cue="-0.5" data-anim="none"><span class="e">💸🏎️</span><div class="t">l'affiliation sur les réseaux</div></div>
+    <div class="card real" data-cue="p1.6" data-anim="up"><span class="e">🤔</span><div class="t">ce qu'on ne te dit pas</div></div>
+  </section>
+
+  <i id="anchor"></i>
+
+  <!-- longueur d'avance -->
+  <section class="scene" data-from="p5" data-glow>
+    <div class="center" style="top:480px"><span data-cue="p5.0" data-anim="pop" style="font-size:180px">🏁</span></div>
+    <div class="center" style="top:760px"><span class="kin light" data-cue="p5.1" style="font-size:76px;line-height:1.2">Si tu acceptes la réalité,</span></div>
+    <div class="center" style="top:900px"><span class="gold" data-cue="p5.6" style="font-size:110px;line-height:1.1">tu as déjà une<br>longueur d'avance.</span></div>
+  </section>
+
+  <!-- CTA -->
+  <section class="scene" data-from="p6">
+    <div class="center" style="top:300px"><span class="kin light" data-cue="p6.3" style="font-size:80px">Tu veux te lancer ?</span></div>
+    <div class="center" style="top:520px"><span class="kin" data-cue="p6.9" style="font-size:110px">Écris-moi</span></div>
+    <div class="center" style="top:640px"><span class="goldtxt" style="font-size:300px;line-height:1.05" data-cue="p6.11" data-anim="slam" data-flash>GO</span></div>
+    <div class="center" style="top:980px"><span class="kin light" data-cue="p6.13" style="font-size:90px">en DM 📩</span></div>
+    <div class="center" style="top:1140px"><span class="gold" data-cue="p6.16" style="font-size:96px">je te dis par où commencer.</span></div>
+    <div class="center" style="top:1420px"><span class="tiny" data-cue="p6.0" style="font-size:28px">Contenu éducatif · aucun résultat garanti</span></div>
+  </section>
+</div><div id="flash"></div></div>
+</body>
+</html>

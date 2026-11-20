@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Routine 30 minutes</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+  #ring { position: absolute; left: 290px; top: 300px; width: 500px; height: 500px; }
+  .mid { position: absolute; left: 290px; top: 300px; width: 500px; height: 500px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  #mins { font-size: 104px; font-weight: 800; letter-spacing: -0.05em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .mid small { font-size: 34px; color: #a29a8a; margin-top: 6px; font-weight: 600; }
+  .steps { position: absolute; left: 80px; right: 80px; top: 880px; display: flex; flex-direction: column; gap: 22px; }
+  .st { display: flex; align-items: center; gap: 28px; padding: 26px 30px; border-radius: 34px; background: rgba(20,18,14,.85); border: 2px solid rgba(233,204,127,.25); }
+  .st.cur { border: 3px solid rgba(243,220,154,.9); box-shadow: 0 0 50px rgba(217,180,90,.3); }
+  .st .m { flex: 0 0 180px; height: 110px; border-radius: 26px; background: var(--gold-grad); background-size: 220% 100%; color: #120f08; font-weight: 900; font-size: 42px; display: flex; align-items: center; justify-content: center; }
+  .st .t { font-size: 50px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+  .st .s { font-size: 32px; color: #b9ad94; margin-top: 6px; }
+</style>
+<script src="../scripts/v13_routine.js"></script>
+<script src="../shared/engine.js"></script>
+<script>
+const SEG = [[0, 10, 'p2'], [10, 25, 'p3'], [25, 30, 'p4']];  // minutes, phrase that fills it
+const C = 2 * Math.PI * 200;
+window.build = () => {
+  const g = document.getElementById('segs');
+  SEG.forEach(() => g.insertAdjacentHTML('beforeend', '<circle cx="250" cy="250" r="200" fill="none" stroke="url(#gg)" stroke-width="46" stroke-linecap="butt" transform="rotate(-90 250 250)"/>'));
+};
+window.onFrame = (t, { clamp, easeInOut, cue }) => {
+  let total = 0;
+  [...document.querySelectorAll('#segs circle')].forEach((c, i) => {
+    const [a, b, p] = SEG[i], k = easeInOut(clamp((t - cue(p)) / 1.4));
+    const len = (b - a) / 30 * C * k;
+    c.setAttribute('stroke-dasharray', `${Math.max(0, len - 6)} ${C}`);
+    c.setAttribute('stroke-dashoffset', `${-a / 30 * C - 3}`);
+    total += (b - a) * k;
+  });
+  document.getElementById('mins').textContent = Math.round(total) + ' min';
+  const glow = clamp((t - cue('p5')) / 0.5);
+  document.getElementById('ring').style.filter = `drop-shadow(0 0 ${30 * glow}px rgba(243,220,154,${0.8 * glow}))`;
+};
+</script>
+</head>
+<body>
+<div id="stage"><div id="cam">
+  <canvas id="silk" width="270" height="480"></canvas><canvas id="dust" width="1080" height="1920"></canvas><div class="vignette"></div>
+
+  <!-- the clock stays on screen from the hook to the end of the routine -->
+  <section class="scene" data-to="p6">
+    <div class="center" style="top:130px"><span class="goldtxt" data-cue="-0.5" data-anim="none" style="font-size:110px;line-height:1">PAS LE TEMPS ?</span></div>
+    <svg id="ring" viewBox="0 0 500 500"><circle cx="250" cy="250" r="200" fill="none" stroke="rgba(233,204,127,.15)" stroke-width="46"/><g id="segs"></g></svg>
+    <div class="mid"><div id="mins">0 min</div><small>sur 30 min / jour</small></div>
+    <div class="center" style="top:900px"><span class="line kin" data-cue="p1.7" data-out="p2.0-0.1" style="font-size:80px">Voici ta routine</span>
+      <span class="line gold" data-cue="p1.11" data-out="p2.0-0.1" style="font-size:120px">30 min / jour</span></div>
+    <div class="steps">
+      <div class="st" data-cue="p2.0" data-anim="left" data-class="p2|cur;p3-0.05|was"><span class="m">10 min</span><div><div class="t">Écoute ton audience</div><div class="s" data-cue="p2.9">commentaires · questions · tendances</div></div></div>
+      <div class="st" data-cue="p3.0" data-anim="left" data-class="p3|cur;p4-0.05|was"><span class="m">15 min</span><div><div class="t">Crée un contenu</div><div class="s" data-cue="p3.6">qui répond à une de ces questions</div></div></div>
+      <div class="st" data-cue="p4.0" data-anim="left" data-class="p4|cur;p5-0.05|was"><span class="m">5 min</span><div><div class="t">Réponds</div><div class="s" data-cue="p4.3">messages et commentaires</div></div></div>
+    </div>
+    <div class="center" style="top:1530px"><span class="gold" data-cue="p5.4" style="font-size:72px">la régularité fait la différence.</span></div>
+  </section>
+
+  <!-- CTA -->
+  <section class="scene" data-from="p6" data-glow>
+    <div class="center" style="top:300px"><span class="kin light" data-cue="p6.3" style="font-size:80px">Tu veux te lancer ?</span></div>
+    <div class="center" style="top:520px"><span class="kin" data-cue="p6.9" style="font-size:110px">Écris-moi</span></div>
+    <div class="center" style="top:640px"><span class="goldtxt" style="font-size:300px;line-height:1.05" data-cue="p6.11" data-anim="slam" data-flash>GO</span></div>
+    <div class="center" style="top:980px"><span class="kin light" data-cue="p6.13" style="font-size:90px">en DM 📩</span></div>
+    <div class="center" style="top:1140px"><span class="gold" data-cue="p6.16" style="font-size:96px">je te dis par où commencer.</span></div>
+    <div class="center" style="top:1420px"><span class="tiny" data-cue="p6.0" style="font-size:28px">Contenu éducatif · aucun résultat garanti</span></div>
+  </section>
+</div><div id="flash"></div></div>
+<script>document.addEventListener('DOMContentLoaded', () => {});</script>
+</body>
+</html>
