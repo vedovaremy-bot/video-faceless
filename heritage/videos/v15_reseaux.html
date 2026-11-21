@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Classement des réseaux</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+  .title { position: absolute; left: 0; right: 0; top: 140px; text-align: center; }
+  .title .k { font-family: var(--cinzel); font-weight: 800; font-size: 44px; letter-spacing: .3em; color: var(--gold); }
+  .title .t { font-size: 66px; font-weight: 800; letter-spacing: -0.03em; margin-top: 8px; }
+  .grid { position: absolute; left: 50px; right: 50px; top: 340px; display: flex; flex-direction: column; gap: 18px; }
+  .row { position: relative; height: 196px; display: flex; gap: 18px; }
+  .lab { flex: 0 0 170px; border-radius: 30px; display: flex; align-items: center; justify-content: center; font-family: var(--cinzel); font-weight: 900; font-size: 100px; color: #120f08; }
+  .lab.medal { font-size: 120px; background: rgba(20,18,14,.85) !important; border: 3px solid rgba(233,204,127,.5); }
+  .slot { flex: 1; border-radius: 30px; border: 2px dashed rgba(233,204,127,.28); background: rgba(20,18,14,.55); position: relative; overflow: hidden; }
+  .row.cur .slot { border: 3px solid rgba(243,220,154,.85); box-shadow: 0 0 50px rgba(217,180,90,.3); }
+  .q { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 80px; font-weight: 800; color: rgba(233,204,127,.25); }
+  .item { position: absolute; inset: 10px; border-radius: 24px; background: linear-gradient(170deg, #1e1a12, #0d0c0a); border: 2px solid rgba(233,204,127,.4); display: flex; align-items: center; gap: 24px; padding: 0 28px; }
+  .item .e { font-size: 84px; }
+  .item .n { font-size: 52px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; }
+  .item .r { font-size: 30px; color: #b9ad94; margin-top: 6px; font-weight: 500; line-height: 1.2; }
+  .item.top { border: 3px solid #fff1c4; box-shadow: 0 0 70px rgba(217,180,90,.55); background: linear-gradient(170deg, #2d2412, #120f0a); }
+  .item.top .n { background: var(--gold-grad); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; font-family: var(--cinzel); font-size: 56px; }
+  .opinion { position: absolute; left: 0; right: 0; top: 1470px; text-align: center; font-size: 30px; color: #8d877b; }
+</style>
+<script src="../scripts/v15_reseaux.js"></script>
+<script src="../shared/engine.js"></script>
+<script>
+// each row: tier, colour, which phrase fills it, emoji, name, reason, which word reveals the reason
+const TIERS = [
+  ['🥇', 'linear-gradient(135deg,#fff1c4,#d9b45a)', 'p6', '🎵', 'TikTok', 'même sans abonnés, une vidéo peut toucher des milliers de personnes', 'p6.6'],
+  ['🥈', 'linear-gradient(135deg,#f2f2f2,#9da3ad)', 'p5', '📸', 'Instagram', 'les Reels pour être vu · les DM pour échanger', 'p5.2'],
+  ['🥉', 'linear-gradient(135deg,#f0b98a,#9a5b2e)', 'p4', '▶️', 'YouTube', 'très puissant, mais long à produire', 'p4.2'],
+  ['4', 'linear-gradient(135deg,#a88746,#5e4a22)', 'p3', '📌', 'Pinterest', 'du trafic, surtout pour des niches précises', 'p3.2'],
+  ['5', 'linear-gradient(135deg,#7a6640,#3a3020)', 'p2', '👍', 'Facebook', 'sans pub, ta portée reste faible', 'p2.2'],
+];
+window.build = () => {
+  const g = document.getElementById('grid');
+  TIERS.forEach(([t, col, p, e, n, r, rc], i) => {
+    const next = i === 0 ? 'p7' : TIERS[i - 1][2];
+    g.insertAdjacentHTML('beforeend', `<div class="row" data-class="${p}|cur;${next}-0.05|was">
+      <div class="lab${/[0-9]/.test(t) ? '' : ' medal'}" style="background:${col}">${t}</div>
+      <div class="slot"><div class="q">?</div>
+        <div class="item${t === '🥇' ? ' top' : ''}" data-cue="${p}.${t === '🥇' ? 4 : 0}" data-anim="${t === '🥇' ? 'slam' : 'right'}" ${t === '🥇' ? 'data-flash' : 'data-sfx="pop"'}>
+          <span class="e">${e}</span><div><div class="n">${n}</div><div class="r" data-cue="${rc}" data-anim="up">${r}</div></div></div></div></div>`);
+  });
+};
+window.onFrame = (t, { cue }) => {
+  document.querySelectorAll('.row').forEach(r => { if (r.classList.contains('was')) r.classList.remove('cur'); });
+};
+</script>
+</head>
+<body>
+<div id="stage"><div id="cam">
+  <canvas id="silk" width="270" height="480"></canvas><canvas id="dust" width="1080" height="1920"></canvas><div class="vignette"></div>
+
+  <!-- tier list (hook = empty list already on screen) -->
+  <section class="scene" data-to="p7">
+    <div class="title"><div class="k" data-cue="-0.5" data-anim="none">LE CLASSEMENT</div><div class="t" data-cue="-0.5" data-anim="none">Quel réseau pour débuter ?</div></div>
+    <div class="grid" id="grid"></div>
+    <div class="opinion" data-cue="p1.0">Classement pour un débutant · mon avis</div>
+  </section>
+
+  <!-- CTA -->
+  <section class="scene" data-from="p7" data-glow>
+    <div class="center" style="top:300px"><span class="kin light" data-cue="p7.0" style="font-size:80px">Tu veux te lancer ?</span></div>
+    <div class="center" style="top:520px"><span class="kin" data-cue="p7.5" style="font-size:110px">Écris-moi</span></div>
+    <div class="center" style="top:640px"><span class="goldtxt" style="font-size:300px;line-height:1.05" data-cue="p7.7" data-anim="slam" data-flash>GO</span></div>
+    <div class="center" style="top:980px"><span class="kin light" data-cue="p7.9" style="font-size:90px">en DM 📩</span></div>
+    <div class="center" style="top:1140px"><span class="gold" data-cue="p7.11" style="font-size:96px">je te dis par où commencer.</span></div>
+    <div class="center" style="top:1420px"><span class="tiny" data-cue="p7.0" style="font-size:28px">Contenu éducatif · aucun résultat garanti</span></div>
+  </section>
+</div><div id="flash"></div></div>
+</body>
+</html>
