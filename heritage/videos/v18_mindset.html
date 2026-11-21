@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Même salaire, deux choix</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+  #world { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  .year { position: absolute; left: 0; right: 0; top: 250px; text-align: center; font-family: "JetBrains Mono", monospace; font-weight: 600; font-size: 58px; letter-spacing: .32em; color: #d8cfbd; padding-left: .32em; }
+  .kw { position: absolute; left: 0; right: 0; top: 560px; text-align: center; font-size: 66px; font-weight: 700; letter-spacing: -0.01em; color: #f4efe4; }
+  .kw.g { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 84px; color: #f0d488; }
+  .bottom { position: absolute; left: 60px; right: 60px; top: 1330px; text-align: center; }
+  .bubble { position: absolute; left: 150px; top: 700px; padding: 18px 26px; border-radius: 30px; background: rgba(40,36,30,.9); border: 2px solid rgba(255,255,255,.15); font-size: 34px; color: #cfc6b3; }
+</style>
+<script src="../scripts/v18_mindset.js"></script>
+<script src="../shared/engine.js"></script>
+<script>
+const NS = 'http://www.w3.org/2000/svg';
+window.build = () => {
+  // bricks of the wall (built row by row over the years)
+  const wall = document.getElementById('wall');
+  for (let r = 0; r < 14; r++) for (let c = 0; c < 2; c++)
+    wall.insertAdjacentHTML('beforeend', `<rect class="brick" data-row="${r}" x="${500 + c * 44 + (r % 2 ? 22 : 0) - (r % 2 && c === 1 ? 44 : 0)}" y="${1206 - r * 30}" width="42" height="28" rx="3" fill="#7a5a36" stroke="#3a2a18" stroke-width="2"/>`);
+  // tree crown leaves (appear as it grows)
+  const crown = document.getElementById('crown');
+  for (let i = 0; i < 26; i++) {
+    const a = i * 2.39996, rr = 14 + 120 * Math.sqrt(i / 26);
+    crown.insertAdjacentHTML('beforeend', `<circle class="leaf" data-i="${i}" cx="${870 + Math.cos(a) * rr}" cy="${760 + Math.sin(a) * rr * 0.8}" r="${30 - i * 0.4}" fill="url(#gg)" opacity="0"/>`);
+  }
+  // coins thrown in the air by the spender
+  const coins = document.getElementById('coins');
+  for (let i = 0; i < 6; i++) coins.insertAdjacentHTML('beforeend', `<ellipse class="coin" data-i="${i}" rx="22" ry="7" fill="#e9cc7f" opacity="0"/>`);
+};
+window.onFrame = (t, { clamp, easeOut, easeInOut, cue }) => {
+  // growth of the plant 0..1 and number of brick rows, keyed to the story
+  const g = Math.max(0.0, 0.12 * easeOut(clamp((t - cue('p2.9')) / 0.8)) + 0.33 * easeInOut(clamp((t - cue('p3.9')) / 1.6)) + 0.55 * easeInOut(clamp((t - cue('p4.8')) / 1.8)));
+  const rows = Math.round(3 * clamp((t - cue('p2.12')) / 1) + 4 * clamp((t - cue('p3.12')) / 1.2) + 7 * clamp((t - cue('p4.10')) / 1.6));
+  document.querySelectorAll('.brick').forEach(b => b.style.opacity = +b.dataset.row < rows ? 1 : 0);
+  const stem = document.getElementById('stem'); const h = 20 + 420 * g;
+  stem.setAttribute('d', `M870 1170 C ${865 - 20 * g} ${1170 - h * 0.4}, ${880 + 15 * g} ${1170 - h * 0.7}, 870 ${1170 - h}`);
+  stem.setAttribute('stroke-width', 6 + 26 * g);
+  document.getElementById('sprout').setAttribute('transform', `translate(870 ${1170 - h}) scale(${g > 0.02 && g < 0.6 ? 1 : 0})`);
+  document.querySelectorAll('.leaf').forEach(l => l.setAttribute('opacity', g > 0.55 && +l.dataset.i < (g - 0.55) / 0.45 * 26 ? 0.95 : 0));
+  document.getElementById('crown').setAttribute('transform', `translate(0 ${(1 - g) * 120})`);
+  // spender: party lights flicker, coins fly out while he spends
+  const fl = 0.55 + 0.25 * Math.sin(t * 9) * Math.sin(t * 3.3);
+  document.getElementById('party').setAttribute('opacity', fl);
+  const s0 = cue('p2.3'), s1 = cue('p3');
+  document.querySelectorAll('.coin').forEach(c => {
+    const i = +c.dataset.i, ph = ((t - s0) * 0.9 + i / 6) % 1, on = t > s0 && t < s1;
+    c.setAttribute('cx', 330 + ph * 160 * (i % 2 ? 1 : -0.6)); c.setAttribute('cy', 940 - Math.sin(ph * Math.PI) * 300 + ph * 200);
+    c.setAttribute('opacity', on ? 0.9 * (1 - ph) : 0);
+  });
+  // seed coin dropped in the pot
+  const sd = clamp((t - cue('p2.7')) / 0.6);
+  const seed = document.getElementById('seed'); seed.setAttribute('cy', 960 + sd * 200); seed.setAttribute('opacity', sd > 0 && sd < 1 ? 1 : 0);
+  // gentle idle sway
+  document.getElementById('figL').setAttribute('transform', `translate(0 ${Math.sin(t * 6) * 6})`);
+  document.getElementById('figR').setAttribute('transform', `translate(0 ${Math.sin(t * 1.5) * 3})`);
+  document.getElementById('lampR').setAttribute('opacity', 0.35 + 0.4 * clamp(g * 1.5));
+};
+</script>
+</head>
+<body>
+<div id="stage"><div id="cam">
+  <canvas id="silk" width="270" height="480"></canvas><canvas id="dust" width="1080" height="1920"></canvas><div class="vignette"></div>
+
+  <section class="scene" data-to="p6">
+    <svg id="world" viewBox="0 0 1080 1920">
+      <defs>
+        <linearGradient id="beamA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b48cff" stop-opacity=".55"/><stop offset="1" stop-color="#b48cff" stop-opacity="0"/></linearGradient>
+        <linearGradient id="beamB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd27a" stop-opacity=".5"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></linearGradient>
+        <linearGradient id="beamW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff1c4" stop-opacity=".45"/><stop offset="1" stop-color="#fff1c4" stop-opacity="0"/></linearGradient>
+        <radialGradient id="phone"><stop offset="0" stop-color="#9fd8ff" stop-opacity=".9"/><stop offset="1" stop-color="#9fd8ff" stop-opacity="0"/></radialGradient>
+      </defs>
+      <!-- ground -->
+      <path d="M0 1236 H1080" stroke="rgba(233,204,127,.35)" stroke-width="3"/>
+      <!-- left: party lights -->
+      <g id="party"><polygon points="300,700 120,1236 300,1236" fill="url(#beamA)"/><polygon points="300,700 300,1236 470,1236" fill="url(#beamB)"/>
+        <circle cx="300" cy="690" r="30" fill="#d8d8d8" stroke="#888" stroke-width="3"/></g>
+      <!-- right: warm desk lamp -->
+      <g id="lampR"><polygon points="780,640 600,1236 980,1236" fill="url(#beamW)"/></g>
+      <path d="M760 640 h40" stroke="#fff1c4" stroke-width="10" stroke-linecap="round"/>
+      <!-- the spender -->
+      <g id="figL" stroke="#9a948a" stroke-width="22" stroke-linecap="round" fill="none">
+        <circle cx="300" cy="930" r="46" fill="#8d877b" stroke="none"/>
+        <path d="M300 980 V1110 M300 1110 L262 1226 M300 1110 L338 1226 M300 1010 L360 1050 L350 1000"/>
+        <rect x="336" y="972" width="30" height="46" rx="6" fill="#222" stroke="#555" stroke-width="3"/>
+        <circle cx="351" cy="990" r="60" fill="url(#phone)" stroke="none" opacity=".7"/>
+      </g>
+      <g id="coins"></g>
+      <!-- the builder -->
+      <g id="figR" stroke="#f4efe4" stroke-width="22" stroke-linecap="round" fill="none">
+        <circle cx="720" cy="930" r="46" fill="#f4efe4" stroke="none"/>
+        <path d="M720 980 V1110 M720 1110 L686 1226 M720 1110 L754 1226 M720 1010 L790 1040 M720 1010 L660 1050"/>
+      </g>
+      <ellipse id="seed" cx="870" cy="960" rx="16" ry="6" fill="#e9cc7f" opacity="0"/>
+      <!-- wall built brick by brick -->
+      <g id="wall"></g>
+      <!-- plant -> tree -->
+      <path id="stem" d="M870 1170 L870 1150" stroke="#6b4a2a" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <g id="sprout"><path d="M0 0 C -40 -10, -50 -40, -10 -40 C 0 -30, 0 -10, 0 0 Z M0 0 C 40 -10, 50 -40, 10 -40 C 0 -30, 0 -10, 0 0 Z" fill="#8bd17c"/></g>
+      <g id="crown"></g>
+      <path d="M820 1170 H920 L905 1236 H835 Z" fill="#9a5b2e" stroke="#5e3a1c" stroke-width="4"/>
+    </svg>
+
+    <!-- labels -->
+    <div class="year" data-cue="-0.5" data-anim="none" data-out="p2-0.1">MÊME DÉPART</div>
+    <div class="year" data-cue="p2.0" data-out="p3-0.1">ANNÉE 1</div>
+    <div class="year" data-cue="p3.0" data-out="p4-0.1">ANNÉE 2</div>
+    <div class="year" data-cue="p4.0" data-out="p5-0.1">ANNÉE 5</div>
+
+    <div class="kw" data-cue="-0.5" data-anim="none" data-out="p2-0.1">même salaire.</div>
+    <div class="kw" data-cue="p2.5" data-out="p2.6">dépense.</div>
+    <div class="kw g" data-cue="p2.12" data-out="p3-0.1">apprend.</div>
+    <div class="kw g" data-cue="p3.14" data-out="p4-0.1">petits, mais réels.</div>
+    <div class="kw g" data-cue="p4.10" data-out="p5-0.1">construit.</div>
+    <div class="bubble" data-cue="p4.3" data-anim="pop" data-out="p5-0.1">⏳ le bon moment…</div>
+
+    <div class="bottom">
+      <span class="line kin light" data-cue="p5.0" style="font-size:62px">Le temps passe pareil</span>
+      <span class="line kin light" data-cue="p5.7" style="font-size:62px">pour tout le monde.</span>
+      <span class="line gold" data-cue="p5.17" style="font-size:96px;margin-top:20px">Ce que tu en fais change tout.</span>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="scene" data-from="p6" data-glow>
+    <div class="center" style="top:300px"><span class="kin light" data-cue="p6.3" style="font-size:72px">Tu veux planter ta graine ? 🌱</span></div>
+    <div class="center" style="top:520px"><span class="kin" data-cue="p6.8" style="font-size:110px">Écris-moi</span></div>
+    <div class="center" style="top:640px"><span class="goldtxt" style="font-size:300px;line-height:1.05" data-cue="p6.10" data-anim="slam" data-flash>GO</span></div>
+    <div class="center" style="top:980px"><span class="kin light" data-cue="p6.12" style="font-size:90px">en DM 📩</span></div>
+    <div class="center" style="top:1140px"><span class="gold" data-cue="p6.15" style="font-size:96px">je te dis par où commencer.</span></div>
+    <div class="center" style="top:1420px"><span class="tiny" data-cue="p6.0" style="font-size:28px">Histoire fictive · aucun résultat garanti</span></div>
+  </section>
+</div><div id="flash"></div></div>
+</body>
+</html>
