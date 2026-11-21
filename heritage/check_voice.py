@@ -19,7 +19,8 @@ heard = " ".join(w for _, _, w in words)
 print("Transcription :", heard)
 ok, pos = True, 0
 for p in SCRIPT:
-    tail = norm(p["text"]).split()[-3:]          # last 3 words of each phrase
+    sing = lambda w: w[:-1] if len(w) > 3 and w[-1] in "sx" else w   # plural vs singular sound the same in French
+    tail = [sing(w) for w in norm(p["text"]).split()[-3:]]          # last 3 words of each phrase
     hits = [i for i, t in enumerate(tail) if f" {t}" in f" {heard[pos:]} "]  # prefix match: "lien" ~ "liens" (homophones)
     found = len(hits) >= 2
     print(f"{p['id']}: fin « {' '.join(tail)} » -> {'OK' if found else 'MANQUANT'}")
