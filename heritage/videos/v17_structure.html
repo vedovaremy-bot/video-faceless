@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>La structure d'une vidéo</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+  .title { position: absolute; left: 0; right: 0; top: 140px; text-align: center; }
+  .title .k { font-family: var(--cinzel); font-weight: 800; font-size: 44px; letter-spacing: .3em; color: var(--gold); }
+  .title .t { font-size: 70px; font-weight: 800; letter-spacing: -0.03em; margin-top: 8px; }
+  .tl { position: absolute; left: 60px; right: 60px; top: 360px; height: 150px; border-radius: 26px; background: #0e0d0a; border: 2px solid rgba(233,204,127,.3); padding: 18px; display: flex; gap: 10px; }
+  .seg { border-radius: 16px; display: flex; flex-direction: column; justify-content: center; padding: 0 20px; background: rgba(233,204,127,.08); border: 2px solid rgba(233,204,127,.2); }
+  .seg b { font-family: var(--cinzel); font-weight: 800; font-size: 34px; letter-spacing: .08em; color: #8d877b; }
+  .seg small { font-size: 24px; color: #6f685b; margin-top: 4px; }
+  .seg.on { background: var(--gold-grad); background-size: 220% 100%; border-color: #fff1c4; box-shadow: 0 0 40px rgba(217,180,90,.5); }
+  .seg.on b, .seg.on small { color: #120f08; }
+  #head { position: absolute; top: 340px; width: 6px; height: 190px; margin-left: -3px; border-radius: 3px; background: #fff; box-shadow: 0 0 20px #fff; }
+  #head::before { content: ""; position: absolute; top: -16px; left: -11px; border: 14px solid transparent; border-top-color: #fff; }
+  .ruler { position: absolute; left: 60px; right: 60px; top: 530px; display: flex; justify-content: space-between; font-size: 24px; color: #6f685b; font-variant-numeric: tabular-nums; }
+  .panel { position: absolute; left: 70px; right: 70px; top: 640px; min-height: 720px; padding: 56px 56px; border-radius: 52px; }
+  .panel .n { font-family: var(--cinzel); color: var(--gold); font-weight: 800; font-size: 40px; letter-spacing: .2em; }
+  .panel .h { font-size: 88px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.05; margin-top: 12px; }
+  .panel .s { font-family: var(--serif); font-style: italic; font-size: 58px; color: #e2c67d; margin-top: 12px; }
+  .ex { margin-top: 34px; display: flex; flex-direction: column; gap: 18px; }
+  .ex div { padding: 22px 28px; border-radius: 26px; background: #16140f; border: 2px solid rgba(233,204,127,.3); font-size: 40px; font-weight: 650; }
+  .recap { position: absolute; left: 60px; right: 60px; top: 760px; display: flex; align-items: center; justify-content: center; gap: 22px; }
+  .recap span { padding: 30px 34px; border-radius: 30px; background: var(--gold-grad); background-size: 220% 100%; color: #120f08; font-family: var(--cinzel); font-weight: 900; font-size: 50px; }
+  .recap i { font-style: normal; font-size: 60px; color: var(--gold); }
+</style>
+<script src="../scripts/v17_structure.js"></script>
+<script src="../shared/engine.js"></script>
+<script>
+const SEGS = [['p2', 'p3'], ['p3', 'p4'], ['p4', 'p5']];  // the playhead crosses each block while its phrase is spoken
+window.onFrame = (t, { clamp, cue }) => {
+  const segs = [...document.querySelectorAll('.tl .seg')], tl = document.querySelector('.tl').getBoundingClientRect();
+  let x = segs[0].getBoundingClientRect().left;
+  segs.forEach((s, i) => {
+    const r = s.getBoundingClientRect(), a = cue(SEGS[i][0]), b = cue(SEGS[i][1]);
+    if (t >= a) x = r.left + r.width * clamp((t - a) / (b - a));
+    s.classList.toggle('on', t >= a && t < b + (i === 2 ? 99 : 0));
+  });
+  document.getElementById('head').style.left = (x - document.getElementById('stage').getBoundingClientRect().left) + 'px';
+};
+</script>
+</head>
+<body>
+<div id="stage"><div id="cam">
+  <canvas id="silk" width="270" height="480"></canvas><canvas id="dust" width="1080" height="1920"></canvas><div class="vignette"></div>
+
+  <section class="scene" data-to="p6">
+    <div class="title"><div class="k" data-cue="-0.5" data-anim="none">COPIE CETTE STRUCTURE</div><div class="t" data-cue="-0.5" data-anim="none">Une vidéo qui marche</div></div>
+    <div class="tl" data-cue="-0.5" data-anim="none">
+      <div class="seg" style="flex:0 0 22%"><b>HOOK</b><small>0-3 s</small></div>
+      <div class="seg" style="flex:1"><b>VALEUR</b><small>le cœur</small></div>
+      <div class="seg" style="flex:0 0 24%"><b>ACTION</b><small>la fin</small></div>
+    </div>
+    <i id="head"></i>
+    <div class="ruler"><span>0:00</span><span>0:03</span><span>0:15</span><span>0:25</span></div>
+
+    <div class="center" style="top:720px"><span class="kin" data-cue="-0.5" data-anim="none" data-out="p1.9" style="font-size:84px;line-height:1.15">Tes vidéos<br>ne décollent pas ?</span></div>
+    <div class="center" style="top:760px"><span class="goldtxt" data-cue="p1.10" data-out="p2.0-0.1" data-anim="slam" style="font-size:150px;line-height:1">3 PARTIES</span></div>
+
+    <div class="panel card" data-cue="p2.0" data-out="p3.0-0.1" data-anim="up">
+      <div class="n">1 · LE HOOK</div><div class="h">3 secondes pour arrêter le scroll</div>
+      <div class="ex"><div data-cue="p2.11" data-anim="left">❓ une question</div><div data-cue="p2.13" data-anim="left">🔢 un chiffre</div><div data-cue="p2.16" data-anim="left">👀 une phrase qui intrigue</div></div></div>
+    <div class="panel card" data-cue="p3.0" data-out="p4.0-0.1" data-anim="up">
+      <div class="n">2 · LA VALEUR</div><div class="h">Le cœur de ta vidéo</div>
+      <div class="ex"><div data-cue="p3.4" data-anim="left">💡 un conseil concret</div><div data-cue="p3.7" data-anim="left">🎬 ou une démo du produit</div></div></div>
+    <div class="panel card" data-cue="p4.0" data-out="p5.0-0.1" data-anim="up">
+      <div class="n">3 · L'ACTION</div><div class="h">Une seule action claire</div><div class="s" data-cue="p4.9">à la fin, jamais deux.</div></div>
+
+    <div class="recap" data-cue="p5.0" data-anim="pop"><span>HOOK</span><i>→</i><span>VALEUR</span><i>→</i><span>ACTION</span></div>
+    <div class="center" style="top:1000px"><span class="gold" data-cue="p5.3" style="font-size:84px">teste-la sur ta prochaine vidéo.</span></div>
+  </section>
+
+  <section class="scene" data-from="p6" data-glow>
+    <div class="center" style="top:300px"><span class="kin light" data-cue="p6.3" style="font-size:80px">Tu veux te lancer ?</span></div>
+    <div class="center" style="top:520px"><span class="kin" data-cue="p6.9" style="font-size:110px">Écris-moi</span></div>
+    <div class="center" style="top:640px"><span class="goldtxt" style="font-size:300px;line-height:1.05" data-cue="p6.11" data-anim="slam" data-flash>GO</span></div>
+    <div class="center" style="top:980px"><span class="kin light" data-cue="p6.13" style="font-size:90px">en DM 📩</span></div>
+    <div class="center" style="top:1140px"><span class="gold" data-cue="p6.16" style="font-size:96px">je te dis par où commencer.</span></div>
+    <div class="center" style="top:1420px"><span class="tiny" data-cue="p6.0" style="font-size:28px">Contenu éducatif · aucun résultat garanti</span></div>
+  </section>
+</div><div id="flash"></div></div>
+</body>
+</html>
