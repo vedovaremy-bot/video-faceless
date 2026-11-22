@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Arrête d'écrire ça</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+  :root { --bad: #e8866a; }
+  .post { position: absolute; left: 110px; right: 110px; top: 560px; padding: 40px; border-radius: 44px; background: #15130f; border: 2px solid rgba(255,255,255,.1); }
+  .post .hd { display: flex; align-items: center; gap: 20px; font-size: 34px; font-weight: 700; }
+  .post .av { width: 76px; height: 76px; border-radius: 50%; background: linear-gradient(135deg, #3a3326, #6b5730); }
+  .post .img { height: 330px; border-radius: 28px; margin-top: 26px; background: radial-gradient(120% 90% at 30% 20%, #4a3c22, #1a1610 70%); display: flex; align-items: center; justify-content: center; font-size: 140px; }
+  .post .cap { font-size: 44px; font-weight: 600; margin-top: 26px; }
+  .post .stats { display: flex; gap: 40px; margin-top: 22px; font-size: 36px; color: #a29a8a; }
+  .post .stats b { color: var(--bad); }
+  .cnt { position: absolute; left: 0; right: 0; top: 200px; text-align: center; font-family: var(--cinzel); font-weight: 800; font-size: 46px; letter-spacing: .25em; color: var(--gold); }
+  .bad, .good { position: absolute; left: 80px; right: 80px; padding: 40px 48px; border-radius: 44px; }
+  .bad { top: 330px; min-height: 300px; background: rgba(40,20,16,.8); border: 3px solid rgba(232,134,106,.6); }
+  .good { top: 820px; min-height: 420px; background: linear-gradient(170deg, #1f1a10, #0c0b0a 70%); border: 3px solid rgba(233,204,127,.75); box-shadow: 0 0 70px rgba(217,180,90,.2); }
+  .lab { font-family: var(--cinzel); font-weight: 800; font-size: 36px; letter-spacing: .2em; }
+  .bad .lab { color: var(--bad); } .good .lab { color: var(--gold); }
+  .bad .q { position: relative; display: inline-block; margin-top: 22px; font-size: 64px; font-weight: 800; color: #e6d6cc; }
+  .bad .q i { position: absolute; left: -2%; top: 52%; height: 8px; width: 0; background: var(--bad); border-radius: 4px; }
+  .good .q { margin-top: 22px; font-size: 64px; font-weight: 800; line-height: 1.15; color: #fff3d6; min-height: 230px; }
+  .arrow { position: absolute; left: 0; right: 0; top: 670px; text-align: center; font-size: 110px; color: var(--gold); }
+</style>
+<script src="../scripts/v19_ecris.js"></script>
+<script src="../shared/engine.js"></script>
+<script>
+const PAIRS = [
+  ['p2', 'Achetez ce produit 🔗', 'p2.8', '« J\'ai testé 3 modèles, voici celui que je garde. »', 'p2.12', 1.9],
+  ['p3', 'Lien en bio !!!', 'p3.8', '« Je t\'explique en 30 s pourquoi il m\'a convaincu. »', 'p3.12', 2.0],
+  ['p4', 'PROMO -50% 🔥🔥', 'p4.10', '« Ce que personne ne te dit sur ce produit. »', 'p4.14', 1.6],
+];
+window.build = () => {
+  const host = document.getElementById('cam'), anchor = document.getElementById('anchor');
+  PAIRS.forEach(([p, bad, strike, good, gc, d], i) => {
+    const sc = document.createElement('section'); sc.className = 'scene'; sc.dataset.from = p;
+    sc.innerHTML = `<div class="cnt">${i + 1} / 3</div>
+      <div class="bad" data-cue="${p}.0" data-anim="pop"><div class="lab">❌ N'écris pas</div><div class="q">${bad}<i data-strike="${strike}"></i></div></div>
+      <div class="arrow" data-cue="${strike}" data-anim="pop">↓</div>
+      <div class="good" data-cue="${strike}" data-anim="up"><div class="lab">✅ Écris plutôt</div><div class="q"><span data-cue="${gc}" data-anim="type" data-d="${d}">${good}</span></div></div>`;
+    host.insertBefore(sc, anchor);
+  });
+};
+</script>
+</head>
+<body>
+<div id="stage"><div id="cam">
+  <canvas id="silk" width="270" height="480"></canvas><canvas id="dust" width="1080" height="1920"></canvas><div class="vignette"></div>
+
+  <!-- HOOK: the post nobody clicks -->
+  <section class="scene">
+    <div class="center" style="top:170px"><span class="kin" data-cue="-0.5" data-anim="none" style="font-size:80px">Personne ne clique ?</span></div>
+    <div class="center" style="top:300px"><span class="goldtxt" data-cue="p1.10" data-anim="slam" data-flash style="font-size:74px;line-height:1.1">ARRÊTE D'ÉCRIRE ÇA</span></div>
+    <div class="post" data-cue="-0.5" data-anim="none">
+      <div class="hd"><span class="av"></span>toi · lien affilié</div>
+      <div class="img">📦</div>
+      <div class="cap">Achetez ce produit 🔗 lien en bio !!! 🔥</div>
+      <div class="stats"><span>👁 1 240 vues</span><span><b>0 clic</b></span></div>
+    </div>
+  </section>
+
+  <i id="anchor"></i>
+
+  <!-- the lesson -->
+  <section class="scene" data-from="p5" data-glow>
+    <div class="center" style="top:620px"><span class="kin" data-cue="p5.0" style="font-size:80px;line-height:1.2">Les gens n'achètent pas<br><span class="strike" style="font-weight:800">un lien.<i data-strike="p5.5"></i></span></span></div>
+    <div class="center" style="top:930px"><span class="gold" data-cue="p5.6" style="font-size:110px;line-height:1.1">Ils achètent<br>ta recommandation.</span></div>
+  </section>
+
+  <!-- CTA -->
+  <section class="scene" data-from="p6">
+    <div class="center" style="top:300px"><span class="kin light" data-cue="p6.3" style="font-size:80px">Tu veux te lancer ?</span></div>
+    <div class="center" style="top:520px"><span class="kin" data-cue="p6.9" style="font-size:110px">Écris-moi</span></div>
+    <div class="center" style="top:640px"><span class="goldtxt" style="font-size:300px;line-height:1.05" data-cue="p6.11" data-anim="slam" data-flash>GO</span></div>
+    <div class="center" style="top:980px"><span class="kin light" data-cue="p6.13" style="font-size:90px">en DM 📩</span></div>
+    <div class="center" style="top:1140px"><span class="gold" data-cue="p6.16" style="font-size:96px">je te dis par où commencer.</span></div>
+    <div class="center" style="top:1420px"><span class="tiny" data-cue="p6.0" style="font-size:28px">Contenu éducatif · aucun résultat garanti</span></div>
+  </section>
+</div><div id="flash"></div></div>
+</body>
+</html>

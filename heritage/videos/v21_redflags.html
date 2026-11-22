@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Red flags opportunité en ligne</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+  :root { --red: #e5533d; }
+  .ttl { position: absolute; left: 0; right: 0; top: 130px; text-align: center; }
+  .ttl .a { font-family: var(--cinzel); font-weight: 900; font-size: 104px; line-height: 1; color: #ff7a63; text-shadow: 0 0 40px rgba(229,83,61,.5); }
+  .ttl .b { font-size: 52px; font-weight: 700; margin-top: 12px; }
+  .sc { position: absolute; left: 130px; right: 130px; top: 420px; height: 700px; border-radius: 56px; background: linear-gradient(170deg, #1d1914, #0c0b0a 70%); border: 3px solid rgba(233,204,127,.35);
+    box-shadow: 0 40px 100px rgba(0,0,0,.75); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 60px; transform-origin: 50% 120%; }
+  .sc .e { font-size: 170px; line-height: 1; } .sc .q { font-size: 70px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.12; margin-top: 34px; }
+  .stamp { position: absolute; top: 50px; right: 40px; padding: 14px 26px; border: 6px solid var(--red); border-radius: 22px; color: var(--red); font-family: var(--cinzel); font-weight: 900; font-size: 46px; transform: rotate(10deg); background: rgba(10,9,8,.85); }
+  .sc.good { border-color: rgba(120,220,140,.7); box-shadow: 0 40px 100px rgba(0,0,0,.75), 0 0 80px rgba(120,220,140,.25); }
+  .sc.good .stamp { border-color: #7bdc8c; color: #7bdc8c; transform: rotate(-8deg); left: 40px; right: auto; }
+  .why { position: absolute; left: 70px; right: 70px; top: 1200px; text-align: center; font-size: 60px; font-weight: 700; line-height: 1.18; }
+  .count { position: absolute; left: 0; right: 0; top: 1150px; text-align: center; font-size: 34px; color: #8d877b; font-weight: 700; letter-spacing: .1em; }
+  .chips { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin-top: 30px; }
+  .chip { padding: 14px 26px; border-radius: 999px; border: 2px solid rgba(120,220,140,.6); color: #c8f3d0; font-size: 40px; font-weight: 700; }
+</style>
+<script src="../scripts/v21_redflags.js"></script>
+<script src="../shared/engine.js"></script>
+<script>
+const CARDS = [['💰', '« Revenus garantis »', 'p2', 'p2.4'], ['⏳', '« Plus que 2 places, décide maintenant »', 'p3', 'p3.8'],
+               ['👥', '« Pour gagner, recrute tes amis »', 'p4', 'p4.7'], ['📸', '« Regarde mes captures »', 'p5', 'p5.5']];
+window.build = () => {
+  const host = document.getElementById('deck');
+  // last card first so the current one is drawn on top
+  [...CARDS].reverse().forEach(([e, q, p, flag], k) => {
+    const i = CARDS.length - 1 - k;
+    host.insertAdjacentHTML('beforeend', `<div class="sc" data-i="${i}"><span class="e">${e}</span><div class="q">${q}</div>
+      <span class="stamp" data-cue="${flag}" data-anim="slam" data-sfx="hit">🚩 RED FLAG</span></div>`);
+  });
+};
+window.onFrame = (t, { clamp, easeInOut, cue }) => {
+  const starts = CARDS.map(c => cue(c[2])), exits = [cue('p3'), cue('p4'), cue('p5'), cue('p6')].map(x => x - 0.25);
+  let cur = 0; starts.forEach((s, i) => { if (t >= s) cur = i; });
+  document.querySelectorAll('#deck .sc').forEach(el => {
+    const i = +el.dataset.i, out = clamp((t - exits[i]) / 0.45), depth = Math.max(0, i - cur);
+    const ein = easeInOut(out);
+    el.style.transform = out > 0 ? `translateX(${-1300 * ein}px) rotate(${-26 * ein}deg)`
+      : `translateY(${depth * 34}px) scale(${1 - depth * 0.05})`;
+    el.style.opacity = out >= 1 || depth > 2 ? 0 : 1 - depth * 0.25;
+  });
+};
+</script>
+</head>
+<body>
+<div id="stage"><div id="cam">
+  <canvas id="silk" width="270" height="480"></canvas><canvas id="dust" width="1080" height="1920"></canvas><div class="vignette"></div>
+
+  <section class="scene" data-to="p6">
+    <div class="ttl"><div class="a" data-cue="-0.5" data-anim="none">4 RED FLAGS 🚩</div><div class="b" data-cue="-0.5" data-anim="none">d'une fausse opportunité en ligne</div></div>
+    <div id="deck"></div>
+    <div class="count" data-cue="p1.10" data-out="p2.0">swipe avec moi 👈</div>
+    <div class="why" data-cue="p2.6" data-out="p3-0.2">Personne ne peut te garantir un revenu.</div>
+    <div class="why" data-cue="p3.10" data-out="p4-0.2">La pression, c'est pour t'empêcher de réfléchir.</div>
+    <div class="why" data-cue="p4.9" data-out="p5-0.2">Si tu gagnes surtout en recrutant : <span style="color:#ff7a63">fuis.</span></div>
+    <div class="why" data-cue="p5.7" data-out="p6-0.2">…si on ne te montre jamais le travail derrière.</div>
+  </section>
+
+  <!-- the green flag -->
+  <section class="scene" data-from="p6" data-glow>
+    <div class="ttl"><div class="a" style="color:#7bdc8c;text-shadow:0 0 40px rgba(120,220,140,.5);font-size:84px" data-cue="p6.0">LE GREEN FLAG ✅</div></div>
+    <div class="sc good" data-cue="p6.0" data-anim="right"><span class="e">🤝</span><div class="q">Une vraie opportunité te montre</div>
+      <div class="chips"><span class="chip" data-cue="p6.5" data-anim="pop">l'effort</span><span class="chip" data-cue="p6.7" data-anim="pop">le contenu</span><span class="chip" data-cue="p6.10" data-anim="pop">les limites</span></div>
+      <span class="stamp" data-cue="p6.1" data-anim="slam" data-sfx="check">✅ OK</span></div>
+  </section>
+
+  <!-- CTA -->
+  <section class="scene" data-from="p7">
+    <div class="center" style="top:300px"><span class="kin light" data-cue="p7.3" style="font-size:72px">Tu veux te lancer sereinement ?</span></div>
+    <div class="center" style="top:520px"><span class="kin" data-cue="p7.8" style="font-size:110px">Écris-moi</span></div>
+    <div class="center" style="top:640px"><span class="goldtxt" style="font-size:300px;line-height:1.05" data-cue="p7.10" data-anim="slam" data-flash>GO</span></div>
+    <div class="center" style="top:980px"><span class="kin light" data-cue="p7.12" style="font-size:90px">en DM 📩</span></div>
+    <div class="center" style="top:1140px"><span class="gold" data-cue="p7.15" style="font-size:96px">je te dis par où commencer.</span></div>
+    <div class="center" style="top:1420px"><span class="tiny" data-cue="p7.0" style="font-size:28px">Contenu éducatif · aucun résultat garanti</span></div>
+  </section>
+</div><div id="flash"></div></div>
+</body>
+</html>
