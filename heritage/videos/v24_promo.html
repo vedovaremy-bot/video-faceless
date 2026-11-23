@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Héritage par IHC</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+  .bigLogo { width: 340px; height: 374px; filter: drop-shadow(0 0 40px rgba(217,180,90,.6)); }
+  .rays { position: absolute; left: 540px; top: 520px; width: 1400px; height: 1400px; margin: -700px 0 0 -700px; border-radius: 50%;
+    background: repeating-conic-gradient(from 0deg, rgba(243,220,154,.10) 0 4deg, transparent 4deg 14deg); -webkit-mask: radial-gradient(circle, #000 20%, transparent 62%); mask: radial-gradient(circle, #000 20%, transparent 62%); }
+  .feat { position: absolute; left: 90px; right: 90px; padding: 40px 46px; border-radius: 44px; display: flex; gap: 34px; align-items: center; }
+  .feat .i { flex: 0 0 130px; height: 130px; border-radius: 36px; background: rgba(233,204,127,.1); border: 2px solid rgba(233,204,127,.5); display: flex; align-items: center; justify-content: center; font-size: 76px; }
+  .feat .t { font-size: 58px; font-weight: 800; letter-spacing: -0.025em; line-height: 1.1; }
+  .feat .s { font-family: var(--serif); font-style: italic; font-size: 48px; color: #e2c67d; margin-top: 6px; }
+  .offer { position: absolute; left: 110px; right: 110px; padding: 44px 50px; border-radius: 44px; display: flex; gap: 34px; align-items: center; }
+  .offer .num { font-family: var(--cinzel); font-weight: 900; font-size: 120px; line-height: 1; }
+  .offer .t { font-size: 54px; font-weight: 800; } .offer .s { font-size: 36px; color: #a29a8a; margin-top: 6px; }
+  .quote { position: absolute; left: 80px; right: 80px; top: 360px; padding: 70px 60px 56px; border-radius: 52px; }
+  .quote .qm { position: absolute; left: 40px; top: -40px; font-family: var(--serif); font-size: 240px; line-height: 1; color: #d9b45a; }
+  .quote .a { font-size: 54px; font-weight: 600; line-height: 1.3; color: #e9dcc0; }
+  .quote .b { font-size: 70px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.12; margin-top: 30px; }
+  .quote .c { font-family: var(--serif); font-style: italic; font-size: 80px; color: #f0d488; line-height: 1.1; margin-top: 24px; }
+  .quote .sig { font-size: 34px; color: #8d877b; margin-top: 30px; font-weight: 600; }
+  .chips { display: flex; gap: 24px; justify-content: center; }
+  .chip { padding: 24px 40px; border-radius: 999px; border: 3px solid rgba(233,204,127,.7); background: rgba(20,18,14,.85); font-size: 52px; font-weight: 700; color: #f1dfae; }
+</style>
+<script src="../scripts/v24_promo.js"></script>
+<script src="../shared/engine.js"></script>
+<script>
+window.build = ({ say }) => {
+  say(document.getElementById('h1'), 'p1', 0, 6);
+  say(document.getElementById('h2'), 'p1', 6, 14);
+  const h = document.getElementById('herit');
+  [...'HÉRITAGE'].forEach((c, i) => { const s = document.createElement('span'); s.className = 'goldtxt'; s.textContent = c; s.dataset.cue = `p2.1+${(i * 0.06).toFixed(2)}`; s.dataset.d = '0.7'; h.appendChild(s); });
+};
+window.onFrame = (t, { cue, clamp }) => {
+  const r = document.getElementById('rays'); r.style.transform = `rotate(${t * 6}deg) scale(${0.8 + 0.2 * clamp((t - cue('p2')) / 1.2)})`;
+};
+</script>
+</head>
+<body>
+<div id="stage"><div id="cam">
+  <canvas id="silk" width="270" height="480"></canvas><canvas id="dust" width="1080" height="1920"></canvas><div class="vignette"></div>
+
+  <!-- HOOK -->
+  <section class="scene">
+    <div class="center" style="top:520px"><span class="line kin" id="h1" style="font-size:88px"></span><span class="line gold" id="h2" style="font-size:70px;margin-top:10px"></span></div>
+    <div class="center" style="top:430px"><span class="kin" data-cue="-0.5" data-anim="none" data-out="p1.0" style="font-size:88px">Tu veux te lancer…</span></div>
+    <div class="center" style="top:1000px"><span class="pill" data-cue="p1.14" data-anim="pop" style="font-size:44px">Regarde ça 👇</span></div>
+  </section>
+
+  <!-- REVEAL -->
+  <section class="scene" data-from="p2" data-glow data-cut>
+    <div class="rays" id="rays"></div>
+    <div class="center" style="top:200px"><span data-cue="p2.0-0.1" data-anim="slam" data-flash data-d="0.5"><svg class="bigLogo"><use href="#logo"/></svg></span></div>
+    <div class="center" style="top:600px"><span class="line" id="herit" style="font-size:150px;line-height:1.05;letter-spacing:.02em"></span>
+      <span class="label" data-cue="p2.3" style="font-size:46px;margin-top:10px">par IHC</span></div>
+    <div class="center" style="top:930px"><span class="kin light" data-cue="p2.4" style="font-size:62px">La formation pour construire</span>
+      <span class="line gold" data-cue="p2.8" style="font-size:96px;margin-top:6px">ton avenir</span>
+      <span class="line kin" data-cue="p2.10" style="font-size:70px;margin-top:10px">et celui de ta famille.</span></div>
+  </section>
+
+  <!-- WHAT'S INSIDE 1 -->
+  <section class="scene" data-from="p3">
+    <div class="center" style="top:200px"><span class="label" data-cue="p3.0" style="font-size:48px">Dedans</span></div>
+    <div class="feat card" style="top:430px" data-cue="p3.2" data-anim="left"><span class="i">🎬</span><div><div class="t">Des modules vidéo</div><div class="s" data-cue="p3.8">à suivre à ton rythme</div></div></div>
+    <div class="feat card" style="top:820px" data-cue="p3.13" data-anim="left"><span class="i">🧰</span><div><div class="t">Ressources &amp; outils</div><div class="s" data-cue="p3.18">pour passer à la pratique</div></div></div>
+  </section>
+
+  <!-- WHAT'S INSIDE 2 -->
+  <section class="scene" data-from="p4">
+    <div class="center" style="top:200px"><span class="label" data-cue="p4.0" style="font-size:44px">Selon l'offre</span></div>
+    <div class="feat card" style="top:430px" data-cue="p4.3" data-anim="left"><span class="i">🎙️</span><div><div class="t">Coachings collectifs</div><div class="s" data-cue="p4.6">chaque semaine</div></div></div>
+    <div class="feat card" style="top:820px" data-cue="p4.9" data-anim="left"><span class="i">👥</span><div><div class="t">Un groupe privé</div><div class="s" data-cue="p4.12">pour avancer avec d'autres</div></div></div>
+  </section>
+
+  <!-- 2 OFFRES -->
+  <section class="scene" data-from="p5" data-glow>
+    <div class="center" style="top:220px"><span class="goldtxt" data-cue="p5.3" data-anim="slam" style="font-size:150px;line-height:1">2 OFFRES</span></div>
+    <div class="offer card" style="top:560px" data-cue="p5.4" data-anim="left"><span class="num goldtxt">1</span><div><div class="t">Offre n°1</div><div class="s">le détail en DM</div></div></div>
+    <div class="offer card" style="top:820px" data-cue="p5.5" data-anim="right"><span class="num goldtxt">2</span><div><div class="t">Offre n°2</div><div class="s">le détail en DM</div></div></div>
+    <div class="center" style="top:1120px"><span class="sub" data-cue="p5.6" style="font-family:var(--serif);font-style:italic;font-size:60px;color:#e2c67d">selon l'accompagnement que tu veux.</span></div>
+  </section>
+
+  <!-- HONEST OPINION -->
+  <section class="scene" data-from="p6">
+    <div class="quote card" data-cue="p6.0" data-anim="up">
+      <span class="qm">“</span>
+      <div class="a">Je suis moi-même dans la formation. Franchement :</div>
+      <div class="b" data-cue="p6.13">elle ne fait pas le travail à ta place.</div>
+      <div class="c" data-cue="p6.22">Mais elle te donne la méthode et le cadre.</div>
+      <div class="sig">— moi, membre d'Héritage</div>
+    </div>
+  </section>
+
+  <!-- CTA: GO in comments or DM -->
+  <section class="scene" data-from="p7" data-glow>
+    <div class="center" style="top:240px"><span class="kin light" data-cue="p7.0" style="font-size:76px">Tu veux voir le programme ?</span></div>
+    <div class="center" style="top:420px"><span class="kin" data-cue="p7.6" style="font-size:110px">Écris</span></div>
+    <div class="center" style="top:540px"><span class="goldtxt" style="font-size:320px;line-height:1.05" data-cue="p7.8" data-anim="slam" data-flash>GO</span></div>
+    <div class="center" style="top:920px"><div class="chips"><span class="chip" data-cue="p7.11" data-anim="pop">💬 en commentaire</span><span class="chip" data-cue="p7.14" data-anim="pop">📩 en DM</span></div></div>
+    <div class="center" style="top:1120px"><span class="gold" data-cue="p7.16" style="font-size:96px">je t'envoie le lien.</span></div>
+    <div class="center" style="top:1400px"><span class="tiny" data-cue="p7.0" style="font-size:28px">Lien affilié : je peux toucher une commission, sans surcoût pour toi · aucun résultat garanti</span></div>
+  </section>
+</div><div id="flash"></div></div>
+</body>
+</html>
