@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Le scanner produit</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+  :root { --bad: #e8866a; }
+  .ttl { position: absolute; left: 0; right: 0; top: 120px; text-align: center; }
+  .ttl .a { font-family: var(--cinzel); font-weight: 900; font-size: 92px; letter-spacing: .08em; line-height: 1; }
+  .ttl .b { font-size: 44px; font-weight: 600; color: #b9ad94; margin-top: 10px; }
+  .prod { position: absolute; left: 190px; right: 190px; top: 330px; height: 420px; border-radius: 48px; background: linear-gradient(170deg, #1f1a12, #0c0b0a 70%); border: 3px solid rgba(233,204,127,.45);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: visible; }
+  .prod .e { font-size: 200px; line-height: 1; } .prod .n { font-family: var(--cinzel); font-weight: 800; font-size: 34px; letter-spacing: .25em; color: #a29a8a; margin-top: 14px; }
+  #laser { position: absolute; left: 14px; right: 14px; height: 8px; border-radius: 4px; background: linear-gradient(90deg, transparent, #fff1c4, transparent); box-shadow: 0 0 30px 8px rgba(243,220,154,.7); }
+  .corner { position: absolute; width: 60px; height: 60px; border: 6px solid #f3dc9a; }
+  .stamp { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-10deg); padding: 18px 34px; border: 8px solid #7bdc8c; border-radius: 26px; color: #7bdc8c; font-family: var(--cinzel); font-weight: 900; font-size: 64px; background: rgba(10,9,8,.85); white-space: nowrap; }
+  .list { position: absolute; left: 80px; right: 80px; top: 820px; display: flex; flex-direction: column; gap: 18px; }
+  .row { display: flex; align-items: center; gap: 26px; padding: 22px 28px; border-radius: 30px; background: rgba(20,18,14,.85); border: 2px solid rgba(233,204,127,.25); font-size: 46px; font-weight: 700; }
+  .row .box { flex: 0 0 74px; height: 74px; border-radius: 18px; border: 3px solid rgba(233,204,127,.55); display: flex; align-items: center; justify-content: center; font-size: 50px; color: #120f08; }
+  .row.ok { border-color: rgba(120,220,140,.55); }
+  .row.ok .box { background: #7bdc8c; border-color: #7bdc8c; }
+  .verdict { position: absolute; left: 0; right: 0; top: 110px; text-align: center; }
+</style>
+<script src="../scripts/v23_scanner.js"></script>
+<script src="../shared/engine.js"></script>
+<script>
+const Q = [['p2', 'Testé ou vraiment étudié ?'], ['p3', 'Il règle un vrai problème ?'], ['p4', 'Bons avis clients ?'], ['p5', "Programme d'affiliation sérieux ?"], ['p6', 'Tu le conseillerais à un ami ?']];
+window.build = () => {
+  document.getElementById('list').innerHTML = Q.map(([p, q]) =>
+    `<div class="row" data-cue="${p}.0" data-anim="left" data-class="${p}$-0.15|ok"><span class="box"><span data-cue="${p}$-0.15" data-anim="pop" data-sfx="check">✓</span></span>${q}</div>`).join('');
+};
+window.onFrame = (t, { cue }) => {
+  const on = t < cue('p7');
+  const y = 20 + (Math.sin(t * 2.6) * 0.5 + 0.5) * 380;
+  const l = document.getElementById('laser'); l.style.top = y + 'px'; l.style.opacity = on ? 1 : 0;
+};
+</script>
+</head>
+<body>
+<div id="stage"><div id="cam">
+  <canvas id="silk" width="270" height="480"></canvas><canvas id="dust" width="1080" height="1920"></canvas><div class="vignette"></div>
+
+  <section class="scene" data-to="p8">
+    <div class="ttl" data-cue="-0.5" data-anim="none" data-out="p7-0.05"><div class="a goldtxt">LE SCANNER</div><div class="b">avant de recommander un produit</div></div>
+    <div class="verdict" data-cue="p7.0" data-anim="pop"><span class="kin" style="font-size:70px">5 oui ? <span style="color:#7bdc8c">Recommande.</span></span></div>
+    <div class="verdict" style="top:210px" data-cue="p7.7" data-anim="pop"><span class="kin" style="font-size:60px">1 seul non ? <span style="color:#f08a7a">Passe ton tour.</span></span></div>
+
+    <div class="prod" data-cue="-0.5" data-anim="none">
+      <span class="corner" style="left:24px;top:24px;border-right:0;border-bottom:0"></span><span class="corner" style="right:24px;top:24px;border-left:0;border-bottom:0"></span>
+      <span class="corner" style="left:24px;bottom:24px;border-right:0;border-top:0"></span><span class="corner" style="right:24px;bottom:24px;border-left:0;border-top:0"></span>
+      <span class="e">📦</span><span class="n">LE PRODUIT</span>
+      <i id="laser"></i>
+      <span class="stamp" data-cue="p7.1" data-anim="slam" data-flash>✅ VALIDÉ</span>
+    </div>
+    <div class="list" id="list"></div>
+  </section>
+
+  <!-- CTA -->
+  <section class="scene" data-from="p8" data-glow>
+    <div class="center" style="top:300px"><span class="kin light" data-cue="p8.3" style="font-size:80px">Tu veux te lancer ?</span></div>
+    <div class="center" style="top:520px"><span class="kin" data-cue="p8.9" style="font-size:110px">Écris-moi</span></div>
+    <div class="center" style="top:640px"><span class="goldtxt" style="font-size:300px;line-height:1.05" data-cue="p8.11" data-anim="slam" data-flash>GO</span></div>
+    <div class="center" style="top:980px"><span class="kin light" data-cue="p8.13" style="font-size:90px">en DM 📩</span></div>
+    <div class="center" style="top:1140px"><span class="gold" data-cue="p8.16" style="font-size:96px">je te dis par où commencer.</span></div>
+    <div class="center" style="top:1420px"><span class="tiny" data-cue="p8.0" style="font-size:28px">Contenu éducatif · aucun résultat garanti</span></div>
+  </section>
+</div><div id="flash"></div></div>
+</body>
+</html>
