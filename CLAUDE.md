@@ -9,6 +9,8 @@ Le but : qualifier les prospects sur plusieurs vidéos **buzz** et **valeur**, p
 | **Valeur** | Éduquer et créer la confiance : conseils concrets, erreurs à éviter, méthodes | **Non, jamais** |
 | **Promotion** | Convertir : présenter la formation Héritage, ce qu'elle contient, pour qui | **Oui, uniquement ici** |
 
+- Dire et écrire simplement « Héritage » : **ne plus jamais dire ni afficher « par IHC »**.
+
 ## Appel à l'action
 - Fin de vidéo : « écris-moi GO » ou « envoie-moi GO » en DM. Ne plus dire « HÉRITAGE » à la fin.
 - **Buzz et Valeur** : « Écris-moi GO en DM, et je te dis par où commencer. » (le propriétaire présente ensuite Héritage en DM).
