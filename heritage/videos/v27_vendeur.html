@@ -35,7 +35,7 @@ window.onFrame = (t, { clamp, easeInOut, cue }) => {
   const shout = t > cue('p2.4') && t < cue('p3');
   document.getElementById('seller').setAttribute('transform', shout ? `translate(${Math.sin(t * 40) * 5} 0)` : '');
   const away = easeInOut(clamp((t - cue('p2.15')) / 1.2));
-  const vL = document.getElementById('vL'); vL.setAttribute('transform', `translate(${away * 200} ${away > 0 && away < 1 ? -Math.abs(Math.sin(t * 9)) * 8 : 0})`); vL.setAttribute('opacity', 1 - away);
+  const vL = document.getElementById('vL'); vL.setAttribute("transform", `translate(${-away * 480} ${away > 0 && away < 1 ? -Math.abs(Math.sin(t * 9)) * 8 : 0})`); vL.setAttribute('opacity', 1 - away);
   const k = cue('p4.9'), j = t > k ? Math.max(0, Math.sin((t - k) * 10) * Math.exp(-(t - k) * 3)) : 0;
   document.getElementById('vR').setAttribute('transform', `translate(0 ${-j * 50})`);
 };
