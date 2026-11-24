@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Le vendeur vs le créateur</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+  :root { --bad: #f08a7a; }
+  #world { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  .who { position: absolute; top: 350px; width: 540px; text-align: center; font-family: var(--cinzel); font-weight: 900; font-size: 50px; letter-spacing: .1em; }
+  .who.l { left: 0; color: var(--bad); } .who.r { left: 540px; color: var(--gold); }
+  .bub { position: absolute; padding: 22px 28px; border-radius: 34px; font-size: 40px; font-weight: 800; line-height: 1.15; text-align: center; box-shadow: 0 16px 40px rgba(0,0,0,.5); }
+  .bub.l { left: 30px; width: 460px; top: 470px; background: #3a1712; color: #ffd2c4; border: 3px solid var(--bad); }
+  .bub.r { left: 590px; width: 460px; top: 470px; background: #1f1a10; color: #fff3d6; border: 3px solid rgba(233,204,127,.8); }
+  .res { position: absolute; top: 1300px; width: 540px; text-align: center; font-size: 46px; font-weight: 800; }
+  .res.l { left: 0; color: var(--bad); } .res.r { left: 540px; color: #7bdc8c; }
+  .half.dim { opacity: .3 !important; filter: blur(1.5px) saturate(.5) !important; }
+  .big { position: absolute; left: 0; right: 0; top: 1300px; text-align: center; }
+  svg text { font-family: Inter, sans-serif; }
+  svg [data-cue] { transform-box: fill-box; transform-origin: center; }
+</style>
+<script src="../scripts/v27_vendeur.js"></script>
+<script src="../shared/engine.js"></script>
+<script>
+const fig = (id, x, col) => `<g id="${id}"><g stroke="${col}" stroke-width="18" stroke-linecap="round" fill="none">
+  <circle cx="${x}" cy="960" r="38" fill="${col}" stroke="none"/>
+  <path d="M${x} 1002 V1110 M${x} 1110 L${x - 30} 1210 M${x} 1110 L${x + 30} 1210 M${x} 1030 L${x - 46} 1076 M${x} 1030 L${x + 48} 1070"/></g></g>`;
+window.build = () => {
+  document.getElementById('figL').innerHTML = fig('seller', 150, '#e9b3a6') + fig('vL', 400, '#bdb6a8');
+  document.getElementById('figR').innerHTML = fig('creator', 680, '#f4efe4') + fig('vR', 930, '#bdb6a8');
+};
+window.onFrame = (t, { clamp, easeInOut, cue }) => {
+  document.querySelectorAll('.hl').forEach(e => e.classList.toggle('dim', t >= cue('p3') && t < cue('p5')));
+  document.querySelectorAll('.hr').forEach(e => e.classList.toggle('dim', t >= cue('p2') && t < cue('p3')));
+  const shout = t > cue('p2.4') && t < cue('p3');
+  document.getElementById('seller').setAttribute('transform', shout ? `translate(${Math.sin(t * 40) * 5} 0)` : '');
+  const away = easeInOut(clamp((t - cue('p2.15')) / 1.2));
+  const vL = document.getElementById('vL'); vL.setAttribute('transform', `translate(${away * 200} ${away > 0 && away < 1 ? -Math.abs(Math.sin(t * 9)) * 8 : 0})`); vL.setAttribute('opacity', 1 - away);
+  const k = cue('p4.9'), j = t > k ? Math.max(0, Math.sin((t - k) * 10) * Math.exp(-(t - k) * 3)) : 0;
+  document.getElementById('vR').setAttribute('transform', `translate(0 ${-j * 50})`);
+};
+</script>
+</head>
+<body>
+<div id="stage"><div id="cam">
+  <canvas id="silk" width="270" height="480"></canvas><canvas id="dust" width="1080" height="1920"></canvas><div class="vignette"></div>
+
+  <section class="scene" data-to="p5">
+    <div class="center" style="top:150px"><span class="kin" data-cue="-0.5" data-anim="none" style="font-size:66px">Même produit. Même lien.</span></div>
+    <div class="center" style="top:240px"><span class="gold" data-cue="p1.4" data-out="p2-0.1" style="font-size:66px">un seul fait des ventes…</span></div>
+    <div class="half hl"><div class="who l" data-cue="-0.5" data-anim="none">LE VENDEUR</div></div>
+    <div class="half hr"><div class="who r" data-cue="-0.5" data-anim="none">LE CRÉATEUR</div></div>
+    <svg id="world" viewBox="0 0 1080 1920">
+      <path d="M0 1216 H1080" stroke="rgba(233,204,127,.35)" stroke-width="3"/>
+      <path d="M540 330 V1230" stroke="rgba(233,204,127,.25)" stroke-width="3" stroke-dasharray="10 14"/>
+      <g class="half hl" id="figL"></g>
+      <g class="half hr" id="figR"></g>
+      <text x="150" y="1000" text-anchor="middle" font-size="44" data-cue="p2.4" data-anim="pop">📢</text>
+      <text x="740" y="1060" text-anchor="middle" font-size="64" data-cue="p3.3" data-anim="pop">📦</text>
+      <text x="930" y="880" text-anchor="middle" font-size="60" data-cue="p4.4" data-anim="pop">❤️</text>
+      <text x="400" y="880" text-anchor="middle" font-size="56" data-cue="p2.16" data-anim="pop" data-out="p3-0.1">👋</text>
+    </svg>
+
+    <div class="bub l" data-cue="p2.4" data-anim="pop" data-out="p3-0.1">« ACHÈTE !! -50 % VITE 🔥 »</div>
+    <div class="res l" data-cue="p2.15" data-out="p3-0.1">les gens passent leur chemin</div>
+    <div class="bub r" data-cue="p3.3" data-anim="pop" data-out="p3.6-0.05">« Voici le produit… »</div>
+    <div class="bub r" data-cue="p3.6" data-anim="pop" data-out="p3.10-0.05">« …le problème qu'il règle… »</div>
+    <div class="bub r" data-cue="p3.10" data-anim="pop">« …et ses défauts. »</div>
+    <div class="res r" data-cue="p4.4" data-anim="up">❤️ confiance → 🔗 clic</div>
+  </section>
+
+  <!-- the lesson -->
+  <section class="scene" data-from="p5" data-glow>
+    <div class="center" style="top:560px"><span class="kin" data-cue="p5.0" style="font-size:80px">En affiliation,</span></div>
+    <div class="center" style="top:700px"><span class="kin" data-cue="p5.2" style="font-size:100px">ne <span class="strike" style="font-weight:800">vends pas.<i data-strike="p5.4"></i></span></span></div>
+    <div class="center" style="top:860px"><span class="goldtxt" data-cue="p5.5" data-anim="slam" data-flash style="font-size:130px;line-height:1">RECOMMANDE.</span></div>
+  </section>
+
+  <!-- CTA -->
+  <section class="scene" data-from="p6">
+    <div class="center" style="top:300px"><span class="kin light" data-cue="p6.3" style="font-size:80px">Tu veux te lancer ?</span></div>
+    <div class="center" style="top:520px"><span class="kin" data-cue="p6.9" style="font-size:110px">Écris-moi</span></div>
+    <div class="center" style="top:640px"><span class="goldtxt" style="font-size:300px;line-height:1.05" data-cue="p6.11" data-anim="slam" data-flash>GO</span></div>
+    <div class="center" style="top:980px"><span class="kin light" data-cue="p6.13" style="font-size:90px">en DM 📩</span></div>
+    <div class="center" style="top:1140px"><span class="gold" data-cue="p6.16" style="font-size:96px">je te dis par où commencer.</span></div>
+    <div class="center" style="top:1420px"><span class="tiny" data-cue="p6.0" style="font-size:28px">Contenu éducatif · aucun résultat garanti</span></div>
+  </section>
+</div><div id="flash"></div></div>
+</body>
+</html>

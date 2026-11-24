@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Pourquoi personne n'achète</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+  #world { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  .step { position: absolute; left: 0; right: 0; top: 200px; text-align: center; font-family: "JetBrains Mono", monospace; font-weight: 600; font-size: 44px; letter-spacing: .2em; color: #d8cfbd; }
+  .meter { position: absolute; left: 190px; right: 190px; top: 300px; }
+  .meter .k { font-size: 30px; font-weight: 700; color: #a29a8a; letter-spacing: .15em; text-align: center; margin-bottom: 12px; }
+  .meter .bar { height: 30px; border-radius: 15px; background: rgba(233,204,127,.15); overflow: hidden; border: 2px solid rgba(233,204,127,.35); }
+  .meter i { display: block; height: 100%; width: 0; background: var(--gold-grad); }
+  .think { position: absolute; left: 330px; right: 60px; top: 520px; padding: 34px 40px; border-radius: 80px; background: #f4efe4; color: #1a1712; text-align: center; font-size: 56px; font-weight: 800; letter-spacing: -0.02em; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+  .think::after, .think::before { content: ""; position: absolute; border-radius: 50%; background: #f4efe4; }
+  .think::after { width: 44px; height: 44px; right: 230px; bottom: -60px; } .think::before { width: 24px; height: 24px; right: 252px; bottom: -100px; }
+  .ans { position: absolute; left: 60px; right: 60px; top: 1330px; padding: 34px 40px; border-radius: 40px; background: linear-gradient(170deg, #1f1a10, #0c0b0a 70%); border: 3px solid rgba(233,204,127,.7); text-align: center; font-size: 52px; font-weight: 800; line-height: 1.2; }
+  .ans small { display: block; font-family: var(--cinzel); color: var(--gold); font-size: 30px; letter-spacing: .2em; margin-bottom: 10px; }
+  svg text { font-family: Inter, sans-serif; }
+  svg [data-cue] { transform-box: fill-box; transform-origin: center; }
+</style>
+<script src="../scripts/v26_pourquoi.js"></script>
+<script src="../shared/engine.js"></script>
+<script>
+const fig = (id, x, col) => `<g id="${id}"><g stroke="${col}" stroke-width="20" stroke-linecap="round" fill="none">
+  <circle cx="${x}" cy="960" r="42" fill="${col}" stroke="none"/>
+  <path d="M${x} 1006 V1120 M${x} 1120 L${x - 34} 1226 M${x} 1120 L${x + 34} 1226 M${x} 1036 L${x - 50} 1086 M${x} 1036 L${x + 52} 1080"/></g></g>`;
+window.build = () => {
+  const w = document.getElementById('figs');
+  w.insertAdjacentHTML('beforeend', fig('you', 260, '#f4efe4'));
+  w.insertAdjacentHTML('beforeend', fig('viewer', 720, '#bdb6a8'));
+};
+window.onFrame = (t, { clamp, easeOut, cue }) => {
+  // trust meter fills a third per answered doubt
+  const lv = [['p2.10', 1], ['p3.8', 1], ['p4.9', 1]].reduce((s, [c]) => s + easeOut(clamp((t - cue(c)) / 0.8)) / 3, 0);
+  document.getElementById('trust').style.width = (lv * 100) + '%';
+  // the viewer is puzzled (small wobble) until the doubts are gone, then jumps when clicking
+  const k = cue('p5.5'), j = t > k ? Math.max(0, Math.sin((t - k) * 10) * Math.exp(-(t - k) * 3)) : 0;
+  document.getElementById('viewer').setAttribute('transform', `translate(${t < cue('p5') ? Math.sin(t * 3) * 6 : 0} ${-j * 60})`);
+  document.getElementById('you').setAttribute('transform', `translate(0 ${Math.sin(t * 2) * 3})`);
+  document.getElementById('qs').setAttribute('opacity', 1 - clamp((t - cue('p5')) / 0.4));
+};
+</script>
+</head>
+<body>
+<div id="stage"><div id="cam">
+  <canvas id="silk" width="270" height="480"></canvas><canvas id="dust" width="1080" height="1920"></canvas><div class="vignette"></div>
+
+  <section class="scene" data-to="p6">
+    <svg id="world" viewBox="0 0 1080 1920"><g transform="translate(540 1060) scale(1.25) translate(-540 -1060)">
+      <path d="M-200 1236 H1300" stroke="rgba(233,204,127,.35)" stroke-width="3"/>
+      <g id="figs"></g>
+      <text x="260" y="890" text-anchor="middle" font-size="34" font-weight="800" fill="#f3dc9a" letter-spacing="4">TOI</text>
+      <g id="qs" fill="#f08a7a" font-size="56" font-weight="900"><text x="640" y="880">?</text><text x="790" y="860">?</text><text x="700" y="830">?</text></g>
+      <g data-cue="p5.5" data-anim="pop"><text x="720" y="850" text-anchor="middle" font-size="60">🔗</text></g>
+    </g></svg>
+
+    <div class="step" data-cue="-0.5" data-anim="none" data-out="p2-0.1"><span class="goldtxt" style="font-size:54px;letter-spacing:.02em">POURQUOI IL N'ACHÈTE PAS ?</span></div>
+    <div class="step" data-cue="p2.0" data-out="p3-0.1">DOUTE 1 / 3</div>
+    <div class="step" data-cue="p3.0" data-out="p4-0.1">DOUTE 2 / 3</div>
+    <div class="step" data-cue="p4.0" data-out="p5-0.1">DOUTE 3 / 3</div>
+    <div class="step" data-cue="p5.0"><span class="goldtxt" style="font-size:64px;letter-spacing:.02em">LE CLIC DEVIENT NATUREL</span></div>
+    <div class="meter" data-cue="p1.7" data-anim="up"><div class="k">CONFIANCE</div><div class="bar"><i id="trust"></i></div></div>
+
+    <div class="think" data-cue="-0.5" data-anim="none" data-out="p2.3-0.05">🤔 « Pourquoi j'achèterais ? »</div>
+    <div class="think" data-cue="p2.3" data-anim="pop" data-out="p2.10+0.6">« Je ne te connais pas. »</div>
+    <div class="think" data-cue="p3.2" data-anim="pop" data-out="p3.8+0.6">« Ça m'aide comment ? »</div>
+    <div class="think" data-cue="p4.2" data-anim="pop" data-out="p4.9+0.6">« C'est juste une pub ? »</div>
+    <div class="think" data-cue="p5.5" data-anim="pop" style="background:#fff1c4">✅ « OK, je clique. »</div>
+
+    <div class="ans" data-cue="p2.10" data-anim="up" data-out="p3-0.1" data-sfx="check"><small>TA RÉPONSE</small>Montre-toi utile avant de vendre.</div>
+    <div class="ans" data-cue="p3.8" data-anim="up" data-out="p4-0.1" data-sfx="check"><small>TA RÉPONSE</small>Explique le problème que le produit règle.</div>
+    <div class="ans" data-cue="p4.9" data-anim="up" data-out="p5-0.1" data-sfx="check"><small>TA RÉPONSE</small>« Lien affilié » + ton vrai avis.</div>
+  </section>
+
+  <!-- CTA -->
+  <section class="scene" data-from="p6" data-glow>
+    <div class="center" style="top:300px"><span class="kin light" data-cue="p6.3" style="font-size:80px">Tu veux te lancer ?</span></div>
+    <div class="center" style="top:520px"><span class="kin" data-cue="p6.9" style="font-size:110px">Écris-moi</span></div>
+    <div class="center" style="top:640px"><span class="goldtxt" style="font-size:300px;line-height:1.05" data-cue="p6.11" data-anim="slam" data-flash>GO</span></div>
+    <div class="center" style="top:980px"><span class="kin light" data-cue="p6.13" style="font-size:90px">en DM 📩</span></div>
+    <div class="center" style="top:1140px"><span class="gold" data-cue="p6.16" style="font-size:96px">je te dis par où commencer.</span></div>
+    <div class="center" style="top:1420px"><span class="tiny" data-cue="p6.0" style="font-size:28px">Contenu éducatif · aucun résultat garanti</span></div>
+  </section>
+</div><div id="flash"></div></div>
+</body>
+</html>
