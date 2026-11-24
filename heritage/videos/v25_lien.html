@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Comment marche un lien affilié</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+  #world { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  .step { position: absolute; left: 0; right: 0; top: 240px; text-align: center; font-family: "JetBrains Mono", monospace; font-weight: 600; font-size: 46px; letter-spacing: .22em; color: #d8cfbd; }
+  .kw { position: absolute; left: 40px; right: 40px; top: 470px; text-align: center; font-size: 64px; font-weight: 800; letter-spacing: -0.02em; }
+  .kw.g { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 80px; color: #f0d488; }
+  .chips { position: absolute; left: 0; right: 0; top: 1320px; display: flex; justify-content: center; gap: 22px; }
+  .chip { padding: 16px 30px; border-radius: 999px; border: 2px solid rgba(233,204,127,.6); font-size: 40px; font-weight: 700; color: #f1dfae; background: rgba(20,18,14,.85); }
+  svg text { font-family: Inter, sans-serif; }
+</style>
+<script src="../scripts/v25_lien.js"></script>
+<script src="../shared/engine.js"></script>
+<script>
+const fig = (id, x, col, head) => `<g id="${id}"><g stroke="${col}" stroke-width="20" stroke-linecap="round" fill="none">
+  <circle cx="${x}" cy="960" r="42" fill="${head}" stroke="none"/>
+  <path d="M${x} 1006 V1120 M${x} 1120 L${x - 34} 1226 M${x} 1120 L${x + 34} 1226 M${x} 1036 L${x - 50} 1086 M${x} 1036 L${x + 52} 1080"/></g></g>`;
+window.build = () => {
+  const w = document.getElementById('figs');
+  w.insertAdjacentHTML('beforeend', fig('you', 200, '#f4efe4', '#f4efe4'));
+  w.insertAdjacentHTML('beforeend', fig('viewer', 540, '#bdb6a8', '#bdb6a8'));
+  // extra viewers for "the more you help, the more people trust you"
+  [[400, 0.62], [660, 0.62], [470, 0.5], [600, 0.5]].forEach(([x, s], i) =>
+    w.insertAdjacentHTML('beforeend', `<g class="crowd" data-i="${i}" opacity="0" transform="translate(${x} 1236) scale(${s}) translate(${-x} -1236)">${fig('c' + i, x, '#8d877b', '#8d877b')}
+      <text x="${x}" y="880" text-anchor="middle" font-size="64">❤️</text></g>`));
+};
+window.onFrame = (t, { clamp, easeInOut, easeOut, cue }) => {
+  const E = (a, d) => easeInOut(clamp((t - cue(a)) / d));
+  // video card: appears near you, then flies to the viewer
+  const card = document.getElementById('card'), fly = E('p3.0', 0.8);
+  card.setAttribute('transform', `translate(${140 + fly * 340} ${700 - fly * 20}) scale(${0.0001 + clamp((t - cue('p2.4')) / 0.35)})`);
+  card.setAttribute('opacity', 1 - clamp((t - cue('p4.0')) / 0.3));
+  // viewer walks towards the shop while the link takes them there
+  const walk = E('p4.2', 1.2);
+  document.getElementById('viewer').setAttribute('transform', `translate(${walk * 110} ${Math.abs(Math.sin(t * 9)) * -8 * (walk > 0 && walk < 1 ? 1 : 0)})`);
+  // link path drawn from viewer to the shop, token travelling on it
+  const path = document.getElementById('route'), L = path.getTotalLength(), dr = E('p4.0', 0.6);
+  path.style.strokeDasharray = `${L * dr} ${L}`;
+  const tk = E('p4.1', 1.3), p = path.getPointAtLength(tk * L);
+  const tok = document.getElementById('token'); tok.setAttribute('transform', `translate(${p.x} ${p.y})`); tok.setAttribute('opacity', t > cue('p4.1') && t < cue('p5') ? 1 : 0);
+  // coin flies back from the brand to you
+  const c = E('p5.5', 0.9), cx = 880 + (200 - 880) * c, cy = 860 - Math.sin(c * Math.PI) * 330 + c * 0;
+  const coin = document.getElementById('coin'); coin.setAttribute('transform', `translate(${cx} ${cy})`); coin.setAttribute('opacity', t > cue('p5.5') && c < 1 ? 1 : 0);
+  // you jump when the commission lands
+  const land = cue('p5.5') + 0.9, j = t > land ? Math.max(0, Math.sin((t - land) * 10) * Math.exp(-(t - land) * 3)) : 0;
+  document.getElementById('you').setAttribute('transform', `translate(0 ${-j * 60})`);
+  // parcel from the shop to the viewer
+  const b = E('p5.2', 0.7), box = document.getElementById('box');
+  box.setAttribute('transform', `translate(${860 - b * 90} ${1080 - Math.sin(b * Math.PI) * 120})`); box.setAttribute('opacity', t > cue('p5.2') ? 1 : 0);
+  // crowd appears for the secret
+  document.querySelectorAll('.crowd').forEach(g => g.setAttribute('opacity', clamp((t - cue('p6.8') - +g.dataset.i * 0.15) / 0.4)));
+  document.getElementById('shopglow').setAttribute('opacity', 0.25 + 0.6 * E('p4.12', 0.4));
+};
+</script>
+</head>
+<body>
+<div id="stage"><div id="cam">
+  <canvas id="silk" width="270" height="480"></canvas><canvas id="dust" width="1080" height="1920"></canvas><div class="vignette"></div>
+
+  <section class="scene" data-to="p7">
+    <svg id="world" viewBox="0 0 1080 1920">
+      <defs><radialGradient id="glowS"><stop offset="0" stop-color="#ffd27a" stop-opacity=".55"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></radialGradient></defs>
+      <g transform="translate(540 1060) scale(1.2) translate(-570 -1060)">
+      <path d="M-200 1236 H1300" stroke="rgba(233,204,127,.35)" stroke-width="3"/>
+      <!-- the brand's shop -->
+      <circle id="shopglow" cx="880" cy="1060" r="260" fill="url(#glowS)" opacity=".25"/>
+      <rect x="770" y="960" width="220" height="276" rx="10" fill="#1c1912" stroke="#d9b45a" stroke-width="5"/>
+      <path d="M760 960 L1000 960 L985 905 L775 905 Z" fill="#d9b45a"/>
+      <g fill="#120f08"><rect x="800" y="905" width="26" height="55"/><rect x="852" y="905" width="26" height="55"/><rect x="904" y="905" width="26" height="55"/><rect x="956" y="905" width="20" height="55"/></g>
+      <rect x="845" y="1110" width="70" height="126" rx="6" fill="#2a251b" stroke="#d9b45a" stroke-width="3"/>
+      <text x="880" y="1030" text-anchor="middle" font-size="34" font-weight="800" fill="#f3dc9a" letter-spacing="3">MARQUE</text>
+      <!-- the link route -->
+      <path id="route" d="M570 1000 C 680 860, 780 900, 880 1110" fill="none" stroke="#f3dc9a" stroke-width="7" stroke-dasharray="0 9999" stroke-linecap="round" style="filter:drop-shadow(0 0 10px rgba(243,220,154,.8))"/>
+      <g id="token" opacity="0"><circle r="34" fill="#120f08" stroke="#f3dc9a" stroke-width="5"/><text y="12" text-anchor="middle" font-size="34">🔗</text></g>
+      <g id="figs"></g>
+      <!-- labels over the characters -->
+      <text x="200" y="890" text-anchor="middle" font-size="36" font-weight="800" fill="#f3dc9a" letter-spacing="4">TOI</text>
+      <!-- your video card -->
+      <g id="card"><rect x="0" y="0" width="120" height="170" rx="16" fill="#0d0c0a" stroke="#f3dc9a" stroke-width="4"/>
+        <path d="M48 62 L80 85 L48 108 Z" fill="#f3dc9a"/><text x="60" y="150" text-anchor="middle" font-size="26">🔗</text></g>
+      <g id="box" opacity="0"><text text-anchor="middle" font-size="80">📦</text></g>
+      <g id="coin" opacity="0"><circle r="32" fill="url(#gg)"/><text y="12" text-anchor="middle" font-size="34" font-weight="900" fill="#120f08">€</text></g>
+      </g>
+    </svg>
+
+    <!-- step labels -->
+    <div class="step" data-cue="-0.5" data-anim="none" data-out="p2-0.1"><span class="goldtxt" style="font-size:84px;letter-spacing:.04em">LE LIEN AFFILIÉ</span><br><span style="font-size:40px">expliqué en 30 s</span></div>
+    <div class="step" data-cue="p2.0" data-out="p3-0.1">1 · TA VIDÉO</div>
+    <div class="step" data-cue="p3.0" data-out="p4-0.1">2 · LE CLIC</div>
+    <div class="step" data-cue="p4.0" data-out="p5-0.1">3 · LA MARQUE</div>
+    <div class="step" data-cue="p5.0" data-out="p6-0.1">4 · LA COMMISSION</div>
+    <div class="step" data-cue="p6.0">LE SECRET</div>
+
+    <div class="kw" data-cue="p2.4" data-out="p3-0.1">une vidéo utile <span style="color:#f0d488">+ ton lien</span></div>
+    <div class="kw" data-cue="p3.7" data-out="p4-0.1">❤️ confiance → 👆 clic</div>
+    <div class="kw g" data-cue="p4.12" data-out="p5-0.1">« cette visite vient de toi »</div>
+    <div class="kw" data-cue="p5.7" data-out="p6-0.1">💰 <span class="goldtxt">+ commission</span></div>
+    <div class="kw g" data-cue="p6.3" style="top:430px;line-height:1.15">plus tu aides,<br>plus on te fait confiance.</div>
+
+    <div class="chips"><span class="chip" data-cue="p5.8" data-anim="pop" data-out="p6-0.1">sans stock</span><span class="chip" data-cue="p5.10" data-anim="pop" data-out="p6-0.1">sans livraison</span></div>
+  </section>
+
+  <!-- CTA -->
+  <section class="scene" data-from="p7" data-glow>
+    <div class="center" style="top:300px"><span class="kin light" data-cue="p7.3" style="font-size:80px">Tu veux te lancer ?</span></div>
+    <div class="center" style="top:520px"><span class="kin" data-cue="p7.9" style="font-size:110px">Écris-moi</span></div>
+    <div class="center" style="top:640px"><span class="goldtxt" style="font-size:300px;line-height:1.05" data-cue="p7.11" data-anim="slam" data-flash>GO</span></div>
+    <div class="center" style="top:980px"><span class="kin light" data-cue="p7.13" style="font-size:90px">en DM 📩</span></div>
+    <div class="center" style="top:1140px"><span class="gold" data-cue="p7.16" style="font-size:96px">je te dis par où commencer.</span></div>
+    <div class="center" style="top:1420px"><span class="tiny" data-cue="p7.0" style="font-size:28px">Contenu éducatif · aucun résultat garanti</span></div>
+  </section>
+</div><div id="flash"></div></div>
+</body>
+</html>
