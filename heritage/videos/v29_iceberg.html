@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>L'iceberg de la réussite</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+  #world { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  svg text { font-family: Inter, sans-serif; font-weight: 800; }
+  svg [data-cue] { transform-box: fill-box; transform-origin: center; }
+  .top { position: absolute; left: 50px; right: 50px; top: 120px; text-align: center; }
+  .subov { position: absolute; left: 140px; right: 140px; top: 1180px; padding: 46px 40px; border-radius: 48px; text-align: center; }
+  .subbtn .b { display: none; } .subbtn.done .a { display: none; } .subbtn.done .b { display: inline; }
+</style>
+<script src="../scripts/v29_iceberg.js"></script>
+<script src="../shared/engine.js"></script>
+<script>
+window.onFrame = (t, { clamp, easeInOut, cue }) => {
+  // camera: dive under the water while the hidden part is listed, then zoom out on the whole iceberg
+  const a = cue('p4.0'), b = cue('p4$');
+  const pan = 640 * easeInOut(clamp((t - a) / Math.max(0.5, b - a)));
+  const z = easeInOut(clamp((t - cue('p5')) / 1.1));
+  const s = 1 - 0.5 * z, cy = (960 + pan) * (1 - z) + 1430 * z;
+  document.getElementById('camg').setAttribute('transform', `translate(540 960) scale(${s}) translate(-540 ${-cy})`);
+  document.getElementById('wave').setAttribute('d', `M-400 760 ${Array.from({ length: 24 }, (_, i) => `Q ${-350 + i * 80} ${760 + 10 * Math.sin(t * 3 + i)}, ${-310 + i * 80} 760`).join(' ')}`);
+  document.getElementById('hero').setAttribute('transform', `translate(0 ${Math.sin(t * 2) * 4})`);
+};
+</script>
+</head>
+<body>
+<div id="stage"><div id="cam">
+  <canvas id="silk" width="270" height="480"></canvas><canvas id="dust" width="1080" height="1920"></canvas><div class="vignette"></div>
+
+  <section class="scene" data-to="p6">
+    <svg id="world" viewBox="0 0 1080 1920">
+      <defs>
+        <linearGradient id="ice" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbf7ee"/><stop offset=".35" stop-color="#cfd8de"/><stop offset="1" stop-color="#6f7f8c"/></linearGradient>
+        <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0d2a3a" stop-opacity=".55"/><stop offset="1" stop-color="#05121a" stop-opacity=".85"/></linearGradient>
+      </defs>
+      <g id="camg">
+        <!-- iceberg -->
+        <polygon points="250,760 830,760 990,1350 900,2000 700,2500 360,2450 150,1900 90,1350" fill="url(#ice)" opacity=".9"/>
+        <rect x="-600" y="760" width="2300" height="2400" fill="url(#sea)"/>
+        <polygon points="250,760 540,470 830,760" fill="url(#ice)" stroke="#fff1c4" stroke-width="4"/>
+        <path id="wave" d="M-400 760 H1500" stroke="#f3dc9a" stroke-width="5" fill="none" style="filter:drop-shadow(0 0 10px rgba(243,220,154,.9))"/>
+        <!-- the person on top, with a trophy -->
+        <g id="hero" stroke="#f4efe4" stroke-width="12" stroke-linecap="round" fill="none">
+          <circle cx="540" cy="350" r="26" fill="#f4efe4" stroke="none"/>
+          <path d="M540 378 V440 M540 440 L520 478 M540 440 L560 478 M540 396 L505 360 M540 396 L575 360"/>
+          <text x="540" y="320" text-anchor="middle" font-size="54" stroke="none" fill="#fff">🏆</text>
+        </g>
+        <!-- what people see (above) -->
+        <g font-size="40" fill="#fff3d6">
+          <text x="250" y="560" text-anchor="middle" data-cue="p3.3" data-anim="pop" data-out="p4.0+0.3">📈 résultats</text>
+          <text x="830" y="560" text-anchor="middle" data-cue="p3.5" data-anim="pop" data-out="p4.0+0.3">📸 captures</text>
+          <text x="540" y="230" text-anchor="middle" data-cue="p3.7" data-anim="pop" data-out="p4.0+0.3">🎉 félicitations</text>
+        </g>
+        <!-- what nobody sees (below) -->
+        <g font-size="46" fill="#fff3d6" text-anchor="middle">
+          <text x="540" y="1060" data-cue="p4.4" data-anim="pop">📚 des mois à apprendre</text>
+          <text x="540" y="1330" data-cue="p4.8" data-anim="pop">📉 des vidéos que</text>
+          <text x="540" y="1390" data-cue="p4.8" data-anim="pop">personne ne regarde</text>
+          <text x="540" y="1640" data-cue="p4.14" data-anim="pop">😔 des doutes</text>
+          <text x="540" y="1920" data-cue="p4.16" data-anim="pop" fill="#f3dc9a" font-size="52">🔁 beaucoup de régularité</text>
+        </g>
+      </g>
+    </svg>
+
+    <div class="top" data-cue="-0.5" data-anim="none" data-out="p2-0.1"><span class="kin" style="font-size:66px;line-height:1.2">Ce que les gens voient<br>de ta réussite…</span></div>
+    <div class="top" data-cue="p2.0" data-out="p3-0.1"><span class="goldtxt" style="font-size:62px">LA POINTE DE L'ICEBERG</span></div>
+    <div class="top" data-cue="p3.0" data-out="p4-0.1"><span class="label" style="font-size:44px">Au-dessus</span></div>
+    <div class="top" data-cue="p4.0" data-out="p5-0.1"><span class="label" style="font-size:44px">En dessous</span></div>
+    <div class="top" data-cue="p5.0"><span class="kin" style="font-size:62px">Personne ne voit cette partie.</span><br><span class="gold" data-cue="p5.5" style="font-size:84px">Mais c'est elle qui fait tout.</span></div>
+
+    <div class="subov card" data-cue="p2.0" data-anim="pop" data-out="p3-0.1" data-sfx-at="p2.0+0.6|ding"><div style="font-size:50px;font-weight:800;margin-bottom:24px">Abonne-toi 👇</div>
+      <span class="subbtn" data-class="p2.0+0.6|done"><span class="a">＋ S'abonner</span><span class="b">Abonné ✓</span></span></div>
+  </section>
+
+  <!-- CTA -->
+  <section class="scene" data-from="p6" data-glow>
+    <div class="center" style="top:300px"><span class="kin light" data-cue="p6.3" style="font-size:72px">Tu veux construire la tienne ?</span></div>
+    <div class="center" style="top:520px"><span class="kin" data-cue="p6.8" style="font-size:110px">Écris-moi</span></div>
+    <div class="center" style="top:640px"><span class="goldtxt" style="font-size:300px;line-height:1.05" data-cue="p6.10" data-anim="slam" data-flash>GO</span></div>
+    <div class="center" style="top:980px"><span class="kin light" data-cue="p6.12" style="font-size:90px">en DM 📩</span></div>
+    <div class="center" style="top:1140px"><span class="gold" data-cue="p6.15" style="font-size:96px">je te dis par où commencer.</span></div>
+    <div class="center" style="top:1420px"><span class="tiny" data-cue="p6.0" style="font-size:28px">Contenu éducatif · aucun résultat garanti</span></div>
+  </section>
+</div><div id="flash"></div></div>
+</body>
+</html>
