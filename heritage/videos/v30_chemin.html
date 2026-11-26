@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Le chemin vers la réussite</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+  #world { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  svg text { font-family: Inter, sans-serif; font-weight: 800; }
+  svg [data-cue] { transform-box: fill-box; transform-origin: center; }
+  .top { position: absolute; left: 40px; right: 40px; top: 150px; text-align: center; }
+  .subov { position: absolute; left: 160px; right: 160px; top: 300px; padding: 40px; border-radius: 46px; text-align: center; z-index: 5; }
+  .subbtn .b { display: none; } .subbtn.done .a { display: none; } .subbtn.done .b { display: inline; }
+</style>
+<script src="../scripts/v30_chemin.js"></script>
+<script src="../shared/engine.js"></script>
+<script>
+// how far along the real path the walker is, keyed to the words that describe each step
+const FR = [['p3.0', 0], ['p3.7', 0.17], ['p3.11', 0.27], ['p4.1', 0.38], ['p4.3', 0.5], ['p4.7', 0.6], ['p5.3', 0.74], ['p5$', 1]];
+const LABELS = [[0.02, '👀 personne ne regarde', 'p3.0', 160, 115], [0.17, '🎉 1ère victoire', 'p3.7', 0, -70], [0.27, '📉 la chute', 'p3.11', -70, 95],
+  [0.38, '🤔 doutes', 'p4.1', 0, -80], [0.5, '🔁 on recommence', 'p4.3', 110, 105], [0.6, '😐 rien ne bouge', 'p4.7', -30, -80],
+  [0.74, '📈 un peu plus haut', 'p5.3', -190, -40], [1, '🏁', 'p5$', 0, -60]];
+window.build = () => {
+  const path = document.getElementById('real'), L = path.getTotalLength(), g = document.getElementById('labels');
+  LABELS.forEach(([f, txt, c, dx, dy]) => {
+    const p = path.getPointAtLength(f * L);
+    g.insertAdjacentHTML('beforeend', `<circle cx="${p.x}" cy="${p.y}" r="12" fill="#f3dc9a" data-cue="${c}" data-anim="pop" data-sfx="pop"/>
+      <text x="${p.x + dx}" y="${p.y + dy}" text-anchor="middle" font-size="${txt.length < 4 ? 76 : 38}" fill="#fff3d6" data-cue="${c}" data-anim="pop" data-sfx="none">${txt}</text>`);
+  });
+};
+function walkerAt(path, f, t) {
+  const L = path.getTotalLength(), p = path.getPointAtLength(f * L);
+  return `translate(${p.x} ${p.y - 6 - Math.abs(Math.sin(t * 9)) * 6})`;
+}
+window.onFrame = (t, { clamp, easeInOut, cue }) => {
+  // dream line: drawn and walked during the hook
+  const dream = document.getElementById('dream'), DL = dream.getTotalLength(), fd = easeInOut(clamp(t / Math.max(0.6, cue('p1$'))));
+  dream.style.strokeDasharray = `${DL * fd} ${DL}`;
+  dream.style.opacity = t < cue('p2') ? 1 : 0.25;
+  // real path progress, piecewise between the cues
+  let f = 0;
+  for (let i = 1; i < FR.length; i++) { const [c0, f0] = FR[i - 1], [c1, f1] = FR[i], a = cue(c0), b = cue(c1);
+    if (t >= a) f = f0 + (f1 - f0) * clamp((t - a) / Math.max(0.1, b - a)); }
+  const real = document.getElementById('real'), RL = real.getTotalLength();
+  real.style.strokeDasharray = `${RL * f} ${RL}`;
+  const w = document.getElementById('walker');
+  w.setAttribute('transform', t < cue('p3') ? walkerAt(dream, fd, t) : walkerAt(real, f, t));
+};
+</script>
+</head>
+<body>
+<div id="stage"><div id="cam">
+  <canvas id="silk" width="270" height="480"></canvas><canvas id="dust" width="1080" height="1920"></canvas><div class="vignette"></div>
+
+  <section class="scene" data-to="p7">
+    <svg id="world" viewBox="0 0 1080 1920"><g transform="translate(545 1000) scale(1.15) translate(-545 -990)">
+      <!-- the straight line people imagine -->
+      <path id="dream" d="M130 1420 L960 560" fill="none" stroke="#f3dc9a" stroke-width="8" stroke-linecap="round" stroke-dasharray="0 9999"/>
+      <!-- the real path: ups, downs, loops -->
+      <path id="real" d="M130 1420 C 200 1400, 230 1250, 300 1200 C 340 1170, 360 1330, 400 1370 C 450 1410, 560 1300, 520 1220 C 490 1160, 420 1220, 470 1270
+        C 520 1320, 600 1330, 640 1300 C 700 1260, 690 1310, 750 1290 C 800 1270, 760 1130, 830 1100 C 880 1080, 860 1180, 900 1150
+        C 950 1110, 900 900, 940 800 C 960 740, 950 640, 960 580" fill="none" stroke="url(#gg)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"
+        stroke-dasharray="0 9999" style="filter:drop-shadow(0 0 12px rgba(243,220,154,.7))"/>
+      <g id="labels"></g>
+      <!-- the walker -->
+      <g id="walker"><g stroke="#f4efe4" stroke-width="10" stroke-linecap="round" fill="none" transform="translate(0 -92)">
+        <circle cx="0" cy="0" r="18" fill="#f4efe4" stroke="none"/><path d="M0 18 V60 M0 60 L-14 90 M0 60 L14 90 M0 30 L-18 48 M0 30 L18 46"/></g></g>
+    </g></svg>
+
+    <div class="top" data-cue="-0.5" data-anim="none" data-out="p2-0.1"><span class="kin" style="font-size:70px;line-height:1.15">Le chemin vers<br>la réussite…</span><br><span class="label" data-cue="p1.6" style="font-size:40px">ce que tu imagines</span></div>
+    <div class="top" data-cue="p2.3" data-out="p6-0.1"><span class="goldtxt" style="font-size:96px">LA RÉALITÉ</span></div>
+    <div class="top" data-cue="p6.0"><span class="kin" style="font-size:66px;line-height:1.2">La seule façon de perdre :</span><br><span class="gold" data-cue="p6.5" style="font-size:96px">arrêter de marcher.</span></div>
+
+    <div class="subov card" data-cue="p2.0" data-anim="pop" data-out="p3-0.1" data-sfx-at="p2.0+0.6|ding"><div style="font-size:48px;font-weight:800;margin-bottom:22px">Abonne-toi 👇</div>
+      <span class="subbtn" data-class="p2.0+0.6|done"><span class="a">＋ S'abonner</span><span class="b">Abonné ✓</span></span></div>
+  </section>
+
+  <!-- CTA -->
+  <section class="scene" data-from="p7" data-glow>
+    <div class="center" style="top:300px"><span class="kin light" data-cue="p7.3" style="font-size:80px">Tu veux te lancer ?</span></div>
+    <div class="center" style="top:520px"><span class="kin" data-cue="p7.7" style="font-size:110px">Écris-moi</span></div>
+    <div class="center" style="top:640px"><span class="goldtxt" style="font-size:300px;line-height:1.05" data-cue="p7.9" data-anim="slam" data-flash>GO</span></div>
+    <div class="center" style="top:980px"><span class="kin light" data-cue="p7.11" style="font-size:90px">en DM 📩</span></div>
+    <div class="center" style="top:1140px"><span class="gold" data-cue="p7.14" style="font-size:96px">je te dis par où commencer.</span></div>
+    <div class="center" style="top:1420px"><span class="tiny" data-cue="p7.0" style="font-size:28px">Contenu éducatif · aucun résultat garanti</span></div>
+  </section>
+</div><div id="flash"></div></div>
+</body>
+</html>
