@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Trouve ta niche</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+  #world { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  svg text { font-family: Inter, sans-serif; font-weight: 800; }
+  svg [data-cue] { transform-box: fill-box; transform-origin: center; }
+  .top { position: absolute; left: 40px; right: 40px; top: 150px; text-align: center; }
+  .top .k { font-family: "JetBrains Mono", monospace; font-weight: 600; font-size: 40px; letter-spacing: .2em; color: #d8cfbd; }
+  .top .q { font-size: 62px; font-weight: 800; letter-spacing: -0.02em; margin-top: 14px; line-height: 1.15; }
+  .result { position: absolute; left: 70px; right: 70px; top: 1370px; padding: 30px 36px; border-radius: 40px; text-align: center; }
+  .result small { display: block; font-family: var(--cinzel); color: var(--gold); font-size: 30px; letter-spacing: .2em; margin-bottom: 8px; }
+</style>
+<script src="../scripts/v31_niche.js"></script>
+<script src="../shared/engine.js"></script>
+<script>
+window.onFrame = (t, { clamp, cue }) => {
+  const on = clamp((t - cue('p5.8')) / 0.5), pulse = 1 + 0.08 * Math.sin(t * 5) * on;
+  const star = document.getElementById('star'); star.setAttribute('opacity', on); star.setAttribute('transform', `translate(540 850) scale(${(0.6 + 0.4 * on) * pulse})`);
+};
+</script>
+</head>
+<body>
+<div id="stage"><div id="cam">
+  <canvas id="silk" width="270" height="480"></canvas><canvas id="dust" width="1080" height="1920"></canvas><div class="vignette"></div>
+
+  <section class="scene" data-to="p7">
+    <svg id="world" viewBox="0 0 1080 1920">
+      <!-- empty outlines already on the first frame -->
+      <g fill="none" stroke="rgba(233,204,127,.3)" stroke-width="4" stroke-dasharray="12 14">
+        <circle cx="410" cy="770" r="240"/><circle cx="670" cy="770" r="240"/><circle cx="540" cy="990" r="240"/></g>
+      <!-- the three circles fill in, one per question -->
+      <circle cx="410" cy="770" r="240" fill="rgba(240,138,122,.22)" stroke="#f08a7a" stroke-width="5" data-cue="p2.0" data-anim="pop"/>
+      <circle cx="670" cy="770" r="240" fill="rgba(159,216,255,.18)" stroke="#9fd8ff" stroke-width="5" data-cue="p3.0" data-anim="pop"/>
+      <circle cx="540" cy="990" r="240" fill="rgba(233,204,127,.2)" stroke="#e9cc7f" stroke-width="5" data-cue="p4.0" data-anim="pop"/>
+      <g text-anchor="middle" font-size="40">
+        <text x="300" y="500" fill="#f8b4a8" data-cue="p2.3" data-anim="pop">❤️ ce que tu aimes</text>
+        <text x="790" y="500" fill="#bfe6ff" data-cue="p3.5" data-anim="pop">🧠 ce que tu sais faire</text>
+        <text x="540" y="1290" fill="#f3dc9a" data-cue="p4.3" data-anim="pop">🎯 ce que les gens cherchent</text>
+      </g>
+      <!-- example chips -->
+      <g text-anchor="middle" font-size="40" fill="#fff">
+        <text x="300" y="720" data-cue="p6.5" data-anim="pop">🏋️ sport</text>
+        <text x="790" y="720" data-cue="p6.8" data-anim="pop">🍳 cuisine</text>
+        <text x="540" y="1130" data-cue="p6.13" data-anim="pop">🥗 manger sain</text>
+      </g>
+      <!-- the sweet spot -->
+      <g id="star" opacity="0"><circle r="80" fill="url(#gg)" style="filter:drop-shadow(0 0 30px rgba(243,220,154,.9))"/>
+        <text y="-6" text-anchor="middle" font-size="44" fill="#120f08">⭐</text><text y="36" text-anchor="middle" font-size="24" fill="#120f08" font-weight="900">TA NICHE</text></g>
+      <i data-cue="p5.8" data-anim="none" data-flash data-sfx="hit"></i>
+    </svg>
+
+    <div class="top" data-cue="-0.5" data-anim="none" data-out="p2-0.1"><div class="q goldtxt" style="font-size:84px;line-height:1.05">QUELLE NICHE<br>CHOISIR ?</div></div>
+    <div class="top" data-cue="p2.0" data-out="p3-0.1"><div class="k">QUESTION 1 / 3</div><div class="q">De quoi tu parlerais<br>pendant des heures ?</div></div>
+    <div class="top" data-cue="p3.0" data-out="p4-0.1"><div class="k">QUESTION 2 / 3</div><div class="q">Qu'est-ce que tu sais<br>faire, ou veux apprendre ?</div></div>
+    <div class="top" data-cue="p4.0" data-out="p5-0.1"><div class="k">QUESTION 3 / 3</div><div class="q">Quel problème les gens<br>veulent régler ?</div></div>
+    <div class="top" data-cue="p5.0" data-out="p6-0.1"><div class="q gold" style="font-size:86px">là où les 3 se croisent.</div></div>
+    <div class="top" data-cue="p6.0"><div class="k">EXEMPLE</div></div>
+
+    <div class="result card" data-cue="p6.15" data-anim="up" data-sfx="check"><small>TA NICHE</small><span class="gold" style="font-size:72px">la cuisine healthy pour sportifs</span></div>
+  </section>
+
+  <!-- CTA -->
+  <section class="scene" data-from="p7" data-glow>
+    <div class="center" style="top:300px"><span class="kin light" data-cue="p7.3" style="font-size:80px">Tu veux te lancer ?</span></div>
+    <div class="center" style="top:520px"><span class="kin" data-cue="p7.9" style="font-size:110px">Écris-moi</span></div>
+    <div class="center" style="top:640px"><span class="goldtxt" style="font-size:300px;line-height:1.05" data-cue="p7.11" data-anim="slam" data-flash>GO</span></div>
+    <div class="center" style="top:980px"><span class="kin light" data-cue="p7.13" style="font-size:90px">en DM 📩</span></div>
+    <div class="center" style="top:1140px"><span class="gold" data-cue="p7.16" style="font-size:96px">je te dis par où commencer.</span></div>
+    <div class="center" style="top:1420px"><span class="tiny" data-cue="p7.0" style="font-size:28px">Contenu éducatif · aucun résultat garanti</span></div>
+  </section>
+</div><div id="flash"></div></div>
+</body>
+</html>
